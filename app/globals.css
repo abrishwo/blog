@@ -25,3 +25,48 @@ body {
     text-wrap: balance;
   }
 }
+
+/* styles.css or equivalent */
+
+@media (max-width: 768px) {
+  .hero-card img {
+    height: 50vh; /* Adjust as needed for mobile */
+  }
+}
+
+@media (min-width: 769px) {
+  .hero-card img {
+    height: 75vh; /* Adjust as needed for desktop */
+  }
+}
+
+
+/* styles.css or styles.module.css */
+
+.tags-filter {
+  margin-bottom: 20px;
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag-button {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tag-button.active {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.tag-button:hover {
+  background-color: #ddd;
+}
