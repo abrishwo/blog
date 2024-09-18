@@ -1,0 +1,10 @@
+/* ./extensions/content-manager/admin/src/admin.css */
+
+body {
+    font-family: 'Arial', sans-serif; /* Customize fonts */
+  }
+  
+  .header-logo {
+    max-height: 60px; /* Adjust logo size */
+  }
+  
