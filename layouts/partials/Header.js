@@ -35,6 +35,10 @@ const Header = () => {
         <div className="order-0">
           <Logo />
         </div>
+        <div className="flex flex-col items-center">
+            <h1>STARS and TOQUES</h1>
+            <h6>FINE DINING RESTAURANTS</h6>
+        </div>
         <div className="flex items-center space-x-4 xl:space-x-8">
           <div
             className={`collapse-menu ${
@@ -55,7 +59,7 @@ const Header = () => {
             </button>
             <ul
               id="nav-menu"
-              className="navbar-nav w-full md:w-auto md:space-x-1 lg:flex xl:space-x-2"
+              className="navbar-nav w-full flex flex-col md:w-auto md:space-x-1 lg:flex xl:space-x-2"
             >
               {main.map((menu, i) => (
                 <React.Fragment key={`menu-${i}`}>
@@ -110,18 +114,18 @@ const Header = () => {
               ))}
             </ul>
             {/* header social */}
-            <Social source={socical} className="socials" />
+            {/* <Social source={socical} className="socials" /> */}
           </div>
-          <ThemeSwitcher />
+          {/* <ThemeSwitcher /> */}
           {/* Header search */}
-          <div
+          {/* <div
             className="search-icon"
             onClick={() => {
               setSearchModal(true);
             }}
           >
             <IoSearch />
-          </div>
+          </div> */}
           <button
             onClick={() => setShowMenu(!showMenu)}
             className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white lg:hidden"
