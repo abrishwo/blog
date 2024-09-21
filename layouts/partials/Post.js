@@ -18,7 +18,7 @@ const Post = ({ post }) => {
         {post.attributes && (
           <ImageFallback
             className="rounded"
-            src={`${BASE_URL}${post.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
+            src={`${post.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
             alt={post.attributes.Title}
             width={405}
             height={208}

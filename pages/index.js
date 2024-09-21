@@ -78,7 +78,7 @@ const Home = ({
                 <div className="col-9 lg:col-6 relative w-full">
                   <ImageFallback
                     className="mx-auto object-contain w-full h-64 object-cover md:h-96"
-                    src={`${BASE_URL}${featuredArticle.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
+                    src={`${featuredArticle.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
                     width={548}
                     height={443}
                     priority

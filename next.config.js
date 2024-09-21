@@ -5,7 +5,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost'], // Add 'localhost' or other domains as needed
+    domains: ['localhost', 'vivid-flowers-9f3564b8da.media.strapiapp.com'], // Add 'localhost' or other domains as needed
   },
 };
 

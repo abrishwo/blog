@@ -4,7 +4,7 @@ import axios from 'axios';
 // Fetch contact page data
 export const fetchContactUs = createAsyncThunk('contact/fetchContactUs', async () => {
   try {
-    const res = await axios.get('http://localhost:1337/api/contacts?populate=*');
+    const res = await axios.get('https://vivid-flowers-9f3564b8da.strapiapp.com/api/contacts?populate=*');
     const data = res.data;
     return data.data[0];
   } catch (error) {

@@ -39,7 +39,7 @@ const PostSingle = ({
                 <div className="relative">
                   {content.attributes.Thumbnail.data && (
                     <Image
-                      src={`${BASE_URL}${content.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
+                      src={`${content.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
                       height="500"
                       width="1000"
                       alt={content.attributes.Title}

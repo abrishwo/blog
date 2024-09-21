@@ -35,29 +35,36 @@ const About = ({ data }) => {
 
 
   return (
-    
-    <section className="section mt-16 px-12">
+    <>
+    {
+      about && (
+        <section className="section mt-16 px-12">
       
-      <div className="container text-center w-3/4 flex flex-col items-start">
-        {about.attributes.Image && (
-          <div className="mb-8 ">
-            <Image
-              src={`${BASE_URL}${about.attributes.Image.data.attributes.formats.large.url}`}
-              width={1298}
-              height={616}
-              alt={about.attributes.Title}
-              className="rounded-lg"
-              priority={true}
-            />
+        <div className="container text-center w-3/4 flex flex-col items-start">
+          {about?.attributes?.Image && (
+            <div className="mb-8 ">
+              <Image
+                src={`${about.attributes.Image.data.attributes.formats.large.url}`}
+                width={1298}
+                height={616}
+                alt={about.attributes.Title}
+                className="rounded-lg"
+                priority={true}
+              />
+            </div>
+           )} 
+          {markdownify(about?.attributes?.Title, "h1", "h1 text-left lg:text-[55px] mt-12")}
+  
+          <div className="content text-left">
+             {markdownify(about?.attributes?.Content, "div")}
           </div>
-        )}
-        {markdownify(about.attributes.Title, "h1", "h1 text-left lg:text-[55px] mt-12")}
-
-        <div className="content text-left">
-           {markdownify(about.attributes.Content, "div")}
         </div>
-      </div>
-    </section>
+      </section>
+      )
+    }
+    
+    </>
+
   );
 };
 

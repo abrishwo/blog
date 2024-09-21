@@ -42,7 +42,7 @@ const Contact = ({ data }) => {
 
           <div className="lg:col-6">
             {markdownify(
-              contact.attributes.Title,
+              contact?.attributes?.Title,
               "h1",
               "h1 my-10 lg:my-11 lg:pt-11 text-center lg:text-left lg:text-[64px]"
             )}
@@ -60,7 +60,7 @@ const Contact = ({ data }) => {
               <hr className="w-full zinc-800 text-2xl mb-6"/>
               <div className=" flex flex-row justify-between items-start sm:flex-col">
               <ul className="text-lg text-dark dark:text-darkmode-light space-y-2">
-                {contact.attributes.WorkingHours.slice(0, 4).map((wh, index)=>{
+                {contact?.attributes?.WorkingHours.slice(0, 4).map((wh, index)=>{
                   return (
                     <li key={index} className="mb-2">
                       <span className="text-zinc-900 font-bold">{wh.day} : </span> {wh.hours} 
@@ -69,7 +69,7 @@ const Contact = ({ data }) => {
                 })}
             </ul>
             <ul className="text-lg text-dark dark:text-darkmode-light space-y-2">
-             {contact.attributes.WorkingHours.slice(4, 7).map((wh, index)=>{
+             {contact?.attributes?.WorkingHours.slice(4, 7).map((wh, index)=>{
                   return (
                     <li key={index} className="mb-2">
                       <span className="text-zinc-900 font-bold">{wh.day} : </span>  {wh.hours}
@@ -94,7 +94,7 @@ const Contact = ({ data }) => {
               <hr className="w-full zinc-800 text-2xl mb-6"/>
              
                 <p className="ml-1.5 text-lg font-bold text-dark dark:text-darkmode-light">
-                  {contact.attributes.Address}
+                  {contact?.attributes?.Address}
                 </p>
 
             </motion.div>
@@ -173,30 +173,30 @@ const Contact = ({ data }) => {
         </div>
 
         <div className="row">
-          {contact.attributes.PhoneNumber && (
+          {contact?.attributes?.PhoneNumber && (
             <div className="col-5">
               <Link
-                href={`tel:${contact.attributes.PhoneNumber}`}
+                href={`tel:${contact?.attributes?.PhoneNumber}`}
                 className="my-4 flex h-[100px] items-center justify-center
              rounded border border-border p-4 text-primary dark:border-darkmode-border"
               >
                 <FaUserAlt />
                 <p className="ml-1.5 text-lg font-bold text-dark dark:text-darkmode-light">
-                  {contact.attributes.PhoneNumber}
+                  {contact?.attributes?.PhoneNumber}
                 </p>
               </Link>
             </div>
           )}
-          {contact.attributes.Email && (
+          {contact?.attributes?.Email && (
             <div className="col-5">
               <Link
-                href={`mailto:${contact.attributes.Email}`}
+                href={`mailto:${contact?.attributes?.Email}`}
                 className="my-4 flex h-[100px] items-center justify-center
              rounded border border-border p-4 text-primary dark:border-darkmode-border"
               >
                 <FaEnvelope />
                 <p className="ml-1.5 text-lg font-bold text-dark dark:text-darkmode-light">
-                  {contact.attributes.Email}
+                  {contact?.attributes?.Email}
                 </p>
               </Link>
             </div>
@@ -205,7 +205,7 @@ const Contact = ({ data }) => {
         </div>
 
         <iframe
-          src={`https://www.google.com/maps?q=${contact.attributes.MapCoordinates.latitude},${contact.attributes.MapCoordinates.longitude}&z=15&output=embed`}
+          src={`https://www.google.com/maps?q=${contact?.attributes?.MapCoordinates?.latitude},${contact?.attributes?.MapCoordinates?.longitude}&z=15&output=embed`}
           width="100%"
           height="400"
           className="border-0 rounded-lg shadow-lg"
