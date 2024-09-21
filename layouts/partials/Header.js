@@ -30,15 +30,20 @@ const Header = () => {
   }, [showMenu]);
 
   return (
-    <header className="header">
+    <header className="header sticky top-0 bg-white z-50">
       <nav className="navbar container px-1 sm:px-8">
         <div className="order-0">
           <Logo />
         </div>
-        <div className="flex flex-col items-center">
-            <h1>STARS and TOQUES</h1>
-            <h6>FINE DINING RESTAURANTS</h6>
+        <div className="flex flex-col items-center justify-evenly">
+          <h3 className="mb-2 mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+            STARS and TOQUES
+          </h3>
+          <p className="mt-2 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600">
+            Mostly Fine Dining Restaurant Reviews
+          </p>
         </div>
+
         <div className="flex items-center space-x-4 xl:space-x-8">
           <div
             className={`collapse-menu ${
@@ -100,14 +105,25 @@ const Header = () => {
                     </li>
                   ) : (
                     <li className="nav-item">
-                      <Link
+                    { menu.name === "SEARCH" || menu.url==='/search' ?(
+                      <button
+                        className="search-button flex items-center justify-center px-4 py-2 text-sm text-white rounded-full bg-primary"
+                        onClick={() => {
+                          setSearchModal(true);
+                        }}
+                      >
+                        {/* <IoSearch /> */}
+                        {menu.name}
+                      </button>
+                    ):( <Link
                         href={menu.url}
                         className={`nav-link block ${
                           router.asPath === menu.url && "active"
                         }`}
                       >
                         {menu.name}
-                      </Link>
+                      </Link>)
+}
                     </li>
                   )}
                 </React.Fragment>

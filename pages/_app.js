@@ -5,6 +5,8 @@ import { ThemeProvider } from "next-themes";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import TagManager from "react-gtm-module";
+import { Provider } from "react-redux";
+import store from "../redux/store";
 import "styles/style.scss";
 
 const App = ({ Component, pageProps }) => {
@@ -37,7 +39,9 @@ const App = ({ Component, pageProps }) => {
   }, []);
 
   return (
-    <JsonContext>
+    <Provider store={store}>
+
+<JsonContext>
       <Head>
         {/* google font css */}
         <link
@@ -60,6 +64,9 @@ const App = ({ Component, pageProps }) => {
         <Component {...pageProps} />
       </ThemeProvider>
     </JsonContext>
+
+    </Provider>
+   
   );
 };
 

@@ -1,15 +1,35 @@
 import { markdownify } from "@lib/utils/textConverter";
 import Link from "next/link";
 import { BsArrowRightShort } from "react-icons/bs";
-import { FaEnvelope, FaMapMarkerAlt, FaUserAlt } from "react-icons/fa";
+import { FaEnvelope, FaMapMarkerAlt, FaUserAlt, FaClock } from "react-icons/fa";
 import ImageFallback from "./components/ImageFallback";
+import { motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchContactUs } from "../redux/slices/contactSlice";
+
+import React, { useEffect, useState } from "react";
 
 const Contact = ({ data }) => {
   const { frontmatter } = data;
   const { title, form_action, phone, mail, location } = frontmatter;
 
+  const dispatch = useDispatch();
+  const { items: contact, status } = useSelector((state) => state.contact);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchContactUs());
+    }
+  }, [dispatch, status]);
+
+  if (status === 'loading') return <div>Loading...</div>;
+  if (status === 'failed') return <div>Error: {contact.error}</div>;
+
   return (
-    <section className="section lg:mt-16">
+    <>
+    {
+      contact && (
+        <section className="section lg:mt-16">
       <div className="container">
         <div className="row relative pb-16">
           <ImageFallback
@@ -19,13 +39,67 @@ const Contact = ({ data }) => {
             alt="map bg"
             priority={true}
           />
+
           <div className="lg:col-6">
             {markdownify(
-              title,
+              contact.attributes.Title,
               "h1",
               "h1 my-10 lg:my-11 lg:pt-11 text-center lg:text-left lg:text-[64px]"
             )}
+
+            {/* Animated Work Hours Section */}
+            <motion.div
+              className="work-hours mt-8 bg-gray-100 dark:bg-darkmode-bg p-6 rounded-lg shadow-lg"
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+            >
+              <h3 className="text-xl font-bold mb-4 text-primary flex items-center">
+                <FaClock className="mr-2" /> Work Hours
+              </h3>
+              <hr className="w-full zinc-800 text-2xl mb-6"/>
+              <div className=" flex flex-row justify-between items-start sm:flex-col">
+              <ul className="text-lg text-dark dark:text-darkmode-light space-y-2">
+                {contact.attributes.WorkingHours.slice(0, 4).map((wh, index)=>{
+                  return (
+                    <li key={index} className="mb-2">
+                      <span className="text-zinc-900 font-bold">{wh.day} : </span> {wh.hours} 
+                    </li>
+                  )
+                })}
+            </ul>
+            <ul className="text-lg text-dark dark:text-darkmode-light space-y-2">
+             {contact.attributes.WorkingHours.slice(4, 7).map((wh, index)=>{
+                  return (
+                    <li key={index} className="mb-2">
+                      <span className="text-zinc-900 font-bold">{wh.day} : </span>  {wh.hours}
+                    </li>
+                  )
+                })}
+               
+              </ul>
+              </div>
+            </motion.div>
+
+            {/* address */}
+            <motion.div
+              className="work-hours mt-8 bg-gray-100 dark:bg-darkmode-bg p-6 rounded-lg shadow-lg mt-8"
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+            >
+              <h3 className="text-xl font-bold mb-4 text-primary flex items-center">
+              <FaMapMarkerAlt  className="mr-2"/> Address
+              </h3>
+              <hr className="w-full zinc-800 text-2xl mb-6"/>
+             
+                <p className="ml-1.5 text-lg font-bold text-dark dark:text-darkmode-light">
+                  {contact.attributes.Address}
+                </p>
+
+            </motion.div>
           </div>
+
           <div className="contact-form-wrapper rounded border border-border p-6 dark:border-darkmode-border lg:col-6">
             <h2>
               Send Us A
@@ -42,9 +116,7 @@ const Contact = ({ data }) => {
               <div className="mb-6">
                 <label className="mb-2 block font-secondary" htmlFor="name">
                   Full name
-                  <small className="font-secondary text-sm text-primary">
-                    *
-                  </small>
+                  <small className="font-secondary text-sm text-primary">*</small>
                 </label>
                 <input
                   className="form-input w-full"
@@ -57,9 +129,7 @@ const Contact = ({ data }) => {
               <div className="mb-6">
                 <label className="mb-2 block font-secondary" htmlFor="email">
                   Email Address
-                  <small className="font-secondary text-sm text-primary">
-                    *
-                  </small>
+                  <small className="font-secondary text-sm text-primary">*</small>
                 </label>
                 <input
                   className="form-input w-full"
@@ -72,9 +142,7 @@ const Contact = ({ data }) => {
               <div className="mb-6">
                 <label className="mb-2 block font-secondary" htmlFor="subject">
                   Subject
-                  <small className="font-secondary text-sm text-primary">
-                    *
-                  </small>
+                  <small className="font-secondary text-sm text-primary">*</small>
                 </label>
                 <input
                   className="form-input w-full"
@@ -87,9 +155,7 @@ const Contact = ({ data }) => {
               <div className="mb-6">
                 <label className="mb-2 block font-secondary" htmlFor="message">
                   Your Message Here
-                  <small className="font-secondary text-sm text-primary">
-                    *
-                  </small>
+                  <small className="font-secondary text-sm text-primary">*</small>
                 </label>
                 <textarea
                   className="form-textarea w-full"
@@ -105,51 +171,51 @@ const Contact = ({ data }) => {
             </form>
           </div>
         </div>
+
         <div className="row">
-          {phone && (
-            <div className="md:col-6 lg:col-4">
+          {contact.attributes.PhoneNumber && (
+            <div className="col-5">
               <Link
-                href={`tel:${phone}`}
+                href={`tel:${contact.attributes.PhoneNumber}`}
                 className="my-4 flex h-[100px] items-center justify-center
              rounded border border-border p-4 text-primary dark:border-darkmode-border"
               >
                 <FaUserAlt />
                 <p className="ml-1.5 text-lg font-bold text-dark dark:text-darkmode-light">
-                  {phone}
+                  {contact.attributes.PhoneNumber}
                 </p>
               </Link>
             </div>
           )}
-          {mail && (
-            <div className="md:col-6 lg:col-4">
+          {contact.attributes.Email && (
+            <div className="col-5">
               <Link
-                href={`mailto:${mail}`}
+                href={`mailto:${contact.attributes.Email}`}
                 className="my-4 flex h-[100px] items-center justify-center
              rounded border border-border p-4 text-primary dark:border-darkmode-border"
               >
                 <FaEnvelope />
                 <p className="ml-1.5 text-lg font-bold text-dark dark:text-darkmode-light">
-                  {mail}
+                  {contact.attributes.Email}
                 </p>
               </Link>
             </div>
           )}
-          {location && (
-            <div className="md:col-6 lg:col-4">
-              <span
-                className="my-4 flex h-[100px] items-center justify-center
-             rounded border border-border p-4 text-primary dark:border-darkmode-border"
-              >
-                <FaMapMarkerAlt />
-                <p className="ml-1.5 text-lg font-bold text-dark dark:text-darkmode-light">
-                  {location}
-                </p>
-              </span>
-            </div>
-          )}
+         
         </div>
+
+        <iframe
+          src={`https://www.google.com/maps?q=${contact.attributes.MapCoordinates.latitude},${contact.attributes.MapCoordinates.longitude}&z=15&output=embed`}
+          width="100%"
+          height="400"
+          className="border-0 rounded-lg shadow-lg"
+          allowFullScreen={true}
+          loading="lazy"
+        ></iframe>
       </div>
     </section>
+      )    }
+    </>
   );
 };
 

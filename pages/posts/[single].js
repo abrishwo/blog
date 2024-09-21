@@ -1,82 +1,79 @@
-import config from "@config/config.json";
+import React, { useEffect } from "react";
 import PostSingle from "@layouts/PostSingle";
-import { getSinglePage } from "@lib/contentParser";
-import { getTaxonomy } from "@lib/taxonomyParser";
-import parseMDX from "@lib/utils/mdxParser";
-const { blog_folder } = config.settings;
+import { useDispatch, useSelector } from "react-redux";
+import { fetchArticleDetails, fetchRelatedPosts } from "../../redux/slices/articlesSlice";
 
-// post single layout
-const Article = ({
-  post,
-  mdxContent,
-  slug,
-  allCategories,
-  relatedPosts,
-  posts,
-}) => {
-  const { frontmatter, content } = post;
+// Article component
+const Article = ({ slug }) => {
+  const dispatch = useDispatch();
+  const { details, relatedPosts, status } = useSelector((state) => state.articles);
 
+  // Fetch article details and related posts on mount
+  useEffect(() => {
+    if (slug) {
+      dispatch(fetchArticleDetails(slug));
+    }
+  }, [slug, dispatch]);
+
+  // Fetch related posts based on tags if article details are loaded
+  useEffect(() => {
+    if (details) {
+      // const tagList = details.attributes.tags.data.map(tag => tag.attributes.Name);
+      dispatch(fetchRelatedPosts(["belgium"]));
+    }
+  }, [details, dispatch]);
+
+  // Handle loading and error states
+  if (status === "loading") return <p>Loading...</p>;
+  if (status === "failed") return <p>Error loading article</p>;
+
+  
   return (
-    <PostSingle
-      frontmatter={frontmatter}
-      content={content}
-      mdxContent={mdxContent}
-      slug={slug}
-      allCategories={allCategories}
-      relatedPosts={relatedPosts}
-      posts={posts}
-    />
+    <>
+{/* <p>{JSON.stringify(relatedPosts)}</p> */}
+      {
+
+        details && (
+          <PostSingle
+  
+          content={details.data[0]}
+      
+          relatedPost={relatedPosts}
+         
+        />
+        )
+      }
+    </>
+
   );
 };
 
-// get post single slug
-export const getStaticPaths = () => {
-  const allSlug = getSinglePage(`content/${blog_folder}`);
-  const paths = allSlug.map((item) => ({
+// getStaticPaths to generate article pages
+export const getStaticPaths = async () => {
+  const response = await fetch("http://localhost:1337/api/articles");
+  const articles = await response.json();
+
+  const paths = articles.data.map((article) => ({
     params: {
-      single: item.slug,
+      single: article.attributes.Slug, // Use slug from your CMS (Strapi)
     },
   }));
 
   return {
     paths,
-    fallback: false,
+    fallback: true, // Enables ISR
   };
 };
 
-// get post single content
+// getStaticProps to fetch article data for static generation
 export const getStaticProps = async ({ params }) => {
-  const { single } = params;
-  const posts = getSinglePage(`content/${blog_folder}`);
-  const post = posts.find((p) => p.slug == single);
-  const mdxContent = await parseMDX(post.content);
-  // related posts
-  const relatedPosts = posts.filter((p) =>
-    post.frontmatter.categories.some((cate) =>
-      p.frontmatter.categories.includes(cate)
-    )
-  );
+  const { single: slug } = params;
 
-  //all categories
-  const categories = getTaxonomy(`content/${blog_folder}`, "categories");
-  const categoriesWithPostsCount = categories.map((category) => {
-    const filteredPosts = posts.filter((post) =>
-      post.frontmatter.categories.includes(category)
-    );
-    return {
-      name: category,
-      posts: filteredPosts.length,
-    };
-  });
   return {
     props: {
-      post: post,
-      mdxContent: mdxContent,
-      slug: single,
-      allCategories: categoriesWithPostsCount,
-      relatedPosts: relatedPosts,
-      posts: posts,
+      slug, // Pass slug to the component
     },
+    revalidate: 60, // Revalidate page every 60 seconds (ISR)
   };
 };
 

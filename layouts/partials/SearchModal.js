@@ -32,6 +32,9 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
         placeholder="Type and hit enter..."
         onChange={(e) => setInput(e.target.value)}
       />
+     
+
+                  
     </div>
   );
 };

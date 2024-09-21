@@ -1,31 +1,27 @@
 import Base from "@layouts/Baseof";
-import { slugify } from "@lib/utils/textConverter";
 import Post from "@partials/Post";
-import { useSearchContext } from "context/state";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { setSearch, fetchArticles, setPagination } from "../redux/slices/articlesSlice";
 
 const SearchPage = () => {
   const router = useRouter();
   const { query } = router;
-  const keyword = slugify(query.key);
-  const { posts } = useSearchContext();
+  const dispatch = useDispatch();
 
-  const searchResults = posts.filter((product) => {
-    if (product.frontmatter.draft) {
-      return !product.frontmatter.draft;
+  // Get articles and search-related state from Redux
+  const { items: searchResults, status, pagination, search } = useSelector((state) => state.articles);
+
+  useEffect(() => {
+    if (query.key) {
+      // Dispatch the search keyword to Redux
+      dispatch(setSearch(query.key));
+
+      // Fetch articles based on the current search term
+      dispatch(fetchArticles({ search: query.key, page: pagination.currentPage, pageSize: pagination.pageSize }));
     }
-    if (slugify(product.frontmatter.title).includes(keyword)) {
-      return product;
-    } else if (
-      product.frontmatter.categories.find((category) =>
-        slugify(category).includes(keyword)
-      )
-    ) {
-      return product;
-    } else if (slugify(product.content).includes(keyword)) {
-      return product;
-    }
-  });
+  }, [query.key, pagination.currentPage, pagination.pageSize, dispatch]);
 
   return (
     <Base title={`Search results for ${query.key}`}>
@@ -34,7 +30,9 @@ const SearchPage = () => {
           <h1 className="h2 mb-8 text-center">
             Search results for <span className="text-primary">{query.key}</span>
           </h1>
-          {searchResults.length > 0 ? (
+          {status === 'loading' ? (
+            <div className="py-24 text-center text-h3 shadow">Loading...</div>
+          ) : searchResults.length > 0 ? (
             <div className="row">
               {searchResults.map((post, i) => (
                 <div key={`key-${i}`} className="col-12 mb-8 sm:col-6">
@@ -44,7 +42,7 @@ const SearchPage = () => {
             </div>
           ) : (
             <div className="py-24 text-center text-h3 shadow">
-              No Search Found
+              No Search Results Found
             </div>
           )}
         </div>
