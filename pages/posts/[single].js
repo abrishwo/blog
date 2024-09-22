@@ -50,7 +50,7 @@ const Article = ({ slug }) => {
 
 // getStaticPaths to generate article pages
 export const getStaticPaths = async () => {
-  const response = await fetch("http://localhost:1337/api/articles");
+  const response = await fetch("https://vivid-flowers-9f3564b8da.strapiapp.com/api/articles?populate=*");
   const articles = await response.json();
 
   const paths = articles.data.map((article) => ({
