@@ -8,9 +8,18 @@ body.menu-open {
 
 // navbar items
 .navbar {
-  @apply relative flex flex-wrap items-center justify-between;
-}
+  @apply relative flex flex-wrap items-center justify-between; 
 
+  @media (max-width: 768px) { // Adjust breakpoint as needed
+    flex-direction: column;
+  }
+}
+// .midle-title{
+
+//   @media (max-width: 768px) { // Adjust breakpoint as needed
+//     display: none;
+//   }
+// }
 .collapse-menu {
   @apply fixed right-0 top-0 z-10 mx-0 h-[100vh] w-full max-w-[400px] items-center border-l border-l-dark  bg-body p-6 transition-transform duration-300 ease-in-out dark:bg-darkmode-body lg:static lg:flex lg:h-auto lg:w-auto lg:max-w-full lg:space-x-4 lg:border-l-0 lg:bg-transparent lg:p-0 xl:space-x-8;
 }

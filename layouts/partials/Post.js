@@ -10,7 +10,8 @@ const Post = ({ post }) => {
   const { meta_author } = config.metadata;
   // const author = post.frontmatter.author ? post.frontmatter.author : meta_author;
   const author = "Admin";
-  const BASE_URL = 'http://localhost:1337';
+  // const BASE_URL = 'http://localhost:1337';
+  const BASE_URL = '';
   return (
     <>
     { post.attributes &&(<div className="post">
@@ -18,7 +19,7 @@ const Post = ({ post }) => {
         {post.attributes && (
           <ImageFallback
             className="rounded"
-            src={`${post.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
+            src={`${BASE_URL}${post.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
             alt={post.attributes.Title}
             width={405}
             height={208}

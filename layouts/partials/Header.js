@@ -31,11 +31,12 @@ const Header = () => {
 
   return (
     <header className="header sticky top-0 bg-white z-50">
-      <nav className="navbar container px-1 sm:px-8">
+      <nav className="navbar container px-1 sm:px-0">
         <div className="order-0">
           <Logo />
+          
         </div>
-        <div className="flex flex-col items-center justify-evenly">
+        <div className="midle-title flex flex-col items-center justify-evenly">
           <h3 className="mb-2 mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
             STARS and TOQUES
           </h3>
@@ -50,7 +51,7 @@ const Header = () => {
               !showMenu && "translate-x-full"
             } lg:flex lg:translate-x-0`}
           >
-            <button
+            {/* <button
               className="absolute right-6 top-11 lg:hidden"
               onClick={() => setShowMenu(false)}
             >
@@ -61,7 +62,7 @@ const Header = () => {
                   transform="rotate(45 10 10)"
                 />
               </svg>
-            </button>
+            </button> */}
             <ul
               id="nav-menu"
               className="navbar-nav w-full flex flex-col md:w-auto md:space-x-1 lg:flex xl:space-x-2"

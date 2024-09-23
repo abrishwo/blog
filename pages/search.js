@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setSearch, fetchArticles, setPagination } from "../redux/slices/articlesSlice";
+import Loader from "@layouts/components/Loader";
 
 const SearchPage = () => {
   const router = useRouter();
@@ -31,7 +32,8 @@ const SearchPage = () => {
             Search results for <span className="text-primary">{query.key}</span>
           </h1>
           {status === 'loading' ? (
-            <div className="py-24 text-center text-h3 shadow">Loading...</div>
+            // <div className="py-24 text-center text-h3 shadow">Loading...</div>
+             <Loader/>
           ) : searchResults.length > 0 ? (
             <div className="row">
               {searchResults.map((post, i) => (

@@ -14,6 +14,7 @@ import Sidebar from "./partials/Sidebar";
 import shortcodes from "./shortcodes/all";
 const { disqus } = config;
 const { meta_author } = config.metadata;
+import GallerySlider from "./components/GalleryView";
 
 const PostSingle = ({
   content,
@@ -22,12 +23,18 @@ const PostSingle = ({
 
   const { theme } = useTheme();
   const author = "Admin";
-  // Local copy so we don't modify global config.
-  // let disqusConfig = config.disqus.settings;
-  // disqusConfig.identifier = frontmatter.disqusId
-  //   ? frontmatter.disqusId
-  //   : config.settings.blog_folder + "/" + slug;
-    const BASE_URL = 'http://localhost:1337';
+ 
+    // const BASE_URL = 'http://localhost:1337';
+    const BASE_URL = '';
+
+    const imageList = [
+      content.attributes.Thumbnail.data.attributes.formats.thumbnail.url,
+    ];
+    const gall = content.attributes?.Images?.data.map(image=>image.attributes.formats.thumbnail.url);
+    
+    if(gall.length > 0) {
+      imageList.concat(gall);
+    }
   return (
    <>
    {content.attributes && ( <Base title={content.attributes.Title} description={content.attributes.Content}>
@@ -37,16 +44,20 @@ const PostSingle = ({
             <div className="lg:col-8">
               <article>
                 <div className="relative">
-                  {content.attributes.Thumbnail.data && (
-                    <Image
-                      src={`${content.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
+                  {/* {content.attributes.Thumbnail.data && ( */}
+                    {/* <Image
+                      src={`${BASE_URL}${content.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
                       height="500"
                       width="1000"
                       alt={content.attributes.Title}
                       className="rounded-lg"
-                    />
-                  )}
-                  <ul className="absolute top-3 left-2 flex flex-wrap items-center">
+                    /> */}
+                  {/* )} */}
+
+                    {/* <h1>Gallery Slider</h1> */}
+                    <GallerySlider images={imageList} />
+
+                  {/* <ul className="absolute top-3 left-2 flex flex-wrap items-center">
                     {content.attributes.tags.data.map((tag, index) => (
                       <li
                         className="mx-2 inline-flex h-7 rounded-[35px] bg-primary px-3 text-white"
@@ -60,7 +71,7 @@ const PostSingle = ({
                         </Link>
                       </li>
                     ))}
-                  </ul>
+                  </ul> */}
                 </div>
                 {/* {config.settings.InnerPaginationOptions.enableTop && (
                   <div className="mt-4">
@@ -108,6 +119,28 @@ const PostSingle = ({
             />
           </div>
         </div>
+        {/* tags */}
+        <div className="container mt-5">
+          <h2 className="section-title">Tags</h2>
+          <div className="flex flex-wrap">
+            <ul className="flex flex-wrap items-center">
+                      {content.attributes.tags.data.map((tag, index) => (
+                        <li
+                          className="mx-2 inline-flex h-7 rounded-[35px] bg-primary px-3 text-white"
+                          key={"tag-" + index}
+                        >
+                          <Link
+                            className="capitalize"
+                            href={`/categories/${tag.attributes.Slug.replace(" ", "-")}`}
+                          >
+                            {tag.attributes.Name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+          </div>
+
+          </div>
 
         {/* Related posts */}
         <div className="container mt-20">

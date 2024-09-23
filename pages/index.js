@@ -10,6 +10,7 @@ import { FaRegCalendar } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchArticles, setSearch, setSelectedTags, setPagination } from '../redux/slices/articlesSlice';
 import React, { useEffect, useState } from "react";
+import Loader from "@layouts/components/Loader";
 
 const { blog_folder } = config.settings;
 
@@ -23,7 +24,8 @@ const Home = ({
 
   const [featuredArticle, setFeaturedArticle] = useState(null);
 
-  const BASE_URL = 'http://localhost:1337';
+  const BASE_URL = '';
+  // const BASE_URL = 'http://localhost:1337';
 
   useEffect(() => {
     if (status === 'idle') {
@@ -51,9 +53,9 @@ const Home = ({
     dispatch(setSelectedTags([tag]));
   };
 
-  if (status === 'loading') {
-    return <p>Loading...</p>;
-  }
+  // if (status === 'loading') {
+    // return <Loader/>;
+  // }
 
   if (status === 'failed') {
     return <p>Error loading articles.</p>;
@@ -61,7 +63,10 @@ const Home = ({
 
   return (
     <Base>
+
+    {status === 'loading' && <Loader />}
       {/* Banner Section */}
+
       {featuredArticle && (
         <section className="section banner relative pb-0">
           <ImageFallback
@@ -78,7 +83,7 @@ const Home = ({
                 <div className="col-9 lg:col-6 relative w-full">
                   <ImageFallback
                     className="mx-auto object-contain w-full h-64 object-cover md:h-96"
-                    src={`${featuredArticle.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
+                    src={`${BASE_URL}${featuredArticle.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
                     width={548}
                     height={443}
                     priority

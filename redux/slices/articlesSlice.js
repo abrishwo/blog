@@ -1,18 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+
+const BASE_URL = "https://vivid-flowers-9f3564b8da.strapiapp.com"
+// const BASE_URL = 'http://localhost:1337';
+
 // Fetch all articles 
 export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (params = {}) => {
+
   const { page = 1, pageSize = 4, tags = [], search = "" } = params;
-  let query = `https://vivid-flowers-9f3564b8da.strapiapp.com/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+  let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
   
   if (tags.length > 0) {
-    const tagsQuery = tags.map(tag => `filters[tags][name][$eq]=${tag}`).join('&');
+    const tagsQuery = tags.map(tag => `filters[tags][Name][$eq]=${tag}`).join('&');
     query += `&${tagsQuery}`;
   }
 
   if (search) {
-    query += `&filters[title][$containsi]=${search}`;
+    query += `&filters[Title][$containsi]=${search}`;
   }
 
   const response = await axios.get(query);
@@ -21,19 +26,49 @@ export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (p
 
 // Fetch article details by slug
 export const fetchArticleDetails = createAsyncThunk('articles/fetchArticleDetails', async (slug) => {
-  const response = await axios.get(`https://vivid-flowers-9f3564b8da.strapiapp.com/api/articles?filters[slug][$eq]=${slug}&populate=*`);
+  const response = await axios.get(`${BASE_URL}/api/articles?filters[Slug][$eq]=${slug}&populate=*`);
   return response.data;
 });
 
 // Fetch related posts (based on tags or categories)
 export const fetchRelatedPosts = createAsyncThunk('articles/fetchRelatedPosts', async (tags) => {
-  const tagsQuery = tags.map(tag => `filters[tags][name][$eq]=${tag}`).join('|');
-  const query = `https://vivid-flowers-9f3564b8da.strapiapp.com/api/articles?populate=*&${tagsQuery}&pagination[pageSize]=3`;
-  // const query = "http://localhost:1337/api/articles?populate=*&filters[tags][name][$eq]=Belgium&pagination[pageSize]=3";
+  const tagsQuery = tags.map(tag => `filters[tags][Name][$eq]=${tag}`).join('|');
+  const query = `${BASE_URL}/api/articles?populate=*&${tagsQuery}&pagination[pageSize]=3`;
   const response = await axios.get(query);
   console.log(response.data);
   return response.data;
 });
+
+
+// export const fetchRelatedPosts = createAsyncThunk('articles/fetchRelatedPosts', async ({ currentPostId, tags }) => {
+//   try {
+//     const query = `${BASE_URL}/api/articles?populate=*`; // Fetch enough posts to analyze
+//     const response = await axios.get(query);
+//     const allPosts = response.data;
+// console.log(allPosts);
+//     const filteredPosts = allPosts.filter(post => post.id !== currentPostId);
+
+//     const relatedPosts = filteredPosts
+//       .map(post => {
+//         const postTags = post.attributes.tags.data.map(tag => tag.attributes.Name);
+//         const similarTagsCount = postTags.filter(tag => tags.includes(tag)).length;
+//         return {
+//           ...post,
+//           similarTagsCount,
+//         };
+//       })
+//       .filter(post => post.similarTagsCount > 0) // Keep only posts with at least 1 matching tag
+//       .sort((a, b) => b.similarTagsCount - a.similarTagsCount) // Sort by similarity (descending)
+//       .slice(0, 3); // Return top 3 most similar posts
+// console.log(relatedPosts);
+//     return relatedPosts;
+  
+//   } catch (error) {
+//     console.error('Error fetching related posts:', error);
+//     throw error;
+//   }
+// });
+
 
 const articlesSlice = createSlice({
   name: 'articles',

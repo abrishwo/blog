@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import PostSingle from "@layouts/PostSingle";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchArticleDetails, fetchRelatedPosts } from "../../redux/slices/articlesSlice";
+import Loader from "@layouts/components/Loader";
 
 // Article component
 const Article = ({ slug }) => {
@@ -18,19 +19,20 @@ const Article = ({ slug }) => {
   // Fetch related posts based on tags if article details are loaded
   useEffect(() => {
     if (details) {
-      // const tagList = details.attributes.tags.data.map(tag => tag.attributes.Name);
-      dispatch(fetchRelatedPosts(["belgium"]));
+      // const tagList = details?.attributes?.tags?.data.map(tag => tag?.attributes?.Name);
+      // dispatch(fetchRelatedPosts({currentPostId: details.id, tags: tagList}));
+      dispatch(fetchRelatedPosts("Belgium"));
     }
   }, [details, dispatch]);
 
-  // Handle loading and error states
-  if (status === "loading") return <p>Loading...</p>;
-  if (status === "failed") return <p>Error loading article</p>;
 
   
   return (
     <>
-{/* <p>{JSON.stringify(relatedPosts)}</p> */}
+        {status === "loading"  && <Loader />}
+        {status === "failed" && <div className="h-full w-full text-2xl text-zinc-700 top-h/3 mx-auto">Error loading article</div>}
+
+{/* {details && JSON.stringify(relatedPosts)} */}
       {
 
         details && (

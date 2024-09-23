@@ -1,10 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const BASE_URL = "https://vivid-flowers-9f3564b8da.strapiapp.com"
+// const BASE_URL = 'http://localhost:1337';
+
 // Fetch contact page data
 export const fetchContactUs = createAsyncThunk('contact/fetchContactUs', async () => {
   try {
-    const res = await axios.get('https://vivid-flowers-9f3564b8da.strapiapp.com/api/contacts?populate=*');
+    const res = await axios.get(`${BASE_URL}/api/contacts?populate=*`);
     const data = res.data;
     return data.data[0];
   } catch (error) {
