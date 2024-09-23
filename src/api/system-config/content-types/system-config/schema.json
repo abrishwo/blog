@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "system_configs",
+  "info": {
+    "singularName": "system-config",
+    "pluralName": "system-configs",
+    "displayName": "SystemConfig"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Media": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "Favicon": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "Title": {
+      "type": "string"
+    },
+    "Tagline": {
+      "type": "string"
+    },
+    "copyright": {
+      "type": "string"
+    }
+  }
+}

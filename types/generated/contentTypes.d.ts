@@ -970,6 +970,70 @@ export interface ApiSocialMediaSocialMedia extends Schema.CollectionType {
   };
 }
 
+export interface ApiSubscriberSubscriber extends Schema.CollectionType {
+  collectionName: 'subscribers';
+  info: {
+    singularName: 'subscriber';
+    pluralName: 'subscribers';
+    displayName: 'Subscriber';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Email: Attribute.Email;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::subscriber.subscriber',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::subscriber.subscriber',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiSystemConfigSystemConfig extends Schema.CollectionType {
+  collectionName: 'system_configs';
+  info: {
+    singularName: 'system-config';
+    pluralName: 'system-configs';
+    displayName: 'SystemConfig';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Media: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Favicon: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Title: Attribute.String;
+    Tagline: Attribute.String;
+    copyright: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::system-config.system-config',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::system-config.system-config',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiTagTag extends Schema.CollectionType {
   collectionName: 'tags';
   info: {
@@ -1021,6 +1085,8 @@ declare module '@strapi/types' {
       'api::contact.contact': ApiContactContact;
       'api::privacy.privacy': ApiPrivacyPrivacy;
       'api::social-media.social-media': ApiSocialMediaSocialMedia;
+      'api::subscriber.subscriber': ApiSubscriberSubscriber;
+      'api::system-config.system-config': ApiSystemConfigSystemConfig;
       'api::tag.tag': ApiTagTag;
     }
   }
