@@ -7,6 +7,7 @@ import { fetchAboutUs } from "../redux/slices/aboutSlice";
 
 
 import React, {useEffect, useState} from "react";
+import Loader from "./components/Loader";
 
 const About = ({ data }) => {
   const { frontmatter, mdxContent } = data;
@@ -25,22 +26,26 @@ const About = ({ data }) => {
     }
   }, [status, dispatch]);
 
-  if (status === 'loading') {
-    return <p>Loading...</p>;
-  }
+  // if (status === 'loading') {
+  //   return <p>Loading...</p>;
+  // }
 
-  if (status === 'failed') {
-    return <p>Error loading About us!.</p>;
-  }
+  // if (status === 'failed') {
+  //   return ;
+  // }
 
 
   return (
     <>
+    {status === 'success' && <Loader />}
+
+    {status === 'failed' && (<p className="top-1/3 mx-auto">Error loading About us!.</p>)}
     {
       about && (
-        <section className="section mt-16 px-12">
+        <section className="section md:mt-16 px-12 sm:px-0 sm:mx-0 sm:w-full">
       
-        <div className="container text-center w-3/4 flex flex-col items-start">
+        {/* <div className="container text-center w-3/4 sm:w-full flex flex-col items-start"> */}
+        <div className="container w-full md:w-3/4 flex flex-col items-start">
           {about?.attributes?.Image && (
             <div className="mb-8 ">
               <Image
@@ -55,9 +60,9 @@ const About = ({ data }) => {
            )} 
           {markdownify(about?.attributes?.Title, "h1", "h1 text-left lg:text-[55px] mt-12")}
   
-          <div className="content text-left">
-             {markdownify(about?.attributes?.Content, "div")}
-          </div>
+          {/* <div className="content text-left"> */}
+             {markdownify(about?.attributes?.Content, "p", "content sm:px-0 sm:mx-0 flex-col items-start")}
+          {/* </div> */}
         </div>
       </section>
       )

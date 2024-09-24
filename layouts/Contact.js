@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchContactUs } from "../redux/slices/contactSlice";
 
 import React, { useEffect, useState } from "react";
+import Loader from "./components/Loader";
 
 const Contact = ({ data }) => {
   const { frontmatter } = data;
@@ -22,11 +23,11 @@ const Contact = ({ data }) => {
     }
   }, [dispatch, status]);
 
-  if (status === 'loading') return <div>Loading...</div>;
-  if (status === 'failed') return <div>Error: {contact.error}</div>;
 
   return (
     <>
+    {status === 'loading' && <Loader/>}
+    {status === 'failed' && (<p className="top-1/3 mx-auto">Error loading Contact us!.</p>)}
     {
       contact && (
         <section className="section lg:mt-16">
@@ -49,7 +50,7 @@ const Contact = ({ data }) => {
 
             {/* Animated Work Hours Section */}
             <motion.div
-              className="work-hours mt-8 bg-gray-100 dark:bg-darkmode-bg p-6 rounded-lg shadow-lg"
+              className="work-hours mt-8 bg-gray-100 dark:bg-darkmode-bg p-6 rounded-lg shadow-lg items-center"
               initial={{ opacity: 0, y: -50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeInOut" }}
@@ -58,27 +59,18 @@ const Contact = ({ data }) => {
                 <FaClock className="mr-2" /> Work Hours
               </h3>
               <hr className="w-full zinc-800 text-2xl mb-6"/>
-              <div className=" flex flex-row justify-between items-start sm:flex-col">
+              {/* <div className=" flex flex-row justify-between items-start sm:flex-col"> */}
               <ul className="text-lg text-dark dark:text-darkmode-light space-y-2">
-                {contact?.attributes?.WorkingHours.slice(0, 4).map((wh, index)=>{
+                {contact?.attributes?.WorkingHours.map((wh, index)=>{
                   return (
-                    <li key={index} className="mb-2">
+                    <li key={index} className="mb-2 ml-2">
                       <span className="text-zinc-900 font-bold">{wh.day} : </span> {wh.hours} 
                     </li>
                   )
                 })}
             </ul>
-            <ul className="text-lg text-dark dark:text-darkmode-light space-y-2">
-             {contact?.attributes?.WorkingHours.slice(4, 7).map((wh, index)=>{
-                  return (
-                    <li key={index} className="mb-2">
-                      <span className="text-zinc-900 font-bold">{wh.day} : </span>  {wh.hours}
-                    </li>
-                  )
-                })}
-               
-              </ul>
-              </div>
+            
+              {/* </div> */}
             </motion.div>
 
             {/* address */}

@@ -27,17 +27,25 @@ const PostSingle = ({
     // const BASE_URL = 'http://localhost:1337';
     const BASE_URL = '';
 
-    var imageList = [];
+    
 
     const thumb = [
       content.attributes.Thumbnail.data.attributes.formats.thumbnail.url,
     ];
-    const gall = content.attributes?.Images?.data.map(image=>image.attributes.formats.thumbnail.url).join(', ');
-    if (gall) {
-      imageList = [...thumb, ',', ...gall];
-    }else{
-      imageList = [...thumb,];
-    }
+    
+    // Check if there are gallery images, and map them to an array of URLs
+    const gall = content.attributes?.Images?.data.map(
+      (image) => image.attributes.formats.thumbnail.url
+    );
+    
+    // Combine thumbnail and gallery images into a single array (no need to join with commas)
+    const imageList = [...thumb, ...(gall || [])]; // Use spread operator to combine arrays
+    
+    console.log(imageList); // You can access images by index now
+    
+    // }else{
+    //   imageList = [...thumb,];
+    // }
     // for(var i in gall) {
     //   imageList.push(i);
     // }
@@ -123,10 +131,10 @@ const PostSingle = ({
                   </div>
 
 
-                <div className="content mb-16">
-                {markdownify(content.attributes.Content, "div")}
+                {/* <div className="content mb-16"> */}
+                {markdownify(content.attributes.Content, "div", "sm:mx-0 sm:p-0 sm:left-0")}
                   {/* <MDXRemote {...content.attributes.Content} components={shortcodes} /> */}
-                </div> 
+                {/* </div>  */}
                 {/* {config.settings.InnerPaginationOptions.enableBottom && (
                   <InnerPagination posts={posts} date={date} />
                 )} */}

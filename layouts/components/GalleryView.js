@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 
 const GallerySlider = ({ images }) => {
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [selectedImage, setSelectedImage] = useState(images[2]);
 
   const handleImageClick = (image) => {
     setSelectedImage(image);
   };
 
   return (
-    <div className="gallery-container flex justify-evenly">
+    <div className="gallery-container flex justify-evenly flex-col">
 
 
         <Image 
@@ -34,7 +34,7 @@ const GallerySlider = ({ images }) => {
           />
         ))}
       </div> */}
-      <div className="thumbnail-slider">
+      <div className="thumbnail-slider sm:flex sm:flex-row sm:items-center">
         {images.map((image, index) => (
           <img
             key={index}

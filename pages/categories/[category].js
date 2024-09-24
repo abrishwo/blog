@@ -1,20 +1,12 @@
-// import config from "@config/config.json";
 import Base from "@layouts/Baseof";
-// import Sidebar from "@layouts/partials/Sidebar";
-// import { getSinglePage } from "@lib/contentParser";
-// import { getTaxonomy } from "@lib/taxonomyParser";
-// import { slugify } from "@lib/utils/textConverter";
 import Post from "@partials/Post";
-// const { blog_folder } = config.settings;
-
 import { fetchPostsByTags, fetchRelatedPosts } from "../../redux/slices/articlesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "@layouts/components/Loader";
-import React, {useEffect, useState} from "react";
+import React, { useEffect } from "react";
+
 // category page
-const Category = ({slug}) => {
-
-
+const Category = ({ slug }) => {
   const dispatch = useDispatch();
   const { postsByTag, relatedPosts, status } = useSelector((state) => state.articles);
 
@@ -26,21 +18,13 @@ const Category = ({slug}) => {
 
   useEffect(() => {
     if (postsByTag) {
-      // const tagList = details?.attributes?.tags?.data.map(tag => tag?.attributes?.Name);
-      // dispatch(fetchRelatedPosts({currentPostId: details.id, tags: tagList}));
-      dispatch(fetchRelatedPosts("Belgium"));
+      dispatch(fetchRelatedPosts("Belgium")); // Adjust this if needed
     }
   }, [postsByTag, dispatch]);
 
+  if (status === 'loading') return <Loader />;
 
   return (
-    <>
-{/* <br/>
-<br/>
-<br/> */}
-    {/* {postsByTag && (JSON.stringify(postsByTag))} */}
-    
-    {status === 'loading' && <Loader />}
     <Base title={slug}>
       <div className="section mt-16">
         <div className="container">
@@ -53,51 +37,63 @@ const Category = ({slug}) => {
           <div className="row">
             <div className="lg:col-12">
               <div className="row rounded border border-border p-4 px-3 dark:border-darkmode-border lg:p-6">
-                {postsByTag.map((post, i) => (
-                  <div key={`key-${i}`} className="col-12 mb-8 sm:col-6">
-                    <Post post={post} />
-                  </div>
-                ))}
+                {postsByTag?.length > 0 ? (
+                  postsByTag.map((post, i) => (
+                    <div key={`key-${i}`} className="col-12 mb-8 sm:col-6">
+                      <Post post={post} />
+                    </div>
+                  ))
+                ) : (
+                  <p>No posts found for this category.</p>
+                )}
               </div>
             </div>
-            {/* <Sidebar posts={posts} categories={categories} /> */}
           </div>
         </div>
       </div>
     </Base>
-    </>
   );
 };
 
 export default Category;
 
 
-
 // getStaticPaths to generate article pages
 export const getStaticPaths = async () => {
-  const response = await fetch("https://vivid-flowers-9f3564b8da.strapiapp.com/api/tags?populate=*");
-  const tags = await response.json();
+  try {
+    const response = await fetch("https://vivid-flowers-9f3564b8da.strapiapp.com/api/tags?populate=*");
+    const tags = await response.json();
 
-  const paths = tags.data.map((tag) => ({
-    params: {
-      category: tag.attributes.Slug, // Use slug from your CMS (Strapi)
-    },
-  }));
+    const paths = tags.data.map((tag) => ({
+      params: {
+        category: tag.attributes.Slug,
+      },
+    }));
 
-  return {
-    paths,
-    fallback: true, // Enables ISR
-  };
+    return {
+      paths,
+      fallback: 'blocking', // Use 'blocking' to handle not found routes properly
+    };
+  } catch (error) {
+    console.error("Error fetching tags:", error);
+    return { paths: [], fallback: 'blocking' };
+  }
 };
 
 // getStaticProps to fetch article data for static generation
 export const getStaticProps = async ({ params }) => {
   const { category: slug } = params;
 
+  if (!slug) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
-      slug, // Pass slug to the component
+      slug,
     },
-    revalidate: 60, // Revalidate page every 60 seconds (ISR)
+    revalidate: 60, // Revalidate every 60 seconds
   };
 };

@@ -8,6 +8,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
+import { MenuOutline } from 'react-ionicons'
+
+
 
 const Header = () => {
   // distructuring the main menu from menu object
@@ -32,9 +35,23 @@ const Header = () => {
   return (
     <header className="header sticky top-0 bg-white z-50">
       <nav className="navbar container px-1 sm:px-0">
-        <div className="order-0">
+        <div className="order-0 sm:flex flex-row justify-between">
           <Logo />
-          
+          <button
+            onClick={() => setShowMenu(!showMenu)}
+            className="absolute right-6 top-6 inline-flex h-10 w-10 items-end justify-center rounded-full lg:hidden"
+          >
+            {!showMenu && (
+              
+              <MenuOutline
+                 color={'#000000'} 
+                  title={'Menu Open'}
+                  height="60px"
+                  width="40px"
+                />
+            )}
+          </button>
+
         </div>
         <div className="midle-title flex flex-col items-center justify-evenly">
           <h3 className="mb-2 mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
@@ -46,12 +63,13 @@ const Header = () => {
         </div>
 
         <div className="flex items-center space-x-4 xl:space-x-8">
+          
           <div
             className={`collapse-menu ${
               !showMenu && "translate-x-full"
             } lg:flex lg:translate-x-0`}
           >
-            {/* <button
+            <button
               className="absolute right-6 top-11 lg:hidden"
               onClick={() => setShowMenu(false)}
             >
@@ -62,7 +80,10 @@ const Header = () => {
                   transform="rotate(45 10 10)"
                 />
               </svg>
-            </button> */}
+            </button>
+
+
+
             <ul
               id="nav-menu"
               className="navbar-nav w-full flex flex-col md:w-auto md:space-x-1 lg:flex xl:space-x-2"
@@ -130,6 +151,8 @@ const Header = () => {
                 </React.Fragment>
               ))}
             </ul>
+
+
             {/* header social */}
             {/* <Social source={socical} className="socials" /> */}
           </div>
@@ -143,7 +166,7 @@ const Header = () => {
           >
             <IoSearch />
           </div> */}
-          <button
+          {/* <button
             onClick={() => setShowMenu(!showMenu)}
             className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white lg:hidden"
           >
@@ -161,7 +184,8 @@ const Header = () => {
                 <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z" />
               </svg>
             )}
-          </button>
+          </button> */}
+
         </div>
 
         <SearchModal
