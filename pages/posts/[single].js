@@ -30,9 +30,9 @@ const Article = ({ slug }) => {
   return (
     <>
         {status === "loading"  && <Loader />}
-        {status === "failed" && <div className="h-full w-full text-2xl text-zinc-700 top-h/3 mx-auto">Error loading article</div>}
+        {status === "failed" && (<div className="h-full w-full text-2xl text-zinc-700 top-h/3 mx-auto">Error loading article</div>)}
 
-{/* {details && JSON.stringify(relatedPosts)} */}
+
       {
 
         details && (

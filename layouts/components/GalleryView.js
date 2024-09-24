@@ -21,14 +21,28 @@ const GallerySlider = ({ images }) => {
                 className="rounded-lg selected-image full-image-view"
             />
     
-      <div className="thumbnail-slider">
+      {/* <div className="thumbnail-slider">
         {images.map((image, index) => (
           <img
             key={index}
             src={image}
         
             alt={`Thumbnail ${index}`}
+            
             className={`thumbnail ${selectedImage === image ? 'active' : ''}`}
+            onClick={() => handleImageClick(image)}
+          />
+        ))}
+      </div> */}
+      <div className="thumbnail-slider">
+        {images.map((image, index) => (
+          <img
+            key={index}
+            src={image}
+            alt={`Thumbnail ${index}`}
+            className={`thumbnail ${
+              selectedImage === image ? 'active' : ''
+            }`}
             onClick={() => handleImageClick(image)}
           />
         ))}

@@ -70,12 +70,20 @@ export const fetchRelatedPosts = createAsyncThunk('articles/fetchRelatedPosts', 
 // });
 
 
+// Fetch posts (based on tags or categories)
+export const fetchPostsByTags = createAsyncThunk('articles/fetchPostsByTags', async (tag) => {
+  const response = await axios.get(`${BASE_URL}/api/articles/?filters[tags][Slug][$eq]=${tag}&populate=*`);
+  // https://vivid-flowers-9f3564b8da.strapiapp.com/api/articles/?filters[tags][Slug][$eq]=belgium&populate=*
+  return response.data.data;
+});
+
 const articlesSlice = createSlice({
   name: 'articles',
   initialState: {
     items: [],
     details: null,
     relatedPosts: [],
+    postsByTag: [],
     status: 'idle', // idle | loading | succeeded | failed
     error: null,
     pagination: {
@@ -136,12 +144,27 @@ const articlesSlice = createSlice({
       })
       .addCase(fetchRelatedPosts.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.relatedPosts = action.payload.data;
+        state.relatedPosts = action.payload;
       })
       .addCase(fetchRelatedPosts.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });
+
+
+          // Fetch posts By Tags
+    builder
+    .addCase(fetchPostsByTags.pending, (state) => {
+      state.status = 'loading';
+    })
+    .addCase(fetchPostsByTags.fulfilled, (state, action) => {
+      state.status = 'succeeded';
+      state.postsByTag = action.payload;
+    })
+    .addCase(fetchPostsByTags.rejected, (state, action) => {
+      state.status = 'failed';
+      state.error = action.error.message;
+    });
   },
 });
 

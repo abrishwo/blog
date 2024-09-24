@@ -27,16 +27,25 @@ const PostSingle = ({
     // const BASE_URL = 'http://localhost:1337';
     const BASE_URL = '';
 
-    const imageList = [
+    var imageList = [];
+
+    const thumb = [
       content.attributes.Thumbnail.data.attributes.formats.thumbnail.url,
     ];
-    const gall = content.attributes?.Images?.data.map(image=>image.attributes.formats.thumbnail.url);
-    
-    if(gall.length > 0) {
-      imageList.concat(gall);
+    const gall = content.attributes?.Images?.data.map(image=>image.attributes.formats.thumbnail.url).join(', ');
+    if (gall) {
+      imageList = [...thumb, ',', ...gall];
+    }else{
+      imageList = [...thumb,];
     }
+    // for(var i in gall) {
+    //   imageList.push(i);
+    // }
+
   return (
    <>
+
+   
    {content.attributes && ( <Base title={content.attributes.Title} description={content.attributes.Content}>
       <section className="section single-blog mt-6">
         <div className="container">
@@ -94,6 +103,26 @@ const PostSingle = ({
                     {dateFormat(content.attributes.Date)}
                   </li>
                 </ul>
+
+                <div className="flex flex-wrap my-2">
+                    <ul className="flex flex-wrap items-center">
+                              {content.attributes.tags.data.map((tag, index) => (
+                                <li
+                                  className="mx-2 inline-flex h-7 rounded-[35px] bg-primary px-3 text-white"
+                                  key={"tag-" + index}
+                                >
+                                  <Link
+                                    className="capitalize"
+                                    href={`/categories/${tag.attributes.Slug.replace(" ", "-")}`}
+                                  >
+                                    {tag.attributes.Name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                  </div>
+
+
                 <div className="content mb-16">
                 {markdownify(content.attributes.Content, "div")}
                   {/* <MDXRemote {...content.attributes.Content} components={shortcodes} /> */}
@@ -119,28 +148,7 @@ const PostSingle = ({
             />
           </div>
         </div>
-        {/* tags */}
-        <div className="container mt-5">
-          <h2 className="section-title">Tags</h2>
-          <div className="flex flex-wrap">
-            <ul className="flex flex-wrap items-center">
-                      {content.attributes.tags.data.map((tag, index) => (
-                        <li
-                          className="mx-2 inline-flex h-7 rounded-[35px] bg-primary px-3 text-white"
-                          key={"tag-" + index}
-                        >
-                          <Link
-                            className="capitalize"
-                            href={`/categories/${tag.attributes.Slug.replace(" ", "-")}`}
-                          >
-                            {tag.attributes.Name}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-          </div>
-
-          </div>
+     
 
         {/* Related posts */}
         <div className="container mt-20">

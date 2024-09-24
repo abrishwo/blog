@@ -57,16 +57,16 @@ const Home = ({
     // return <Loader/>;
   // }
 
-  if (status === 'failed') {
-    return <p>Error loading articles.</p>;
-  }
+  // if (status === 'failed') {
+  //   return <p>Error loading articles.</p>;
+  // }
 
   return (
     <Base>
 
     {status === 'loading' && <Loader />}
       {/* Banner Section */}
-
+{status === 'failed' && (<p>Error loading articles.</p>)}
       {featuredArticle && (
         <section className="section banner relative pb-0">
           <ImageFallback
