@@ -2,8 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 
-const BASE_URL = "https://vivid-flowers-9f3564b8da.strapiapp.com"
-// const BASE_URL = 'http://localhost:1337';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // Fetch all articles 
 export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (params = {}) => {

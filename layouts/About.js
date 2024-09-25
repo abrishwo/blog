@@ -18,7 +18,7 @@ const About = ({ data }) => {
   const { items: about, status } = useSelector((state) => state.about);
 
 
-  const BASE_URL = 'http://localhost:1337';
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
   useEffect(() => {
     if (status === 'idle') {
@@ -49,7 +49,7 @@ const About = ({ data }) => {
           {about?.attributes?.Image && (
             <div className="mb-8 ">
               <Image
-                src={`${about.attributes.Image.data.attributes.formats.large.url}`}
+                src={`${BASE_URL}${about.attributes.Image.data.attributes.formats.large.url}`}
                 width={1298}
                 height={616}
                 alt={about.attributes.Title}

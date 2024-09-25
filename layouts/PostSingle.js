@@ -24,8 +24,7 @@ const PostSingle = ({
   const { theme } = useTheme();
   const author = "Admin";
  
-    // const BASE_URL = 'http://localhost:1337';
-    const BASE_URL = '';
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
     
 

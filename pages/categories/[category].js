@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "@layouts/components/Loader";
 import React, { useEffect } from "react";
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
 // category page
 const Category = ({ slug }) => {
   const dispatch = useDispatch();
@@ -61,7 +63,7 @@ export default Category;
 // getStaticPaths to generate article pages
 export const getStaticPaths = async () => {
   try {
-    const response = await fetch("https://vivid-flowers-9f3564b8da.strapiapp.com/api/tags?populate=*");
+    const response = await fetch(`${BASE_URL}/api/tags?populate=*`);
     const tags = await response.json();
 
     const paths = tags.data.map((tag) => ({

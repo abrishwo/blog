@@ -10,8 +10,8 @@ const Post = ({ post }) => {
   const { meta_author } = config.metadata;
   // const author = post.frontmatter.author ? post.frontmatter.author : meta_author;
   const author = "Admin";
-  // const BASE_URL = 'http://localhost:1337';
-  const BASE_URL = '';
+
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   return (
     <>
     { post.attributes &&(<div className="post">

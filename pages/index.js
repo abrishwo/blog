@@ -24,8 +24,7 @@ const Home = ({
 
   const [featuredArticle, setFeaturedArticle] = useState(null);
 
-  const BASE_URL = '';
-  // const BASE_URL = 'http://localhost:1337';
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
   useEffect(() => {
     if (status === 'idle') {
@@ -66,7 +65,10 @@ const Home = ({
 
     {status === 'loading' && <Loader />}
       {/* Banner Section */}
-{status === 'failed' && (<p>Error loading articles.</p>)}
+{status === 'failed' && (
+  <p className="top-1/3 mx-auto">Error loading articles.</p>
+  // <p>{process.env.NEXT_PUBLIC_BASE_URL} haj</p>
+  )}
       {featuredArticle && (
         <section className="section banner relative pb-0">
           <ImageFallback

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchArticleDetails, fetchRelatedPosts } from "../../redux/slices/articlesSlice";
 import Loader from "@layouts/components/Loader";
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 // Article component
 const Article = ({ slug }) => {
   const dispatch = useDispatch();
@@ -52,7 +53,7 @@ const Article = ({ slug }) => {
 
 // getStaticPaths to generate article pages
 export const getStaticPaths = async () => {
-  const response = await fetch("https://vivid-flowers-9f3564b8da.strapiapp.com/api/articles?populate=*");
+  const response = await fetch(`${BASE_URL}/api/articles?populate=*`);
   const articles = await response.json();
 
   const paths = articles.data.map((article) => ({
