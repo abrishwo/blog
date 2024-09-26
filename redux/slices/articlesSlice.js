@@ -30,43 +30,43 @@ export const fetchArticleDetails = createAsyncThunk('articles/fetchArticleDetail
 });
 
 // Fetch related posts (based on tags or categories)
-export const fetchRelatedPosts = createAsyncThunk('articles/fetchRelatedPosts', async (tags) => {
-  const tagsQuery = tags.map(tag => `filters[tags][Name][$eq]=${tag}`).join('|');
-  const query = `${BASE_URL}/api/articles?populate=*&${tagsQuery}&pagination[pageSize]=3`;
-  const response = await axios.get(query);
-  console.log(response.data);
-  return response.data;
-});
-
-
-// export const fetchRelatedPosts = createAsyncThunk('articles/fetchRelatedPosts', async ({ currentPostId, tags }) => {
-//   try {
-//     const query = `${BASE_URL}/api/articles?populate=*`; // Fetch enough posts to analyze
-//     const response = await axios.get(query);
-//     const allPosts = response.data;
-// console.log(allPosts);
-//     const filteredPosts = allPosts.filter(post => post.id !== currentPostId);
-
-//     const relatedPosts = filteredPosts
-//       .map(post => {
-//         const postTags = post.attributes.tags.data.map(tag => tag.attributes.Name);
-//         const similarTagsCount = postTags.filter(tag => tags.includes(tag)).length;
-//         return {
-//           ...post,
-//           similarTagsCount,
-//         };
-//       })
-//       .filter(post => post.similarTagsCount > 0) // Keep only posts with at least 1 matching tag
-//       .sort((a, b) => b.similarTagsCount - a.similarTagsCount) // Sort by similarity (descending)
-//       .slice(0, 3); // Return top 3 most similar posts
-// console.log(relatedPosts);
-//     return relatedPosts;
-  
-//   } catch (error) {
-//     console.error('Error fetching related posts:', error);
-//     throw error;
-//   }
+// export const fetchRelatedPosts = createAsyncThunk('articles/fetchRelatedPosts', async (tags) => {
+//   const tagsQuery = tags.map(tag => `filters[tags][Name][$eq]=${tag}`).join('|');
+//   const query = `${BASE_URL}/api/articles?populate=*&${tagsQuery}&pagination[pageSize]=3`;
+//   const response = await axios.get(query);
+//   console.log(response.data);
+//   return response.data;
 // });
+
+
+export const fetchRelatedPosts = createAsyncThunk('articles/fetchRelatedPosts', async ({ currentPostId, tags }) => {
+  try {
+    const query = `${BASE_URL}/api/articles?populate=*`; // Fetch enough posts to analyze
+    const response = await axios.get(query);
+    const allPosts = response.data;
+console.log(allPosts);
+    const filteredPosts = allPosts.filter(post => post.id !== currentPostId);
+
+    const relatedPosts = filteredPosts
+      .map(post => {
+        const postTags = post.attributes.tags.data.map(tag => tag.attributes.Name);
+        const similarTagsCount = postTags.filter(tag => tags.includes(tag)).length;
+        return {
+          ...post,
+          similarTagsCount,
+        };
+      })
+      .filter(post => post.similarTagsCount > 0) // Keep only posts with at least 1 matching tag
+      .sort((a, b) => b.similarTagsCount - a.similarTagsCount) // Sort by similarity (descending)
+      .slice(0, 3); // Return top 3 most similar posts
+console.log(relatedPosts);
+    return relatedPosts;
+  
+  } catch (error) {
+    console.error('Error fetching related posts:', error);
+    throw error;
+  }
+});
 
 
 // Fetch posts (based on tags or categories)

@@ -36,39 +36,37 @@ const About = ({ data }) => {
 
 
   return (
-    <>
-    {status === 'success' && <Loader />}
-
-    {status === 'failed' && (<p className="top-1/3 mx-auto">Error loading About us!.</p>)}
-    {
-      about && (
-        <section className="section md:mt-16 px-12 sm:px-0 sm:mx-0 sm:w-full">
-      
-        {/* <div className="container text-center w-3/4 sm:w-full flex flex-col items-start"> */}
-        <div className="container w-full md:w-3/4 flex flex-col items-start">
-          {about?.attributes?.Image && (
-            <div className="mb-8 ">
-              <Image
-                src={`${BASE_URL}${about.attributes.Image.data.attributes.formats.large.url}`}
-                width={1298}
-                height={616}
-                alt={about.attributes.Title}
-                className="rounded-lg"
-                priority={true}
-              />
-            </div>
-           )} 
-          {markdownify(about?.attributes?.Title, "h1", "h1 text-left lg:text-[55px] mt-12")}
   
-          {/* <div className="content text-left"> */}
-             {markdownify(about?.attributes?.Content, "p", "content sm:px-0 sm:mx-0 flex-col items-start")}
-          {/* </div> */}
-        </div>
+     
+      <section className="section md:mt-16 md:px-12">
+        {status === 'success' && <Loader />}
+        {status === 'failed' && (<p className="top-1/3 mx-auto">Error loading About us!.</p>)}
+      
+      { about && (
+                
+        <div className="container md:w-3/4 flex flex-col items-start">
+        {about?.attributes?.Image && (
+          <div className="mb-8 ">
+            <Image
+              src={`${BASE_URL}${about.attributes.Image.data.attributes.formats.large.url}`}
+              width={1298}
+              height={616}
+              alt={about.attributes.Title}
+              className="rounded-lg thumbnail-images"
+              priority={true}
+            />
+          </div>
+         )} 
+        {markdownify(about?.attributes?.Title, "h1", "title-h2 text-left lg:text-[55px] mt-12")}
+
+        {/* <div className="content text-left"> */}
+           {markdownify(about?.attributes?.Content, "div", "enatsoft-post-content")}
+        {/* </div> */}
+      </div>
+        )
+      }
+  
       </section>
-      )
-    }
-    
-    </>
 
   );
 };

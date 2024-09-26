@@ -53,11 +53,12 @@ const Header = () => {
           </button>
 
         </div>
+        <hr className="md:hidden lg:hidden w-full h-1/5 mt-4"/>
         <div className="midle-title flex flex-col items-center justify-evenly">
-          <h3 className="mb-2 mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+          <h3 className="md:mb-2 mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
             STARS and TOQUES
           </h3>
-          <p className="mt-2 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600">
+          <p className="md:mt-2 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600">
             Mostly Fine Dining Restaurant Reviews
           </p>
         </div>

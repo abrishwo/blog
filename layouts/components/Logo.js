@@ -5,19 +5,25 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const Logo = ({ src }) => {
-  // destructuring items from config object
-  const { logo, logo_white, logo_width, logo_height, logo_text, title } =
-    config.site;
+  // Destructuring items from the config object
+  const { logo, logo_white, logo_width, logo_height, logo_text, title } = config.site;
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  
   useEffect(() => setMounted(true), []);
+
+  // Logo dimensions for responsiveness (smaller for mobile, larger for desktop)
+  const smallWidth = logo_width.replace("px", "") * 1.5;  // Adjust as needed
+  const smallHeight = logo_height.replace("px", "") * 1.5;
+  const mediumWidth = logo_width.replace("px", "") * 2;
+  const mediumHeight = logo_height.replace("px", "") * 2;
 
   return (
     <Link href="/" className="navbar-brand">
       {src || logo ? (
         <ImageFallback
-          width={logo_width.replace("px", "") * 2}
-          height={logo_height.replace("px", "") * 2}
+          width={mediumWidth}
+          height={mediumHeight}
           src={
             mounted && (theme === "dark" || resolvedTheme === "dark")
               ? logo_white
@@ -25,16 +31,17 @@ const Logo = ({ src }) => {
           }
           alt={title}
           priority
+          // Tailwind CSS for responsive width/height
+          className="m-auto w-24 h-12 sm:w-32 sm:h-16 md:w-48 md:h-24 lg:w-56 lg:h-28 xl:w-64 xl:h-32"
           style={{
-            height: logo_height.replace("px", "") + "px",
-            width: logo_width.replace("px", "") + "px",
+            maxHeight: "100%", // Ensure the logo fits within its container
+            maxWidth: "100%",
           }}
-          className={"m-auto sm:w-62 sm:h-32"}
         />
       ) : logo_text ? (
-        logo_text
+        <span className="text-lg font-bold">{logo_text}</span>
       ) : (
-        title
+        <span className="text-lg font-bold">{title}</span>
       )}
     </Link>
   );

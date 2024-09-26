@@ -48,7 +48,7 @@ const Post = ({ post }) => {
       <h3 className="h5 mb-2 mt-4">
         <Link
           href={`/${blog_folder}/${post.attributes.Slug}`}
-          className="block hover:text-primary"
+          className="block hover:text-primary title-h2"
         >
           {post.attributes.Title}
         </Link>
@@ -68,8 +68,8 @@ const Post = ({ post }) => {
           {dateFormat(post.attributes.Date)}
         </li>
       </ul>
-      {/* <p>{post.attributes.Excerpt}</p> */}
-      {markdownify(post.attributes.Content.slice(0, Number(summary_length)), "p")}
+      
+      {markdownify(post.attributes.Excerpt, "p", "content-body-p")}
       {/* <p>{post.attributes.Content.slice(0, Number(summary_length))}</p> */}
       <Link
         className="btn btn-outline-primary mt-4"

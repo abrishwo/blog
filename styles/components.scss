@@ -115,6 +115,7 @@
   opacity: 0;
 }
 
+
 .sidebar-socials,
 footer .socials {
   @apply border-primary;
@@ -221,3 +222,326 @@ footer .socials {
 #disqus_thread {
   color-scheme: none;
 }
+.title-h2, .content-body-p{
+  margin: 0;
+  padding: 0;
+  color: #333; /* Text color */
+  font-family: 'Roboto', sans-serif; /* Font style */
+}
+
+
+.title-h2 {
+  font-size: 1.8rem; 
+  font-weight: 700; 
+  line-height: 1.3; 
+  margin-bottom: 1rem; 
+  color: #222; 
+  text-transform: capitalize; 
+  letter-spacing: 0.02rem; 
+  text-align: center; 
+  
+  /* Text shadow for extra emphasis */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  
+  /* Small devices (max-width: 600px) */
+  @media (max-width: 600px) {
+    font-size: 1.4rem; /* Slightly smaller font size for small screens */
+    margin-bottom: 0.8rem; /* Reduce spacing for tighter layout */
+    line-height: 1.2; /* Tighter line height on small screens */
+  }
+}
+
+/* Styling for p */
+.content-body-p {
+  font-size: 1rem; 
+  line-height: 1.6; 
+  margin-bottom: 1.2rem; 
+  color: #555; 
+  text-align: justify; 
+  
+ 
+  text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
+  
+ 
+  @media (max-width: 600px) {
+    font-size: 0.9rem; 
+    line-height: 1.5; 
+    margin-bottom: 1rem; 
+    padding-left: 0.5rem; 
+    padding-right: 0.5rem;
+  }
+}
+
+
+.title-h2::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 4px;
+  background-color: #ff6f61; 
+  margin: 0.5rem auto; 
+}
+
+.content-body-p strong {
+  color: #ff6f61; 
+}
+
+
+.title-h2, .content-body-p {
+  transition: all 0.3s ease;
+}
+
+
+.content-container{
+
+
+/* General styling */
+h2, p {
+  margin: 0;
+  padding: 0;
+  color: #333; /* Text color */
+  font-family: 'Roboto', sans-serif; /* Font style */
+}
+
+/* Styling for h2 */
+h2 {
+  font-size: 1.8rem; /* Base font size */
+  font-weight: 700; /* Bold heading */
+  line-height: 1.3; /* Tighter line height for headings */
+  margin-bottom: 1rem; /* Spacing below heading */
+  color: #222; /* Darker text for headings */
+  text-transform: capitalize; /* Capitalizes first letter of each word */
+  letter-spacing: 0.02rem; /* Spacing between letters */
+  text-align: center; /* Center-align the heading for small screens */
+  
+  /* Text shadow for extra emphasis */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  
+  /* Small devices (max-width: 600px) */
+  @media (max-width: 600px) {
+    font-size: 1.4rem; /* Slightly smaller font size for small screens */
+    margin-bottom: 0.8rem; /* Reduce spacing for tighter layout */
+    line-height: 1.2; /* Tighter line height on small screens */
+  }
+}
+
+/* Styling for p */
+p {
+  font-size: 1rem; /* Base font size */
+  line-height: 1.6; /* Line height for readability */
+  margin-bottom: 1.2rem; /* Spacing between paragraphs */
+  color: #555; /* Softer text color for body text */
+  text-align: justify; /* Justified text for a cleaner look */
+  
+  /* Add subtle text shadow for enhanced readability */
+  text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
+  
+  /* Responsive styling for small devices */
+  @media (max-width: 600px) {
+    font-size: 0.9rem; /* Slightly smaller text for mobile */
+    line-height: 1.5; /* Adjusted line height */
+    margin-bottom: 1rem; /* Reduced spacing between paragraphs */
+    padding-left: 0.5rem; /* Extra padding for readability on small screens */
+    padding-right: 0.5rem;
+  }
+}
+
+/* Optional additional styles */
+h2::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 4px;
+  background-color: #ff6f61; /* Accent color for underline */
+  margin: 0.5rem auto; /* Centered underline */
+}
+
+p strong {
+  color: #ff6f61; /* Highlighted text for emphasis */
+}
+
+/* Adding a smooth transition for all text properties */
+h2, p {
+  transition: all 0.3s ease;
+}
+
+}
+
+
+
+.enatsoft-post-content {
+  font-family: 'Roboto', sans-serif; 
+  color: #333; 
+  line-height: 1.6; 
+  margin: 0 auto; 
+  padding: 1rem; 
+  max-width: 100%; 
+}
+
+/* Styling for links inside post-content */
+.enatsoft-post-content a {
+  color: #1e90ff; /* Link color */
+  text-decoration: none; /* Remove underline */
+  font-weight: 500; /* Slightly bold links */
+  
+  /* Underline effect on hover */
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+.enatsoft-post-content a:hover {
+  color: #ff6f61; /* Change color on hover */
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+
+.enatsoft-post-content p {
+  font-size: 1rem; 
+  margin-bottom: 1.2rem; 
+  text-align: justify; 
+
+  @media (max-width: 600px) {
+    font-size: 0.9rem;
+    line-height: 1.5; 
+    margin-bottom: 1rem;
+    padding-left: 0.5rem; 
+    padding-right: 0.5rem;
+  }
+}
+
+.enatsoft-post-content img {
+  width: 100%; 
+  height: auto; 
+  display: block; 
+  margin: 1rem 0; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.enatsoft-post-content img:hover {
+  transform: scale(1.05); 
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); 
+}
+
+
+.enatsoft-post-content div {
+  margin-bottom: 1.2rem; 
+
+  padding: 0.5rem;
+  
+
+  background-color: #f9f9f9;
+  border-left: 4px solid #ff6f61; 
+  border-radius: 4px; 
+  
+
+  @media (max-width: 600px) {
+    margin-bottom: 1rem; 
+    padding: 0.5rem; 
+  }
+}
+
+
+.enatsoft-post-content blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  font-style: italic;
+  background-color: #f0f0f0;
+  border-left: 4px solid #ff6f61; 
+  color: #555; 
+  
+
+  @media (max-width: 600px) {
+    // margin: 1rem 0;
+    // padding: 1rem;
+    
+      h1, h2, h3, h4, h5, h6,p,b,span,strong,sub,sup, * {
+        font-size: 12px !important;
+        letter-spacing: -.2 !important;
+        line-height: 1.5 !important;
+
+      }
+  }
+}
+
+
+.enatsoft-post-content iframe,
+.enatsoft-post-content video {
+  width: 100%; 
+  height: auto; 
+  margin: 1rem 0;
+  border-radius: 8px; 
+}
+
+
+.enatsoft-post-content pre {
+  background-color: #2e2e2e;
+  color: #f8f8f2;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.enatsoft-post-content code {
+  background-color: #f1f1f1;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+
+.enatsoft-post-content h2, .enatsoft-post-content h3, .enatsoft-post-content h4 {
+  color: #222; 
+  margin-bottom: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.02rem;
+}
+.enatsoft-post-content h2 {
+  font-size: 1.8rem;
+}
+.enatsoft-post-content h3 {
+  font-size: 1.5rem;
+}
+.enatsoft-post-content h4 {
+  font-size: 1.2rem;
+}
+
+
+@media (max-width: 600px) {
+ .enatsoft-post-content{
+  // background-color: #000000 !important;
+  width: 90% !important;
+  margin: 0 !important;
+  padding-left: 2px !important;
+  padding-top: 3px !important;
+ }
+  .enatsoft-post-content h2 {
+    font-size: 1.4rem; 
+  }
+  .enatsoft-post-content h3 {
+    font-size: 1.2rem; 
+  }
+  .enatsoft-post-content h4 {
+    font-size: 1rem; 
+  }
+}
+
+
+.enatsoft-post-content * {
+  transition: all 0.3s ease;
+}
+
+
+// thumbnails
+
+// .thumbnail-images{
+  
+
+//   @media (max-width: 600px) {
+   
+//     width: 300px !important;
+
+// }
+// }

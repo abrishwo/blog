@@ -80,7 +80,9 @@ const Home = ({
             priority
           />
           <div className="container">
-            <div className="row flex-wrap-reverse items-center justify-center lg:flex-row overflow-hidden transition-transform transform hover:scale-95 duration-300 ease-in-out">
+            {/* <div className="row flex-wrap-reverse items-center justify-center lg:flex-row overflow-hidden transition-transform transform hover:scale-95 duration-300 ease-in-out"> */}
+             
+             <div className="sm:flex-wrap row md:flex-wrap-reverse items-center justify-center lg:flex-row overflow-hidden transition-transform transform hover:scale-95 duration-300 ease-in-out">
               {/* {banner.image_enable && ( */}
                 <div className="col-9 lg:col-6 relative w-full">
                   <ImageFallback
@@ -101,7 +103,7 @@ const Home = ({
               {/* // )}  */}
 
               {/* <div className={banner.image_enable ? "mt-12 text-center lg:mt-0 lg:text-left lg:col-6 inset-0 flex flex-col justify-between items-start p-6 text-zinc-800 w-full" : "mt-12 text-center lg:mt-0 lg:text-left lg:col-12"}> */}
-                <div className="mt-12 text-center lg:mt-0 lg:text-left lg:col-6 inset-0 flex flex-col justify-between items-start p-6 text-zinc-800 w-full">
+                <div className="content-container md:mt-12 text-center lg:mt-0 lg:text-left lg:col-6 inset-0 flex flex-col justify-between items-start p-6 text-zinc-800 w-full">
                 <h2 className="banner-title text-3xl font-bold mb-4">
                   {featuredArticle.attributes.Title}
                 </h2>
