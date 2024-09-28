@@ -903,6 +903,40 @@ export interface ApiContactContact extends Schema.CollectionType {
   };
 }
 
+export interface ApiMessageMessage extends Schema.CollectionType {
+  collectionName: 'messages';
+  info: {
+    singularName: 'message';
+    pluralName: 'messages';
+    displayName: 'message';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    fullName: Attribute.String;
+    email: Attribute.Email;
+    subject: Attribute.Text;
+    message: Attribute.RichText;
+    date: Attribute.Date;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::message.message',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::message.message',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiPrivacyPrivacy extends Schema.CollectionType {
   collectionName: 'privacies';
   info: {
@@ -1006,16 +1040,18 @@ export interface ApiSystemConfigSystemConfig extends Schema.CollectionType {
     singularName: 'system-config';
     pluralName: 'system-configs';
     displayName: 'SystemConfig';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    Media: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Logo: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Favicon: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Title: Attribute.String;
     Tagline: Attribute.String;
     copyright: Attribute.String;
+    bio: Attribute.Text;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1083,6 +1119,7 @@ declare module '@strapi/types' {
       'api::about.about': ApiAboutAbout;
       'api::article.article': ApiArticleArticle;
       'api::contact.contact': ApiContactContact;
+      'api::message.message': ApiMessageMessage;
       'api::privacy.privacy': ApiPrivacyPrivacy;
       'api::social-media.social-media': ApiSocialMediaSocialMedia;
       'api::subscriber.subscriber': ApiSubscriberSubscriber;

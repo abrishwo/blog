@@ -4,32 +4,35 @@
   "info": {
     "singularName": "system-config",
     "pluralName": "system-configs",
-    "displayName": "SystemConfig"
+    "displayName": "SystemConfig",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "Media": {
+    "Logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
     },
     "Favicon": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
     },
     "Title": {
       "type": "string"
@@ -39,6 +42,9 @@
     },
     "copyright": {
       "type": "string"
+    },
+    "bio": {
+      "type": "text"
     }
   }
 }
