@@ -7,7 +7,7 @@ import Logo from "@layouts/components/Logo";
 import { markdownify } from "@lib/utils/textConverter";
 import Link from "next/link";
 
-const Footer = () => {
+const Footer = ({configData, socialMedia}) => {
   const { copyright, footer_content } = config.params;
   return (
     <footer className="section relative mt-12 pt-[70px] pb-[50px]">
@@ -19,10 +19,10 @@ const Footer = () => {
       />
       <div className="container text-center">
         <div className="mb-6 inline-flex">
-          <Logo />
+          <Logo  logoImg={configData?.Logo?.data?.attributes?.formats?.thumbnail?.url}/>
         </div>
-        {markdownify(footer_content, "p", "max-w-[638px] mx-auto")}
-
+        {markdownify(configData?.Title, "h6", "max-w-[638px] mx-auto")}
+        {markdownify(configData?.Tagline, "p", "max-w-[638px] mx-auto")}
         {/* footer menu */}
         <ul className="mb-12 mt-6 flex-wrap space-x-2 lg:space-x-4">
           {menu.footer.map((menu) => (
@@ -38,10 +38,10 @@ const Footer = () => {
         </ul>
         {/* social icons */}
         <div className="inline-flex">
-          <Social source={social} className="socials mb-12 justify-center" />
+          <Social source={social} social={socialMedia} fromFooter={true} className="socials mb-12 justify-center" />
         </div>
         {/* copyright */}
-        {markdownify(copyright, "p")}
+        {markdownify('©'+configData?.copyright??copyright, "p")}
       </div>
     </footer>
   );

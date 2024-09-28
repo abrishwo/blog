@@ -19,6 +19,7 @@ import GallerySlider from "./components/GalleryView";
 const PostSingle = ({
   content,
   relatedPost,
+  tags
 }) => {
 
   const { theme } = useTheme();
@@ -100,7 +101,7 @@ const PostSingle = ({
             </div>
             <Sidebar
               posts={relatedPost}
-              
+              tags={tags}
               categories={content.attributes.tags }
             />
           </div>
@@ -108,17 +109,17 @@ const PostSingle = ({
      
 
         {/* Related posts */}
-        <div className="container mt-20">
-          <h2 className="section-title">Related Posts</h2>
+        {relatedPost && (<div className="container mt-20">
+          <h2 className="section-title">{relatedPost.attributes && "Related Posts"}</h2>
           <div className="row mt-16"> 
            
             {relatedPost.slice(0, 3).map((post, index) => (
               <div key={"post-" + index} className="mb-12 lg:col-4">
-                <Post post={post} />
+                <Post post={relatedPost} />
               </div>
             ))} 
            </div>
-        </div>
+        </div>)}
       </section>
     </Base>)}
    </>

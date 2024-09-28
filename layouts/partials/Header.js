@@ -12,14 +12,14 @@ import { MenuOutline } from 'react-ionicons'
 
 
 
-const Header = () => {
+const Header = ({configData}) => {
   // distructuring the main menu from menu object
   const { main } = menu;
 
   // states declaration
   const [searchModal, setSearchModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-
+  const [searchBtnActive, setSearchBtnActive] = useState(false);
   // Router
   const router = useRouter();
 
@@ -32,11 +32,14 @@ const Header = () => {
     }
   }, [showMenu]);
 
+  
+
   return (
     <header className="header sticky top-0 bg-white z-50">
       <nav className="navbar container px-1 sm:px-0">
         <div className="order-0 sm:flex flex-row justify-between">
-          <Logo />
+          <Logo  logoImg={configData?.Logo?.data?.attributes?.formats?.thumbnail?.url}/>
+        
           <button
             onClick={() => setShowMenu(!showMenu)}
             className="absolute right-6 top-6 inline-flex h-10 w-10 items-end justify-center rounded-full lg:hidden"
@@ -56,10 +59,10 @@ const Header = () => {
         <hr className="md:hidden lg:hidden w-full h-1/5 mt-4"/>
         <div className="midle-title flex flex-col items-center justify-evenly">
           <h3 className="md:mb-2 mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
-            STARS and TOQUES
+           {configData?configData.Title:" STARS and TOQUES"}
           </h3>
           <p className="md:mt-2 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600">
-            Mostly Fine Dining Restaurant Reviews
+          {configData?configData.Tagline:"Mostly Fine Dining Restaurant Reviews"}
           </p>
         </div>
 
@@ -130,9 +133,13 @@ const Header = () => {
                     <li className="nav-item">
                     { menu.name === "SEARCH" || menu.url==='/search' ?(
                       <button
-                        className="search-button flex items-center justify-center px-4 py-2 text-sm text-white rounded-full bg-primary"
+                        // className={`search-button flex items-center justify-center px-4 py-2 text-sm text-white rounded-full bg-primary`}
+                        className={`nav-link block ${
+                          (searchBtnActive || menu.url==='/search') && "active"
+                        }`}
                         onClick={() => {
-                          setSearchModal(true);
+                          (router.asPath === '/') && setSearchBtnActive(true);
+                         setSearchModal(true);
                         }}
                       >
                         {/* <IoSearch /> */}
@@ -143,7 +150,8 @@ const Header = () => {
                         className={`nav-link block ${
                           router.asPath === menu.url && "active"
                         }`}
-                      >
+                       onClick={()=>setSearchBtnActive(false)}
+                     >
                         {menu.name}
                       </Link>)
 }
@@ -154,39 +162,9 @@ const Header = () => {
             </ul>
 
 
-            {/* header social */}
-            {/* <Social source={socical} className="socials" /> */}
+            
           </div>
-          {/* <ThemeSwitcher /> */}
-          {/* Header search */}
-          {/* <div
-            className="search-icon"
-            onClick={() => {
-              setSearchModal(true);
-            }}
-          >
-            <IoSearch />
-          </div> */}
-          {/* <button
-            onClick={() => setShowMenu(!showMenu)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white lg:hidden"
-          >
-            {showMenu ? (
-              <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                <title>Menu Close</title>
-                <polygon
-                  points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
-                  transform="rotate(45 10 10)"
-                />
-              </svg>
-            ) : (
-              <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                <title>Menu Open</title>
-                <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z" />
-              </svg>
-            )}
-          </button> */}
-
+         
         </div>
 
         <SearchModal

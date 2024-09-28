@@ -15,24 +15,10 @@ export const fetchSystemConfig = createAsyncThunk('config/fetchSystemConfig', as
   }
 });
 
-export const fetchSocialMedia = createAsyncThunk('config/fetchSocialMedia', async () => {
-  try {
-    const res = await axios.get(`${BASE_URL}/api/social-medias?populate=*`);
-    const data = res.data;
-    console.log(data);
-    return data.data;
-  } catch (error) {
-    console.error('Error fetching About Us data:', error);
-    throw error;
-  }
-});
-
-
 const systemSlice = createSlice({
   name: 'config',
   initialState: {
     items: [],
-    social:[],
     status: 'idle', // idle | loading | succeeded | failed
     error: null,
   },
@@ -50,23 +36,7 @@ const systemSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       });
-
-      // social media settings
-      builder
-      .addCase(fetchSocialMedia.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchSocialMedia.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.social = action.payload;
-      })
-      .addCase(fetchSocialMedia.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      });
   },
-
-
 });
 
 export default systemSlice.reducer;

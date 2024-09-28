@@ -6,7 +6,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import React, {useEffect} from "react";
-import { fetchSystemConfig, fetchSocialMedia } from "../redux/slices/systemSlice";
+import { fetchSystemConfig } from "../redux/slices/systemSlice";
 
 const Base = ({
   title,
@@ -24,17 +24,7 @@ const Base = ({
 
   const dispatch = useDispatch();
 
-  const { items: systemConfig, social: socialMedia, status } = useSelector((state) => state.config);
-  
-  useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchSystemConfig());
-      dispatch(fetchSocialMedia());
-    }
-  }, [dispatch, status]);
-
-  
-
+  const { items: config, status } = useSelector((state) => state.config);
   return (
     <>
       <Head>
@@ -106,12 +96,10 @@ const Base = ({
         />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      
- 
-      <Header configData = {systemConfig.attributes}/>
+      <Header />
       {/* main site */}
       <main>{children}</main>
-      <Footer configData = {systemConfig.attributes} socialMedia={socialMedia}/>
+      <Footer />
     </>
   );
 };

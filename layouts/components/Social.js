@@ -32,7 +32,7 @@ import {
   IoLogoStackoverflow,
 } from "react-icons/io5";
 
-const Social = ({ source, className }) => {
+const Social = ({ source, className , social, fromFooter}) => {
   const {
     facebook,
     stackoverflow,
@@ -67,7 +67,30 @@ const Social = ({ source, className }) => {
     website,
   } = source;
   return (
-    <ul className={className}>
+<>
+{social?(<ul className={`mt-8 ${
+  fromFooter? "social-media-icons-footer": "social-media-icons" }`}>
+{ social.map((soc, index)=>{
+  return (
+    <li className="social-items" key={index}>
+        <a
+          aria-label={`${soc.attributes.PlatformName.toLowerCase()}flow`}
+          href={soc.attributes.URL}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
+         
+          <img src={`${process.env.NEXT_PUBLIC_BASE_URL}${soc.attributes.Icon.data.attributes.formats.thumbnail.url}`}
+           alt={soc.attributes.PlatformName} className="icon" />
+
+        </a>
+  </li>
+  );
+}
+
+ )}
+</ul>) :(
+      <ul className={className}>
       {facebook && (
         <li className="inline-block">
           <a
@@ -431,6 +454,8 @@ const Social = ({ source, className }) => {
         </li>
       )}
     </ul>
+)}
+</>
   );
 };
 

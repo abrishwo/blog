@@ -545,3 +545,101 @@ h2, p {
 
 // }
 // }
+
+.social-media-icons {
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  // gap: 10px; /* Space between icons */
+  padding: 10px;
+
+  display: flex;
+  flex-wrap: wrap;
+  // justify-content: space-between; /* Space between items */
+  align-items: center;
+  gap: 10px; 
+}
+
+.social-media-icons-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Space between icons */
+  padding: 10px;
+  // justify-content: space-between; /* Space between items */
+
+} 
+
+.social-media-icons a {
+  display: inline-block;
+}
+
+.social-media-icons .icon {
+  width: 40px;   /* Base size */
+  height: 40px;
+  max-width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.social-media-icons-footer .icon {
+  width: 40px;   /* Base size */
+  height: 40px;
+  max-width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.social-media-icons .icon:hover {
+  transform: scale(1.1); /* Slight hover effect */
+}
+
+.social-media-icons-footer .icon:hover {
+  transform: scale(1.1); /* Slight hover effect */
+}
+/* Responsive for smaller devices */
+@media (max-width: 768px) {
+  .social-media-icons .icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .social-media-icons-footer .icon {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .social-media-icons .icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .social-media-icons-footer .icon {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+
+
+
+.social-items {
+  flex: 0 1 calc(33.333% - 10px); /* 3 items per row, accounting for the gap */
+  box-sizing: border-box;
+  padding: 10px;
+  background-color: #f0f0f0; /* Example background */
+  text-align: center; /* Center text in the item */
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+  .social-items {
+    flex: 0 1 calc(50% - 10px); /* 2 items per row on medium screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .social-items {
+    flex: 0 1 100%; /* 1 item per row on small screens */
+  }
+}

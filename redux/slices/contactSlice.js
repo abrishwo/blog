@@ -15,15 +15,35 @@ export const fetchContactUs = createAsyncThunk('contact/fetchContactUs', async (
   }
 });
 
+// Submit contact form data
+export const submitContactForm = createAsyncThunk(
+  'contact/submitContactForm',
+  async (formData, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/api/messages`, {
+        data: formData, // Adjust based on the structure Strapi expects
+      });
+      return res.data;
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      return rejectWithValue(error.response.data || 'Form submission failed');
+    }
+  }
+);
+
 const contactSlice = createSlice({
   name: 'contact',
   initialState: {
     items: [],
-    status: 'idle', // idle | loading | succeeded | failed
+    status: 'idle', 
+    formStatus: 'idle', 
     error: null,
+    formError: null, 
+    formSuccess: null, 
   },
   reducers: {},
   extraReducers: (builder) => {
+    
     builder
       .addCase(fetchContactUs.pending, (state) => {
         state.status = 'loading';
@@ -35,6 +55,22 @@ const contactSlice = createSlice({
       .addCase(fetchContactUs.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      });
+
+  
+    builder
+      .addCase(submitContactForm.pending, (state) => {
+        state.formStatus = 'loading';
+        state.formError = null;
+        state.formSuccess = null;
+      })
+      .addCase(submitContactForm.fulfilled, (state, action) => {
+        state.formStatus = 'succeeded';
+        state.formSuccess = 'Your message has been successfully sent!';
+      })
+      .addCase(submitContactForm.rejected, (state, action) => {
+        state.formStatus = 'failed';
+        state.formError = action.payload || 'Form submission failed';
       });
   },
 });

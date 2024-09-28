@@ -1,26 +1,27 @@
 import React, { useEffect } from "react";
 import PostSingle from "@layouts/PostSingle";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchArticleDetails, fetchRelatedPosts } from "../../redux/slices/articlesSlice";
+import { fetchArticleDetails, fetchRelatedPosts, fetchTags } from "../../redux/slices/articlesSlice";
 import Loader from "@layouts/components/Loader";
 
 // Article component
 const Article = ({ slug }) => {
   const dispatch = useDispatch();
-  const { details, relatedPosts, status } = useSelector((state) => state.articles);
+  const { details, relatedPosts, tags, status } = useSelector((state) => state.articles);
 
   useEffect(() => {
     if (slug) {
       dispatch(fetchArticleDetails(slug));
+      dispatch(fetchTags());
     }
   }, [slug, dispatch]);
 
   useEffect(() => {
-    if (details) {
-      const tagList = details?.data[0].attributes?.tags?.data.map(tag => tag?.attributes?.Name);
-      dispatch(fetchRelatedPosts({currentPostId: details.id, tags: tagList}));
-      // dispatch(fetchRelatedPosts("Belgium"));
-    }
+    // if (details.data[0]) {
+      const tagList = details?.data[0]?.attributes?.tags?.data.map(tag => tag?.attributes?.Name.toLowerCase());
+      // dispatch(fetchRelatedPosts({currentPostId: details.id, tags: tagList}));
+      dispatch(fetchRelatedPosts(["star-1", "belgium"]));
+    // }
   }, [details, dispatch]);
 
 
@@ -28,7 +29,8 @@ const Article = ({ slug }) => {
   return (
     <>
         {status === "loading"  && <Loader />}
-        {status === "failed" && (<div className="h-full w-full text-2xl text-zinc-700 top-h/3 mx-auto">Error loading article</div>)}
+        {/* {status === "failed" && (<div className="h-full w-full text-2xl text-zinc-700 top-h/3 mx-auto">Error loading article</div>)} */}
+     
 
 
       {
@@ -39,6 +41,8 @@ const Article = ({ slug }) => {
           content={details.data[0]}
       
           relatedPost={relatedPosts}
+
+          tags={tags}
          
         />
         )

@@ -4,7 +4,10 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const Logo = ({ src }) => {
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+const Logo = ({ src , logoImg}) => {
   // Destructuring items from the config object
   const { logo, logo_white, logo_width, logo_height, logo_text, title } = config.site;
   const { theme, resolvedTheme } = useTheme();
@@ -24,11 +27,13 @@ const Logo = ({ src }) => {
         <ImageFallback
           width={mediumWidth}
           height={mediumHeight}
-          src={
-            mounted && (theme === "dark" || resolvedTheme === "dark")
+          src={ 
+            logoImg?`${BASE_URL}${logoImg}`
+            :(mounted && (theme === "dark" || resolvedTheme === "dark"))
               ? logo_white
               : logo
           }
+          // src={`${BASE_URL}${logoImg}`}
           alt={title}
           priority
           // Tailwind CSS for responsive width/height

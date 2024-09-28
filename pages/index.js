@@ -39,7 +39,7 @@ const Home = ({
 
   useEffect(() => {
     if (articles) {
-      const featured = articles.find(article => article.attributes.Featured);
+      const featured = articles?.data?.find(article => article?.data?.attributes?.Featured);
       setFeaturedArticle(featured);
     }
   }, [articles]);
@@ -52,23 +52,14 @@ const Home = ({
     dispatch(setSelectedTags([tag]));
   };
 
-  // if (status === 'loading') {
-    // return <Loader/>;
-  // }
-
-  // if (status === 'failed') {
-  //   return <p>Error loading articles.</p>;
-  // }
+  
 
   return (
     <Base>
 
     {status === 'loading' && <Loader />}
       {/* Banner Section */}
-{status === 'failed' && (
-  <p className="top-1/3 mx-auto">Error loading articles.</p>
-  // <p>{process.env.NEXT_PUBLIC_BASE_URL} haj</p>
-  )}
+
       {featuredArticle && (
         <section className="section banner relative pb-0">
           <ImageFallback
@@ -126,23 +117,12 @@ const Home = ({
         <div className="container">
           <div className="row items-center">
             <div className="mb-12 lg:mb-0 lg:col-12 flex items-center flex-col">
-              {/* {promotion.enable && ( */}
-                {/* <Link href={promotion.link} className="section block pt-0">
-                  <ImageFallback
-                    className="h-full w-full"
-                    height="115"
-                    width="800"
-                    src={promotion.image}
-                    alt="promotion"
-                  />
-                </Link> */}
-              {/* )} */}
-
+            
               {articles && (
                 <div className="section pt-0 mx-auto flex flex-col items-center">
                   {markdownify('Recent Posts', "h2", "section-title")}
                   <div className="row mx-auto">
-                    {articles.slice(0, pagination.pageSize).map((post) => (
+                    {articles?.data?.slice(0, pagination.pageSize).map((post) => (
                       <div className="mb-8 md:col-6" key={post.attributes.Slug}>
                         <Post post={post} />
                       </div>
@@ -152,7 +132,7 @@ const Home = ({
               )}
 
               <Pagination
-                totalPages={Math.ceil(articles?.meta?.pagination?.total / pagination.pageSize)}
+                totalPages={Math.ceil(articles?.meta?.pagination?.total / articles?.meta?.pagination?.pageSize)}
                 currentPage={pagination.currentPage}
                 onPageChange={(page) => dispatch(setPagination({ ...pagination, currentPage: page }))}
               />

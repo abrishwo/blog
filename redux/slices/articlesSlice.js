@@ -76,6 +76,13 @@ export const fetchPostsByTags = createAsyncThunk('articles/fetchPostsByTags', as
   return response.data.data;
 });
 
+// Fetch tags 
+export const fetchTags = createAsyncThunk('articles/fetchTags', async () => {
+  const response = await axios.get(`${BASE_URL}/api/tags/?populate=*`);
+  
+  return response.data;
+});
+
 const articlesSlice = createSlice({
   name: 'articles',
   initialState: {
@@ -83,6 +90,7 @@ const articlesSlice = createSlice({
     details: null,
     relatedPosts: [],
     postsByTag: [],
+    tags: [],
     status: 'idle', // idle | loading | succeeded | failed
     error: null,
     pagination: {
@@ -113,7 +121,7 @@ const articlesSlice = createSlice({
       })
       .addCase(fetchArticles.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.items = action.payload.data;
+        state.items = action.payload;
         state.pagination.totalItems = action.payload.meta.pagination.total;
         state.pagination.totalPages = action.payload.meta.pagination.pageCount;
       })
@@ -122,6 +130,20 @@ const articlesSlice = createSlice({
         state.error = action.error.message;
       });
 
+         // Fetch all tags
+    builder
+    .addCase(fetchTags.pending, (state) => {
+      state.status = 'loading';
+    })
+    .addCase(fetchTags.fulfilled, (state, action) => {
+      state.status = 'succeeded';
+      state.tags = action.payload;
+    
+    })
+    .addCase(fetchTags.rejected, (state, action) => {
+      state.status = 'failed';
+      state.error = action.error.message;
+    });
     // Fetch article details by slug
     builder
       .addCase(fetchArticleDetails.pending, (state) => {
