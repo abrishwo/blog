@@ -19,7 +19,7 @@ const Category = ({ slug }) => {
   }, [slug, dispatch]);
 
   useEffect(() => {
-    if (postsByTag) {
+    if (postsByTag && postsByTag.length > 0) {
       dispatch(fetchRelatedPosts("Belgium")); // Adjust this if needed
     }
   }, [postsByTag, dispatch]);
@@ -39,7 +39,7 @@ const Category = ({ slug }) => {
           <div className="row">
             <div className="lg:col-12">
               <div className="row rounded border border-border p-4 px-3 dark:border-darkmode-border lg:p-6">
-                {postsByTag?.length > 0 ? (
+                {postsByTag && postsByTag.length > 0 ? (
                   postsByTag.map((post, i) => (
                     <div key={`key-${i}`} className="col-12 mb-8 sm:col-6">
                       <Post post={post} />
@@ -59,18 +59,18 @@ const Category = ({ slug }) => {
 
 export default Category;
 
-
 // getStaticPaths to generate article pages
 export const getStaticPaths = async () => {
   try {
     const response = await fetch(`${BASE_URL}/api/tags?populate=*`);
     const tags = await response.json();
 
-    const paths = tags.data.map((tag) => ({
+    // Check if tags.data is an array and not null
+    const paths = Array.isArray(tags.data) ? tags.data.map((tag) => ({
       params: {
         category: tag.attributes.Slug,
       },
-    }));
+    })) : [];
 
     return {
       paths,

@@ -101,7 +101,7 @@ const PostSingle = ({
             </div>
             <Sidebar
               posts={relatedPost}
-              tags={tags}
+              tags={tags??[]}
               categories={content.attributes.tags }
             />
           </div>

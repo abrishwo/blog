@@ -3,7 +3,7 @@ import shortcodes from "@shortcodes/all";
 import { MDXRemote } from "next-mdx-remote";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPrivacy } from "../redux/slices/PrivacySlice";
+import { fetchPrivacy } from "../redux/slices/privacySlice";
 
 
 import React, {useEffect, useState} from "react";

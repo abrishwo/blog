@@ -54,12 +54,12 @@ const Article = ({ slug }) => {
 
 // getStaticPaths to generate article pages
 export const getStaticPaths = async () => {
-  const response = await fetch("https://vivid-flowers-9f3564b8da.strapiapp.com/api/articles?populate=*");
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/articles?populate=*`);
   const articles = await response.json();
-
-  const paths = articles.data.map((article) => ({
+console.log(articles)
+  const paths = articles?.data?.map((article) => ({
     params: {
-      single: article.attributes.Slug, // Use slug from your CMS (Strapi)
+      single: article?.attributes?.Slug, // Use slug from your CMS (Strapi)
     },
   }));
 
