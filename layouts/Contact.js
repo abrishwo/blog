@@ -68,7 +68,7 @@ const Contact = ({ data }) => {
                 )}
 
                 {/* Animated Work Hours Section */}
-                <motion.div
+               {contact?.attributes?.WorkingHours && ( <motion.div
                   className="work-hours mt-8 bg-gray-100 dark:bg-darkmode-bg p-6 rounded-lg shadow-lg items-center"
                   initial={{ opacity: 0, y: -50 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -90,10 +90,10 @@ const Contact = ({ data }) => {
                   </ul>
 
                   {/* </div> */}
-                </motion.div>
+                </motion.div>)}
 
                 {/* address */}
-                <motion.div
+                {contact?.attributes?.Address && (<motion.div
                   className="work-hours mt-8 bg-gray-100 dark:bg-darkmode-bg p-6 rounded-lg shadow-lg mt-8"
                   initial={{ opacity: 0, y: -50 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -108,7 +108,7 @@ const Contact = ({ data }) => {
                     {contact?.attributes?.Address}
                   </p>
 
-                </motion.div>
+                </motion.div>)}
               </div>
 
               <div className="contact-form-wrapper rounded border border-border p-6 dark:border-darkmode-border lg:col-6">
@@ -229,14 +229,14 @@ const Contact = ({ data }) => {
 
             </div>
 
-            <iframe
+          {contact?.attributes?.MapCoordinates && ( <iframe
               src={`https://www.google.com/maps?q=${contact?.attributes?.MapCoordinates?.latitude},${contact?.attributes?.MapCoordinates?.longitude}&z=15&output=embed`}
               width="100%"
               height="400"
               className="border-0 rounded-lg shadow-lg"
               allowFullScreen={true}
               loading="lazy"
-            ></iframe>
+            ></iframe>)}
           </div>
         )}
     </section>

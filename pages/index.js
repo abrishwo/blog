@@ -8,7 +8,7 @@ import { markdownify } from "@lib/utils/textConverter";
 import Link from "next/link";
 import { FaRegCalendar } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchArticles, setSearch, setSelectedTags, setPagination } from '../redux/slices/articlesSlice';
+import { fetchArticles, setSearch, setSelectedTags, setPagination, fetchTags } from '../redux/slices/articlesSlice';
 import React, { useEffect, useState } from "react";
 import Loader from "@layouts/components/Loader";
 
@@ -20,11 +20,13 @@ const Home = ({
   promotion,
 }) => {
   const dispatch = useDispatch();
-  const { items: articles, status, pagination, search, selectedTags } = useSelector((state) => state.articles);
+  const { items: articles, status, pagination, search, selectedTags, tags } = useSelector((state) => state.articles);
 
   const [featuredArticle, setFeaturedArticle] = useState(null);
+  const [filteredArticles, setFilteredArticles] = useState(null);
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+ 
 
   useEffect(() => {
     if (status === 'idle') {
@@ -34,13 +36,20 @@ const Home = ({
         tags: selectedTags,
         search,
       }));
+
+      dispatch(fetchTags());
     }
-  }, [status, pagination.currentPage, pagination.pageSize, selectedTags, search, dispatch]);
+  }, [status, pagination.currentPage, pagination.pageSize, search, dispatch]);
 
   useEffect(() => {
     if (articles) {
-      const featured = articles?.data?.find(article => article?.data?.attributes?.Featured);
+      const featured = articles?.data?.find(article => article?.attributes?.Featured);
+      const filteredArticlesData = articles?.data?.filter(article => !article?.attributes?.Featured);
       setFeaturedArticle(featured);
+      setFilteredArticles(filteredArticlesData);
+    }
+    if(!tags){
+      dispatch(fetchTags());
     }
   }, [articles]);
 
@@ -108,6 +117,8 @@ const Home = ({
              
               </div>
             </div>
+                        {/* sidebar */}
+           
           </div>
         </section>
       )}
@@ -115,14 +126,16 @@ const Home = ({
       {/* Recent Posts Section */}
       <section className="section">
         <div className="container">
-          <div className="row items-center">
-            <div className="mb-12 lg:mb-0 lg:col-12 flex items-center flex-col">
-            
-              {articles && (
+          <div className="row items-start">
+
+            {/* <div className="mb-12 lg:mb-0 lg:col-8 flex items-center flex-col">
+             */}
+           <div className="mb-12 lg:mb-0 lg:col-8">
+              {filteredArticles && (
                 <div className="section pt-0 mx-auto flex flex-col items-center">
                   {markdownify('Recent Posts', "h2", "section-title")}
                   <div className="row mx-auto">
-                    {articles?.data?.slice(0, pagination.pageSize).map((post) => (
+                    {filteredArticles?.slice(0, pagination.pageSize).map((post) => (
                       <div className="mb-8 md:col-6" key={post.attributes.Slug}>
                         <Post post={post} />
                       </div>
@@ -137,9 +150,18 @@ const Home = ({
                 onPageChange={(page) => dispatch(setPagination({ ...pagination, currentPage: page }))}
               />
             </div>
+
+            
+            <Sidebar
+              className={"lg:mt-[9.5rem]"}
+              tags={tags??[]}
+            />
           </div>
         </div>
       </section>
+
+
+      
     </Base>
   );
 };

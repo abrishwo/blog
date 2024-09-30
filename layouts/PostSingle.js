@@ -38,10 +38,10 @@ const PostSingle = ({
       (image) => image.attributes.formats.thumbnail.url
     );
     
-    // Combine thumbnail and gallery images into a single array (no need to join with commas)
+   
     const imageList = [...thumb, ...(gall || [])]; // Use spread operator to combine arrays
     
-    console.log(imageList); // You can access images by index now
+    console.log(imageList); 
     
 
   return (
@@ -56,7 +56,6 @@ const PostSingle = ({
               <article>
                 <div className="relative">
                     <GallerySlider images={imageList} />
-
                 </div>
              
                 {markdownify(content.attributes.Title, "h1", "title-h2 lg:text-[42px] mt-4")}

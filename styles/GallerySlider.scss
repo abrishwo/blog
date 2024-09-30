@@ -41,6 +41,8 @@
 
 .selected-image {
   width: 100%;
-  height: auto;
+  height: fit-content !important;
+  max-height: 90% !important;
   object-fit: contain;
+  aspect-ratio: 3/2 !important;
 }

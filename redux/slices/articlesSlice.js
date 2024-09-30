@@ -1,22 +1,28 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-// Fetch all articles 
+// Fetch all articles with advanced search functionality
 export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (params = {}) => {
-
   const { page = 1, pageSize = 4, tags = [], search = "" } = params;
+  
   let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
   
+  // Add tags filtering if tags are selected
   if (tags.length > 0) {
-    const tagsQuery = tags.map(tag => `filters[tags][Name][$eq]=${tag}`).join('&');
+    const tagsQuery = tags.map(tag => `filters[tags][Name][$eq]=${tag.replace("_"," ")}`).join('&');
     query += `&${tagsQuery}`;
   }
 
+  // Add search filtering if search input is provided
   if (search) {
-    query += `&filters[Title][$containsi]=${search}`;
+    const searchFields = ['Title', 'Excerpt', 'Content', 'Slug'];
+    const searchQuery = searchFields
+      .map(field => `filters[${field}][$containsi]=${search}`)
+      .join('&');
+    
+    query += `&${searchQuery}`;
   }
 
   const response = await axios.get(query);
@@ -29,22 +35,13 @@ export const fetchArticleDetails = createAsyncThunk('articles/fetchArticleDetail
   return response.data;
 });
 
-// Fetch related posts (based on tags or categories)
-// export const fetchRelatedPosts = createAsyncThunk('articles/fetchRelatedPosts', async (tags) => {
-//   const tagsQuery = tags.map(tag => `filters[tags][Name][$eq]=${tag}`).join('|');
-//   const query = `${BASE_URL}/api/articles?populate=*&${tagsQuery}&pagination[pageSize]=3`;
-//   const response = await axios.get(query);
-//   console.log(response.data);
-//   return response.data;
-// });
-
-
+// Fetch related posts
 export const fetchRelatedPosts = createAsyncThunk('articles/fetchRelatedPosts', async ({ currentPostId, tags }) => {
   try {
-    const query = `${BASE_URL}/api/articles?populate=*`; // Fetch enough posts to analyze
+    const query = `${BASE_URL}/api/articles?populate=*`;
     const response = await axios.get(query);
-    const allPosts = response.data;
-console.log(allPosts);
+    const allPosts = response.data.data;
+
     const filteredPosts = allPosts.filter(post => post.id !== currentPostId);
 
     const relatedPosts = filteredPosts
@@ -56,10 +53,10 @@ console.log(allPosts);
           similarTagsCount,
         };
       })
-      .filter(post => post.similarTagsCount > 0) // Keep only posts with at least 1 matching tag
-      .sort((a, b) => b.similarTagsCount - a.similarTagsCount) // Sort by similarity (descending)
-      .slice(0, 3); // Return top 3 most similar posts
-console.log(relatedPosts);
+      .filter(post => post.similarTagsCount > 0)
+      .sort((a, b) => b.similarTagsCount - a.similarTagsCount)
+      .slice(0, 3);
+
     return relatedPosts;
   
   } catch (error) {
@@ -68,18 +65,15 @@ console.log(relatedPosts);
   }
 });
 
-
-// Fetch posts (based on tags or categories)
+// Fetch posts by tag
 export const fetchPostsByTags = createAsyncThunk('articles/fetchPostsByTags', async (tag) => {
   const response = await axios.get(`${BASE_URL}/api/articles/?filters[tags][Slug][$eq]=${tag}&populate=*`);
-  // https://vivid-flowers-9f3564b8da.strapiapp.com/api/articles/?filters[tags][Slug][$eq]=belgium&populate=*
   return response.data.data;
 });
 
-// Fetch tags 
+// Fetch tags
 export const fetchTags = createAsyncThunk('articles/fetchTags', async () => {
   const response = await axios.get(`${BASE_URL}/api/tags/?populate=*`);
-  
   return response.data;
 });
 
@@ -130,20 +124,20 @@ const articlesSlice = createSlice({
         state.error = action.error.message;
       });
 
-         // Fetch all tags
+    // Fetch tags
     builder
-    .addCase(fetchTags.pending, (state) => {
-      state.status = 'loading';
-    })
-    .addCase(fetchTags.fulfilled, (state, action) => {
-      state.status = 'succeeded';
-      state.tags = action.payload;
-    
-    })
-    .addCase(fetchTags.rejected, (state, action) => {
-      state.status = 'failed';
-      state.error = action.error.message;
-    });
+      .addCase(fetchTags.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchTags.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.tags = action.payload;
+      })
+      .addCase(fetchTags.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      });
+
     // Fetch article details by slug
     builder
       .addCase(fetchArticleDetails.pending, (state) => {
@@ -172,20 +166,19 @@ const articlesSlice = createSlice({
         state.error = action.error.message;
       });
 
-
-          // Fetch posts By Tags
+    // Fetch posts by tag
     builder
-    .addCase(fetchPostsByTags.pending, (state) => {
-      state.status = 'loading';
-    })
-    .addCase(fetchPostsByTags.fulfilled, (state, action) => {
-      state.status = 'succeeded';
-      state.postsByTag = action.payload;
-    })
-    .addCase(fetchPostsByTags.rejected, (state, action) => {
-      state.status = 'failed';
-      state.error = action.error.message;
-    });
+      .addCase(fetchPostsByTags.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchPostsByTags.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.postsByTag = action.payload;
+      })
+      .addCase(fetchPostsByTags.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      });
   },
 });
 
