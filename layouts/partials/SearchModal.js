@@ -100,7 +100,7 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
       />
 
       {/* Suggestions */}
-      {showSuggestions && suggestions.length > 0 && (
+      {/* {showSuggestions && suggestions.length > 0 && (
         <ul className="suggestions-list">
           {suggestions.map((suggestion, index) => (
             <li
@@ -115,7 +115,7 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
             </li>
           ))}
         </ul>
-      )}
+      )} */}
 
       {/* Tags Filter */}
       <div className="tags-filter">

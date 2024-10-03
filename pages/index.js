@@ -39,7 +39,21 @@ const Home = ({
 
       dispatch(fetchTags());
     }
-  }, [status, pagination.currentPage, pagination.pageSize, search, dispatch]);
+  }, [status, pagination.currentPage, pagination.pageSize, dispatch]);
+
+  // useEffect(() => {
+  //   if (!articles) {
+  //     dispatch(fetchArticles({
+  //       page: pagination.currentPage,
+  //       pageSize: pagination.pageSize,
+  //       tags: selectedTags,
+  //       search,
+  //     }));
+
+  //     dispatch(fetchTags());
+  //   }
+  // }, [status, pagination.currentPage, articles, pagination.pageSize, search, dispatch]);
+
 
   useEffect(() => {
     if (articles) {
@@ -51,6 +65,7 @@ const Home = ({
     if(!tags){
       dispatch(fetchTags());
     }
+    
   }, [articles]);
 
   const handleSearchChange = (e) => {
@@ -61,7 +76,13 @@ const Home = ({
     dispatch(setSelectedTags([tag]));
   };
 
-  
+  useEffect(() => {
+    // Only fetch articles if the items array is empty
+    if (articles?.data?.length === 0 && status !== 'loading') {
+      dispatch(fetchArticles({ page: pagination.currentPage, pageSize: pagination.pageSize }));
+    }
+  }, [dispatch, articles, pagination.currentPage, pagination.pageSize, status]);
+
 
   return (
     <Base>

@@ -34,6 +34,11 @@ const Logo = ({ src , logoImg}) => {
               : logo
           }
           // src={`${BASE_URL}${logoImg}`}
+          fallback="/images/logo.png" // Fallback image (must be a supported format)
+
+          // width={300}
+          // height={300}
+
           alt={title}
           priority
           // Tailwind CSS for responsive width/height

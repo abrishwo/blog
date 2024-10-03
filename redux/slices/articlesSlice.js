@@ -4,30 +4,72 @@ import axios from 'axios';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // Fetch all articles with advanced search functionality
+
 export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (params = {}) => {
   const { page = 1, pageSize = 4, tags = [], search = "" } = params;
   
+  // Start building the query with pagination and population
   let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
   
+  try {
+    const response = await axios.get(query);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+    throw error;
+  }
+});
+
+
+// search all articles with advanced search functionality
+
+ export const searchArticles = createAsyncThunk('articles/searchArticles', async (params = {}) => {
+  const { page = 1, pageSize = 4, tags = [], search = "" } = params;
+  
+  // Start building the query with pagination and population
+  let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+  
+  // Prepare combined filtering for both tags and search if needed
+  let filterQuery = "";
+
+  // Create a filter that enforces both tag and search conditions using $and
+  let conditions = [];
+
   // Add tags filtering if tags are selected
   if (tags.length > 0) {
-    const tagsQuery = tags.map(tag => `filters[tags][Name][$eq]=${tag.replace("_"," ")}`).join('&');
-    query += `&${tagsQuery}`;
+    const tagsQuery = tags.map((tag, index) => 
+      `filters[$and][0][$or][${index}][tags][Slug][$eqi]=${tag}`).join('&');
+    conditions.push(tagsQuery);
   }
 
   // Add search filtering if search input is provided
   if (search) {
     const searchFields = ['Title', 'Excerpt', 'Content', 'Slug'];
     const searchQuery = searchFields
-      .map(field => `filters[${field}][$containsi]=${search}`)
+      .map((field, index) => `filters[$and][1][$or][${index}][${field}][$containsi]=${search}`)
       .join('&');
     
-    query += `&${searchQuery}`;
+    conditions.push(searchQuery);
   }
 
-  const response = await axios.get(query);
-  return response.data;
+  // Combine both conditions with an $and operator
+  if (conditions.length > 0) {
+    filterQuery = `&${conditions.join('&')}`;
+  }
+
+  // Combine the filter query with the base query
+  query += filterQuery;
+
+  try {
+    const response = await axios.get(query);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+    throw error;
+  }
 });
+
+
 
 // Fetch article details by slug
 export const fetchArticleDetails = createAsyncThunk('articles/fetchArticleDetails', async (slug) => {
@@ -81,6 +123,7 @@ const articlesSlice = createSlice({
   name: 'articles',
   initialState: {
     items: [],
+    searchData: [],
     details: null,
     relatedPosts: [],
     postsByTag: [],
@@ -124,6 +167,21 @@ const articlesSlice = createSlice({
         state.error = action.error.message;
       });
 
+          // Fetch all articles
+  builder
+    .addCase(searchArticles.pending, (state) => {
+      state.status = 'loading';
+    })
+    .addCase(searchArticles.fulfilled, (state, action) => {
+      state.status = 'succeeded';
+      state.searchData = action.payload;
+      state.pagination.totalItems = action.payload.meta.pagination.total;
+      state.pagination.totalPages = action.payload.meta.pagination.pageCount;
+    })
+    .addCase(searchArticles.rejected, (state, action) => {
+      state.status = 'failed';
+      state.error = action.error.message;
+    });
     // Fetch tags
     builder
       .addCase(fetchTags.pending, (state) => {
