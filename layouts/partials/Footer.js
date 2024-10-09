@@ -19,7 +19,7 @@ const Footer = ({configData, socialMedia}) => {
       />
       <div className="container text-center">
         <div className="mb-6 inline-flex">
-          <Logo  logoImg={configData?.Logo?.data?.attributes?.formats?.thumbnail?.url}/>
+          <Logo  />
         </div>
         {markdownify(configData?.Title, "h6", "max-w-[638px] mx-auto")}
         {markdownify(configData?.Tagline, "p", "max-w-[638px] mx-auto")}

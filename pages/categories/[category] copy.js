@@ -10,13 +10,13 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 // category page
 const Category = ({ slug }) => {
   const dispatch = useDispatch();
-  const { postsByTag, relatedPosts, byTagStatus } = useSelector((state) => state.articles);
+  const { postsByTag, relatedPosts, status } = useSelector((state) => state.articles);
 
   useEffect(() => {
-    if (byTagStatus === 'idle' && slug) {
+    if (slug) {
       dispatch(fetchPostsByTags(slug));
     }
-  }, [slug, dispatch, byTagStatus]);
+  }, [slug, dispatch,status]);
 
   // useEffect(() => {
   //   if (postsByTag && postsByTag.length > 0) {
@@ -24,7 +24,7 @@ const Category = ({ slug }) => {
   //   }
   // }, [postsByTag, dispatch]);
 
-  // if (byTagStatus === 'loading') return <Loader />;
+  if (status === 'loading') return <Loader />;
 
   return (
     <Base title={slug}>
@@ -36,13 +36,10 @@ const Category = ({ slug }) => {
               {slug.replace("-", " ")}
             </span>
           </h1>
-
-          
           <div className="row">
             <div className="lg:col-12">
               <div className="row rounded border border-border p-4 px-3 dark:border-darkmode-border lg:p-6">
-                {(byTagStatus === 'loading')? (<Loader />) 
-                : (postsByTag && postsByTag.length > 0 ? (
+                {postsByTag && postsByTag.length > 0 ? (
                   postsByTag.map((post, i) => (
                     <div key={`key-${i}`} className="col-12 mb-8 sm:col-6">
                       <Post post={post} />
@@ -51,7 +48,7 @@ const Category = ({ slug }) => {
                 ) : (
                   JSON.stringify(postsByTag),
                   <p>No posts found for this category.</p>
-                ))}
+                )}
               </div>
             </div>
           </div>

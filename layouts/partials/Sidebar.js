@@ -43,7 +43,8 @@ const Sidebar = ({ posts, categories, className, tags }) => {
             fill={true}
             alt="bg-map"
           />
-          <Logo logoImg={systemConfig?.attributes?.Logo?.data?.attributes?.formats?.thumbnail?.url} />
+          {/* <Logo logoImg={systemConfig?.attributes?.Logo?.data?.attributes?.formats?.thumbnail?.url} /> */}
+          <Logo />
           {markdownify(systemConfig?.attributes?.bio, "p", "mt-8")}
 
 
@@ -69,7 +70,7 @@ const Sidebar = ({ posts, categories, className, tags }) => {
               >
                 <Link
                   className="capitalize"
-                  href={`/categories/${tag.attributes.Slug.replace(" ", "-")}`}
+                  href={`/categories/${tag.attributes.Slug}`}
                 >
                   {tag.attributes.Name}
                 </Link>

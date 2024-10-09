@@ -89,7 +89,7 @@ font-size: 1.2em;
   @apply inline-block h-10 w-10 cursor-pointer rounded-full bg-primary p-2.5 text-xl text-white;
 }
 .search-modal {
-  @apply invisible absolute top-0 left-0 right-0 z-10 h-10 bg-body opacity-0 transition dark:bg-black md:h-full;
+  @apply invisible absolute top-0 left-0 right-0 z-10 bg-body opacity-0 transition dark:bg-black md:h-full;
   .form-input {
     @apply h-full w-full border-0 px-4 text-lg;
   }

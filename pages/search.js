@@ -3,7 +3,7 @@ import Post from "@partials/Post";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { setSearch, searchArticles, setPagination } from "../redux/slices/articlesSlice";
+import { setSearch, searchArticles, setPagination, setSelectedTags } from "../redux/slices/articlesSlice";
 import Loader from "@layouts/components/Loader";
 
 const SearchPage = () => {
@@ -12,17 +12,17 @@ const SearchPage = () => {
   const dispatch = useDispatch();
 
   // Get articles and search-related state from Redux
-  const { searchData: searchResults, status, pagination, search } = useSelector((state) => state.articles);
+  const { searchData: searchResults, searchStatus, pagination, search, setSelectedTags } = useSelector((state) => state.articles);
 
   useEffect(() => {
-    if (query.key) {
+    if (searchStatus === 'idle' || query.key || query?.tags?.length>0) {
       // Dispatch the search keyword to Redux
       dispatch(setSearch(query.key));
-
+      // dispatch(set)
       // Fetch articles based on the current search term
       dispatch(searchArticles({ search: query.key, tags: query.tags, page: pagination.currentPage, pageSize: pagination.pageSize }));
     }
-  }, [query.key, pagination.currentPage, pagination.pageSize, dispatch]);
+  }, [query.key, query?.tags?.length, searchStatus, pagination.currentPage, pagination.pageSize, dispatch]);
 
   return (
     <Base title={`Search results for ${query.key}`}>
@@ -31,7 +31,7 @@ const SearchPage = () => {
           <h1 className="h2 mb-8 text-center">
             Search results for <span className="text-primary">{query.key}</span>
           </h1>
-          {status === 'loading' ? (
+          {searchStatus === 'loading' ? (
             // <div className="py-24 text-center text-h3 shadow">Loading...</div>
              <Loader/>
           ) : searchResults?.data?.length > 0 ? (

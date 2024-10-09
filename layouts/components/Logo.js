@@ -25,11 +25,12 @@ const Logo = ({ src , logoImg}) => {
     <Link href="/" className="navbar-brand">
       {src || logo ? (
         <ImageFallback
-          width={mediumWidth}
-          height={mediumHeight}
+          width={1069}
+          height={936}
           src={ 
-            logoImg?`${BASE_URL}${logoImg}`
-            :(mounted && (theme === "dark" || resolvedTheme === "dark"))
+            // logoImg?`${BASE_URL}${logoImg}`
+            // :
+            (mounted && (theme === "dark" || resolvedTheme === "dark"))
               ? logo_white
               : logo
           }

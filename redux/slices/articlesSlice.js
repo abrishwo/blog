@@ -22,28 +22,37 @@ export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (p
 
 
 // search all articles with advanced search functionality
-
- export const searchArticles = createAsyncThunk('articles/searchArticles', async (params = {}) => {
+export const searchArticles = createAsyncThunk('articles/searchArticles', async (params = {}) => {
   const { page = 1, pageSize = 4, tags = [], search = "" } = params;
-  
-  // Start building the query with pagination and population
-  let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
-  
-  // Prepare combined filtering for both tags and search if needed
-  let filterQuery = "";
 
-  // Create a filter that enforces both tag and search conditions using $and
+  // Start building the base query with pagination and population
+  let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+
+  // Initialize conditions for filters
   let conditions = [];
 
-  // Add tags filtering if tags are selected
-  if (tags.length > 0) {
-    const tagsQuery = tags.map((tag, index) => 
-      `filters[$and][0][$or][${index}][tags][Slug][$eqi]=${tag}`).join('&');
+  // 1. When both search input and tags are empty, return all articles
+  if (tags.length === 0 && !search) {
+    // No filtering is needed, return all articles (just pagination)
+    // The base query already handles this case, so we don't need to modify it further
+  }
+
+  // 2. When tags are selected and search input is empty
+  else if (tags.length > 0 && !search) {
+    // Add tag filtering with OR logic to match any of the selected tags
+    const tagsQuery = tags.map((tag, index) =>
+      `filters[$or][${index}][tags][Slug][$eqi]=${tag}`).join('&');
     conditions.push(tagsQuery);
   }
 
-  // Add search filtering if search input is provided
-  if (search) {
+  // 3. When both tags and search input are provided (existing condition)
+  else if (tags.length > 0 && search) {
+    // Add tag filtering with OR logic to match any of the selected tags
+    const tagsQuery = tags.map((tag, index) =>
+      `filters[$and][0][$or][${index}][tags][Slug][$eqi]=${tag}`).join('&');
+    conditions.push(tagsQuery);
+
+    // Add search filtering for title, excerpt, content, or slug fields
     const searchFields = ['Title', 'Excerpt', 'Content', 'Slug'];
     const searchQuery = searchFields
       .map((field, index) => `filters[$and][1][$or][${index}][${field}][$containsi]=${search}`)
@@ -52,14 +61,23 @@ export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (p
     conditions.push(searchQuery);
   }
 
-  // Combine both conditions with an $and operator
-  if (conditions.length > 0) {
-    filterQuery = `&${conditions.join('&')}`;
+  // 4. When search input is provided and tags are empty (existing condition)
+  else if (!tags.length && search) {
+    // Add search filtering for title, excerpt, content, or slug fields
+    const searchFields = ['Title', 'Excerpt', 'Content', 'Slug'];
+    const searchQuery = searchFields
+      .map((field, index) => `filters[$or][${index}][${field}][$containsi]=${search}`)
+      .join('&');
+    
+    conditions.push(searchQuery);
   }
 
-  // Combine the filter query with the base query
-  query += filterQuery;
+  // Combine conditions into the query string
+  if (conditions.length > 0) {
+    query += `&${conditions.join('&')}`;
+  }
 
+  // Fetch articles from Strapi API
   try {
     const response = await axios.get(query);
     return response.data;
@@ -68,6 +86,7 @@ export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (p
     throw error;
   }
 });
+
 
 
 
@@ -109,7 +128,7 @@ export const fetchRelatedPosts = createAsyncThunk('articles/fetchRelatedPosts', 
 
 // Fetch posts by tag
 export const fetchPostsByTags = createAsyncThunk('articles/fetchPostsByTags', async (tag) => {
-  const response = await axios.get(`${BASE_URL}/api/articles/?filters[tags][Slug][$eq]=${tag}&populate=*`);
+  const response = await axios.get(`${BASE_URL}/api/articles/?filters[tags][Slug][$eqi]=${tag}&populate=*`);
   return response.data.data;
 });
 
@@ -128,6 +147,8 @@ const articlesSlice = createSlice({
     relatedPosts: [],
     postsByTag: [],
     tags: [],
+    byTagStatus: 'idle',
+    searchStatus: 'idle',
     status: 'idle', // idle | loading | succeeded | failed
     error: null,
     pagination: {
@@ -170,16 +191,16 @@ const articlesSlice = createSlice({
           // Fetch all articles
   builder
     .addCase(searchArticles.pending, (state) => {
-      state.status = 'loading';
+      state.searchStatus = 'loading';
     })
     .addCase(searchArticles.fulfilled, (state, action) => {
-      state.status = 'succeeded';
+      state.searchStatus = 'succeeded';
       state.searchData = action.payload;
       state.pagination.totalItems = action.payload.meta.pagination.total;
       state.pagination.totalPages = action.payload.meta.pagination.pageCount;
     })
     .addCase(searchArticles.rejected, (state, action) => {
-      state.status = 'failed';
+      state.searchStatus = 'failed';
       state.error = action.error.message;
     });
     // Fetch tags
@@ -227,14 +248,14 @@ const articlesSlice = createSlice({
     // Fetch posts by tag
     builder
       .addCase(fetchPostsByTags.pending, (state) => {
-        state.status = 'loading';
+        state.byTagStatus = 'loading';
       })
       .addCase(fetchPostsByTags.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.byTagStatus = 'succeeded';
         state.postsByTag = action.payload;
       })
       .addCase(fetchPostsByTags.rejected, (state, action) => {
-        state.status = 'failed';
+        state.byTagStatus = 'failed';
         state.error = action.error.message;
       });
   },

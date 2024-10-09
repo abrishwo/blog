@@ -132,19 +132,23 @@ const Header = ({configData}) => {
                   ) : (
                     <li className="nav-item">
                     { menu.name === "SEARCH" || menu.url==='/search' ?(
-                      <button
+                      <Link
                         // className={`search-button flex items-center justify-center px-4 py-2 text-sm text-white rounded-full bg-primary`}
                         className={`nav-link block ${
                           (searchBtnActive || menu.url==='/search') && "active"
                         }`}
                         onClick={() => {
-                          (router.asPath === '/') && setSearchBtnActive(true);
+                          if(router.asPath === '/') {
+                            setSearchBtnActive(true);
+                          }
                          setSearchModal(true);
                         }}
+
+                        href="#"
                       >
                         {/* <IoSearch /> */}
                         {menu.name}
-                      </button>
+                      </Link>
                     ):( <Link
                         href={menu.url}
                         className={`nav-link block ${
