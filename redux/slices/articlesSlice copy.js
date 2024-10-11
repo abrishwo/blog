@@ -5,38 +5,21 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // Fetch all articles with advanced search functionality
 
-// export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (params = {}) => {
-//   const { page = 1, pageSize = 4, tags = [], search = "" } = params;
-  
-//   // Start building the query with pagination and population
-//   let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
-  
-//   try {
-//     const response = await axios.get(query);
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error fetching articles:', error);
-//     throw error;
-//   }
-// });
-// Fetch all articles 
 export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (params = {}) => {
-
   const { page = 1, pageSize = 4, tags = [], search = "" } = params;
+  
+  // Start building the query with pagination and population
   let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
   
-  if (tags.length > 0) {
-    const tagsQuery = tags.map(tag => `filters[tags][Name][$eq]=${tag}`).join('&');
-    query += `&${tagsQuery}`;
+  try {
+    const response = await axios.get(query);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+    throw error;
   }
-
-  if (search) {
-    query += `&filters[Title][$containsi]=${search}`;
-  }
-
-  const response = await axios.get(query);
-  return response.data;
 });
+
 
 // search all articles with advanced search functionality
 export const searchArticles = createAsyncThunk('articles/searchArticles', async (params = {}) => {
@@ -210,18 +193,12 @@ const articlesSlice = createSlice({
     .addCase(searchArticles.pending, (state) => {
       state.searchStatus = 'loading';
     })
-    // .addCase(searchArticles.fulfilled, (state, action) => {
-    //   state.searchStatus = 'succeeded';
-    //   state.searchData = action.payload;
-    //   state.pagination.totalItems = action.payload.meta.pagination.total;
-    //   state.pagination.totalPages = action.payload.meta.pagination.pageCount;
-    // })
     .addCase(searchArticles.fulfilled, (state, action) => {
       state.searchStatus = 'succeeded';
-      state.searchData = action.payload?.data || [];
-      state.pagination.totalItems = action.payload?.meta?.pagination?.total || 0;
-      state.pagination.totalPages = action.payload?.meta?.pagination?.pageCount || 1;
-    })    
+      state.searchData = action.payload;
+      state.pagination.totalItems = action.payload.meta.pagination.total;
+      state.pagination.totalPages = action.payload.meta.pagination.pageCount;
+    })
     .addCase(searchArticles.rejected, (state, action) => {
       state.searchStatus = 'failed';
       state.error = action.error.message;

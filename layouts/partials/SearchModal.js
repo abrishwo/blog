@@ -1,40 +1,32 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { IoCloseCircleOutline } from "react-icons/io5";
+import { IoCloseCircleOutline, IoSearchOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchArticles, setSearch, setSelectedTags, setPagination, fetchTags } from '../../redux/slices/articlesSlice';
+import { fetchArticles, searchArticles, setSearch, setSelectedTags, setPagination, fetchTags } from '../../redux/slices/articlesSlice';
 
 const SearchModal = ({ searchModal, setSearchModal }) => {
   const router = useRouter();
   const [input, setInput] = useState("");
-  // const [tags, setTags] = useState([]); // Tags array
-  // const [selectedTags, setSelectedTags] = useState([]); // Selected tags
   const [suggestions, setSuggestions] = useState([]); // Keyword suggestions
   const [showSuggestions, setShowSuggestions] = useState(false); // Show suggestions
 
   const dispatch = useDispatch();
 
   // Redux state
-  const { items, tags, search, selectedTags, status } = useSelector((state) => state.articles);
+  const { items, tags, search, selectedTags, status, searchData, searchStatus } = useSelector((state) => state.articles);
 
   useEffect(() => {
     dispatch(fetchTags()); // Fetch all available tags on mount
     dispatch(fetchArticles({ search, tags: selectedTags }));
   }, [searchModal]);
 
-
   useEffect(() => {
     if (searchModal) {
-      
       document.getElementById("searchModalInput").focus();
 
       const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-          router.push({
-            pathname: "/search",
-            query: { key: input, tags: selectedTags.join(",") },
-          });
-          setSearchModal(false);
+          handleSearch();
         }
         if (e.key === "Escape") {
           setSearchModal(false);
@@ -50,13 +42,6 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
     }
   }, [input, selectedTags, router, searchModal, setSearchModal]);
 
-  // const handleTagClick = (tag) => {
-  //   setSelectedTags(
-  //     selectedTags.includes(tag)
-  //       ? selectedTags.filter((t) => t !== tag)
-  //       : [...selectedTags, tag]
-  //   );
-  // };
   const handleTagClick = (tag) => {
     const updatedTags = selectedTags.includes(tag)
       ? selectedTags.filter((t) => t !== tag)
@@ -82,6 +67,19 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
     }
   };
 
+  
+
+  const handleSearch = () => {
+    dispatch(setSearch(input));
+    // handleTagClick();
+    dispatch(searchArticles({ search: input, tags: selectedTags }));
+    router.push({
+      pathname: "/search",
+      query: { key: input, tags: selectedTags.join(",") , searchData: searchData},
+    });
+    setSearchModal(false);
+  };
+
   return (
     <div className={`search-modal ${searchModal ? "open" : ""}`}>
       {/* Close Button */}
@@ -89,33 +87,20 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
         <IoCloseCircleOutline />
       </button>
 
-      {/* Input field */}
-      <input
-        type="text"
-        className="search-input"
-        id="searchModalInput"
-        placeholder="Search by keyword..."
-        value={input}
-        onChange={handleInputChange}
-      />
-
-      {/* Suggestions */}
-      {/* {showSuggestions && suggestions.length > 0 && (
-        <ul className="suggestions-list">
-          {suggestions.map((suggestion, index) => (
-            <li
-              key={index}
-              className="suggestion-item"
-              onClick={() => {
-                setInput(suggestion);
-                setShowSuggestions(false); // Hide suggestions when selected
-              }}
-            >
-              {suggestion}
-            </li>
-          ))}
-        </ul>
-      )} */}
+      {/* Input field with search button */}
+      <div className="search-bar">
+        <input
+          type="text"
+          className="search-input"
+          id="searchModalInput"
+          placeholder="Search by keyword..."
+          value={input}
+          onChange={handleInputChange}
+        />
+        <button className="search-button" onClick={handleSearch}>
+          <IoSearchOutline />
+        </button>
+      </div>
 
       {/* Tags Filter */}
       <div className="tags-filter">
@@ -132,6 +117,7 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
         ))}
       </div>
 
+
       {/* Styling */}
       <style jsx>{`
         .search-modal {
@@ -141,10 +127,8 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
           transform: translateX(-50%);
           width: 90%;
           max-width: 600px;
-          max-height: fit-content !important;
           padding: 20px;
           background-color: white;
-        
           z-index: 999;
           border-radius: 8px;
           display: flex;
@@ -161,14 +145,19 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
           cursor: pointer;
         }
 
-        .search-input {
+        .search-bar {
+          display: flex;
           margin-top: 2rem !important;
+          align-items: center;
+          width: 100%;
+        }
+
+        .search-input {
           padding: 12px;
           font-size: 16px;
           width: 100%;
           border: 1px solid #ccc;
-          border-radius: 8px;
-          margin-bottom: 10px;
+          border-radius: 8px 8px 8px 8px;
           outline: none;
         }
 
@@ -176,24 +165,17 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
           border-color: #0070f3;
         }
 
-        .suggestions-list {
-          margin-top: 10px;
-          list-style: none;
-          padding: 0;
-          background: white;
-          max-height: 200px;
-          overflow-y: auto;
-        }
-
-        .suggestion-item {
-          padding: 10px;
+        .search-button {
+          min-height: 50px !important;
+          min-width: 10vw !important;
+          background-color: #0070f3;
+          border: none;
+          padding: 12px;
+          font-size: 24px;
+          color: white;
           cursor: pointer;
-         
-        }
-
-        .suggestion-item:hover {
-          background-color: #f7f7f7;
-          
+          border-radius: 0 8px 8px 0;
+          transform : translateX(-100%) !important;
         }
 
         .tags-filter {
@@ -221,6 +203,24 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
         .tag-selected {
           background-color: #0070f3;
           color: white;
+        }
+
+        @media (max-width: 768px) {
+          .search-modal {
+            width: 95%;
+          }
+
+          .search-input {
+            font-size: 14px;
+          }
+
+          .search-button {
+            padding: 10px;
+          }
+
+          .tag-btn {
+            font-size: 12px;
+          }
         }
       `}</style>
     </div>

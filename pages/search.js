@@ -12,31 +12,35 @@ const SearchPage = () => {
   const dispatch = useDispatch();
 
   // Get articles and search-related state from Redux
-  const { searchData: searchResults, searchStatus, pagination, search, setSelectedTags } = useSelector((state) => state.articles);
+  const { searchData, searchStatus, pagination, search, selectedTags } = useSelector((state) => state.articles);
 
   useEffect(() => {
-    if (searchStatus === 'idle' || query.key || query?.tags?.length>0) {
+    if (searchStatus === 'idle' && !query.searchData) {
       // Dispatch the search keyword to Redux
-      dispatch(setSearch(query.key));
-      // dispatch(set)
-      // Fetch articles based on the current search term
-      dispatch(searchArticles({ search: query.key, tags: query.tags, page: pagination.currentPage, pageSize: pagination.pageSize }));
+            dispatch(searchArticles({ search: search, tags: selectedTags, page: pagination.currentPage, pageSize: pagination.pageSize }));
     }
-  }, [query.key, query?.tags?.length, searchStatus, pagination.currentPage, pagination.pageSize, dispatch]);
+  }, [search, selectedTags, searchStatus, dispatch]);
+  
 
+
+  if(searchStatus === 'loading'){
+     return <Base title={`looking for ${search} in ${selectedTags.forEach(element => {
+      (<span>{element.replace("-"," ")}</span>);
+     })}`}>
+        <Loader />
+      </Base>;
+    }
   return (
-    <Base title={`Search results for ${query.key}`}>
+    <Base title={`Search results for ${search}`}>
+
       <div className="section">
         <div className="container">
           <h1 className="h2 mb-8 text-center">
             Search results for <span className="text-primary">{query.key}</span>
           </h1>
-          {searchStatus === 'loading' ? (
-            // <div className="py-24 text-center text-h3 shadow">Loading...</div>
-             <Loader/>
-          ) : searchResults?.data?.length > 0 ? (
+          {searchData && searchData.length > 0 ? (
             <div className="row">
-              {searchResults?.data?.map((post, i) => (
+              {searchData.map((post, i) => (
                 <div key={`key-${i}`} className="col-12 mb-8 sm:col-6">
                   <Post post={post} />
                 </div>
