@@ -167,11 +167,13 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
 
         .search-button {
           min-height: 50px !important;
-          min-width: 10vw !important;
+          min-width: 8vw !important;
           background-color: #0070f3;
           border: none;
           padding: 12px;
           font-size: 24px;
+          display: inline-flex;
+          justify-content: center;
           color: white;
           cursor: pointer;
           border-radius: 0 8px 8px 0;

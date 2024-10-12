@@ -25,28 +25,27 @@ const Logo = ({ src , logoImg}) => {
     <Link href="/" className="navbar-brand">
       {src || logo ? (
         <ImageFallback
-          width={1069}
-          height={936}
+          fallback="/images/logo.png"
           src={ 
-            // logoImg?`${BASE_URL}${logoImg}`
-            // :
-            (mounted && (theme === "dark" || resolvedTheme === "dark"))
+            logoImg? `${BASE_URL}${logoImg}`:(mounted && (theme === "dark" || resolvedTheme === "dark"))
               ? logo_white
               : logo
           }
-          // src={`${BASE_URL}${logoImg}`}
-          fallback="/images/logo.png" // Fallback image (must be a supported format)
-
-          // width={300}
-          // height={300}
-
           alt={title}
-          priority
-          // Tailwind CSS for responsive width/height
-          className="m-auto w-24 h-12 sm:w-32 sm:h-16 md:w-48 md:h-24 lg:w-56 lg:h-28 xl:w-64 xl:h-32"
+          fill={true} // Ensures the image fills the container
+          priority // Ensures the image loads quickly
+          sizes="(max-width: 640px) 100vw, 
+                 (max-width: 768px) 50vw, 
+                 (max-width: 1024px) 33vw, 
+                 25vw" 
+                 // Responsive size adjustments
+          className="mx-auto"
           style={{
-            maxHeight: "100%", // Ensure the logo fits within its container
+            objectFit: "contain",
+            objectPosition: "left",
+            maxHeight: "100%",
             maxWidth: "100%",
+            // aspectRatio: "1/1",
           }}
         />
       ) : logo_text ? (

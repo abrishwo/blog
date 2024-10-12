@@ -26,6 +26,7 @@ const ImageFallback = (props) => {
     <Image
       {...rest}
       src={imgSrc}
+      // fill={fill}
       onError={() => {
         setImgSrc(fallback); // Use fallback if the image fails to load
       }}

@@ -22,7 +22,7 @@ const Sidebar = ({ posts, categories, className, tags }) => {
   const [showRecent, setShowRecent] = useState(true);
   const dispatch = useDispatch();
   const { items: systemConfig, social: socialMedia, status } = useSelector((state) => state.config);
-
+  const { logo, logo_white, logo_width, logo_height, logo_text, title } = config.site;
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchSystemConfig());
@@ -31,86 +31,112 @@ const Sidebar = ({ posts, categories, className, tags }) => {
   }, [dispatch, status]);
 
 
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 
-  return (
-    <aside className={`${className} px-0 lg:px-6 lg:col-4`}>
-      {about.enable && (
-        <div className="relative rounded border border-border p-6 text-center dark:border-darkmode-border">
-          <ImageFallback
-            className="-z-[1]"
-            src="/images/map.svg"
-            fill={true}
-            alt="bg-map"
-          />
-          {/* <Logo logoImg={systemConfig?.attributes?.Logo?.data?.attributes?.formats?.thumbnail?.url} /> */}
-          <Logo />
-          {markdownify(systemConfig?.attributes?.bio, "p", "mt-8")}
-
-
-          <Social
-            className="socials sidebar-socials mt-6 justify-center"
-            source={social}
-            social={socialMedia}
-          />
-
-
-        </div>
-      )}
-
-      {tags && (<div className="mt-6 relative rounded border border-border p-6 text-center dark:border-darkmode-border">
-        <div className="flex flex-wrap my-2">
-
-          {markdownify('Filter By Tags', "h2", "title-h2")}
-          <ul className="flex flex-wrap items-center">
-            {tags?.data?.map((tag, index) => (
-              <li
-                className="mx-2 my-2 inline-flex h-7 rounded-[35px] bg-primary px-3 text-white"
-                key={"tag-" + index}
-              >
-                <Link
-                  className="capitalize"
-                  href={`/categories/${tag.attributes.Slug}`}
-                >
-                  {tag.attributes.Name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-      </div>)}
-
-
-
-      {/* newsletter */}
-      {(newsletter.enable && 1<0) && (
-        <div className="mt-6  rounded border border-border p-6 text-center dark:border-darkmode-border">
-          <h4 className="section-title">{newsletter.title}</h4>
-          <p className="mt-10 text-xs">{newsletter.content}</p>
-          <MailchimpSubscribe
-            url={newsletter.malichip_url}
-            render={({ subscribe, status, message }) => (
-              <CustomForm
-                onValidated={(formData) => subscribe(formData)}
-                status={status}
-                message={message}
+    return (
+      <aside className={`${className} px-4 lg:px-6 lg:col-4`}>
+        {about.enable && (
+          <div className="relative rounded border border-border p-6 text-center dark:border-darkmode-border">
+            <ImageFallback
+              className="-z-[1]"
+              src="/images/map.svg"
+              fill={true}
+              alt="bg-map"
+            />
+            <div className="container text-center">
+              {/* Logo Section */}
+              <div className="mb-6 inline-flex items-center">
+                <ImageFallback
+                  src={
+                    systemConfig?.attributes?.Logo?.data?.attributes?.formats?.thumbnail?.url
+                      ? `${BASE_URL}${systemConfig.attributes.Logo.data.attributes.formats.thumbnail.url}`
+                      : logo
+                  }
+                  alt={title}
+                  fill={true}
+                  priority
+                  sizes="(max-width: 640px) 100vw, 
+                         (max-width: 768px) 50vw, 
+                         (max-width: 1024px) 33vw, 
+                         25vw"
+                          className="mx-auto mb-12"
+                  // className="w-24 h-12 sm:w-32 sm:h-16 md:w-40 md:h-20 lg:w-48 lg:h-24"
+                  style={{
+                    objectFit: "contain",
+                    objectPosition: "topCenter",
+                    maxHeight: "20%",
+                    maxWidth: "40%",
+                  }}
+                />
+              </div>
+              {/* Bio Section */}
+              {/* <div className="mb-6"> */}
+                {markdownify(systemConfig?.attributes?.bio, "p", "mt-4 xl:text-center content-body-p pt-12 sm:pt-24")}
+              {/* </div> */}
+              {/* Social Media Section */}
+              <Social
+                className="socials sidebar-socials mt-6 justify-center"
+                source={social}
+                social={socialMedia}
               />
-            )}
-          />
-          <p className="text-xs">
-            By Singing Up, You Agree To
-            <Link
-              href="/privacy"
-              className="ml-1 text-primary"
-            >
-              Privacy Policy
-            </Link>
-          </p>
-        </div>
-      )}
-    </aside>
-  );
-};
-
-export default Sidebar;
+            </div>
+          </div>
+        )}
+  
+        {/* Tags Section */}
+        {tags && (
+          <div className="mt-6 rounded border border-border p-6 text-center dark:border-darkmode-border">
+            <div className="flex flex-wrap my-2">
+              {markdownify('Filter By Tags', "h2", "title-h2")}
+              <ul className="flex flex-wrap items-center justify-center">
+                {tags?.data?.map((tag, index) => (
+                  <li
+                    className="mx-2 my-2 inline-flex h-7 rounded-[35px] bg-primary px-3 text-white"
+                    key={"tag-" + index}
+                  >
+                    <Link
+                      className="capitalize"
+                      href={`/categories/${tag.attributes.Slug}`}
+                    >
+                      {tag.attributes.Name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+  
+        {/* Newsletter Section */}
+        {newsletter.enable && (
+          <div className="mt-6 rounded border border-border p-6 text-center dark:border-darkmode-border">
+            <h4 className="section-title">{newsletter.title}</h4>
+            <p className="mt-4 text-xs">{newsletter.content}</p>
+            <MailchimpSubscribe
+              url={newsletter.malichip_url}
+              render={({ subscribe, status, message }) => (
+                <CustomForm
+                  onValidated={(formData) => subscribe(formData)}
+                  status={status}
+                  message={message}
+                />
+              )}
+            />
+            <p className="text-xs mt-4">
+              By Signing Up, You Agree To
+              <Link
+                href="/privacy"
+                className="ml-1 text-primary"
+              >
+                Privacy Policy
+              </Link>
+            </p>
+          </div>
+        )}
+      </aside>
+    );
+  };
+  
+  export default Sidebar;
+  

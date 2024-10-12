@@ -37,7 +37,7 @@ const Header = ({configData}) => {
   return (
     <header className="header sticky top-0 bg-white z-50">
       <nav className="navbar container px-1 sm:px-0">
-        <div className="order-0 sm:flex flex-row justify-between">
+        <div className="order-0 small-l sm:flex flex-row justify-between">
           <Logo  logoImg={configData?.Logo?.data?.attributes?.formats?.thumbnail?.url}/>
         
           <button
@@ -56,13 +56,14 @@ const Header = ({configData}) => {
           </button>
 
         </div>
-        <hr className="md:hidden lg:hidden w-full h-1/5 mt-4"/>
+
+        <hr className="md:hidden lg:hidden w-full h-1/50 mt-24"/>
         <div className="midle-title flex flex-col items-center justify-evenly">
-          <h3 className="md:mb-2 mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+          <h3 className="md:my-2 mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
            {configData?configData.Title:" STARS and TOQUES"}
           </h3>
           <p className="md:mt-2 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600">
-          {configData?configData.Tagline:"Mostly Fine Dining Restaurant Reviews"}
+              {configData?configData.Tagline:"Mostly Fine Dining Restaurant Reviews"}
           </p>
         </div>
 
