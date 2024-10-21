@@ -5,16 +5,16 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost', '3.8.211.12','admin.starsandtoques.com','vivid-flowers-9f3564b8da.media.strapiapp.com'], // Add 'localhost' or other domains as needed
+    domains: ['localhost', '3.8.211.12','admin.starsandtoques.com','vivid-flowers-9f3564b8da.media.strapiapp.com', 'placehold.co'], // Add 'localhost' or other domains as needed
 
-    remotePatterns: [
-      {
-        protocol: 'http',
-        hostname: '3.8.211.12',  // Add your Strapi server IP or domain
-        port: '1337',            // Add port if needed
-        pathname: '/uploads/**', // Define the path of the images
-      },
-    ],
+  //   remotePatterns: [
+  //     {
+  //       protocol: 'http',
+  //       hostname: '3.8.211.12',  // Add your Strapi server IP or domain
+  //       port: '1337',            // Add port if needed
+  //       pathname: '/uploads/**', // Define the path of the images
+  //     },
+  //   ],
   },
   // async rewrites() {
   //   return [

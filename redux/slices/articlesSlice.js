@@ -176,6 +176,7 @@ const articlesSlice = createSlice({
     },
     search: '',
     selectedTags: [],
+    featuredArticle: null,
   },
   reducers: {
     setSearch: (state, action) => {
@@ -183,6 +184,10 @@ const articlesSlice = createSlice({
     },
     setSelectedTags: (state, action) => {
       state.selectedTags = action.payload;
+    },
+
+    setFeaturedArticle: (state, action) => {
+      state.featuredArticle = action.payload;
     },
     setPagination: (state, action) => {
       state.pagination = { ...state.pagination, ...action.payload };
@@ -284,6 +289,6 @@ const articlesSlice = createSlice({
   },
 });
 
-export const { setSearch, setSelectedTags, setPagination } = articlesSlice.actions;
+export const { setSearch, setSelectedTags,setFeaturedArticle, setPagination } = articlesSlice.actions;
 
 export default articlesSlice.reducer;

@@ -20,7 +20,7 @@ const Article = ({ slug }) => {
     // if (details.data[0]) {
       const tagList = details?.data[0]?.attributes?.tags?.data.map(tag => tag?.attributes?.Name.toLowerCase());
       // dispatch(fetchRelatedPosts({currentPostId: details.id, tags: tagList}));
-      dispatch(fetchRelatedPosts(["star-1", "belgium"]));
+      // dispatch(fetchRelatedPosts(["star-1", "belgium"]));
     // }
   }, [details, dispatch]);
 

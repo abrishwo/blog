@@ -58,7 +58,7 @@ const Header = ({configData}) => {
         </div>
 
         <hr className="md:hidden lg:hidden w-full h-1/50 mt-24"/>
-        <div className="midle-title flex flex-col items-center justify-evenly">
+        <div className="midle-title flex flex-col items-center sm:mx-auto md:justify-evenly">
           <h3 className="md:my-2 mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
            {configData?configData.Title:" STARS and TOQUES"}
           </h3>
@@ -66,6 +66,7 @@ const Header = ({configData}) => {
               {configData?configData.Tagline:"Mostly Fine Dining Restaurant Reviews"}
           </p>
         </div>
+
 
         <div className="flex items-center space-x-4 xl:space-x-8">
           

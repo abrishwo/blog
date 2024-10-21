@@ -8,9 +8,10 @@ import { markdownify } from "@lib/utils/textConverter";
 import Link from "next/link";
 import { FaRegCalendar } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchArticles, setSearch, setSelectedTags, setPagination, fetchTags } from '../redux/slices/articlesSlice';
+import { fetchArticles, setSearch, setSelectedTags, setPagination, fetchTags , setFeaturedArticle} from '../redux/slices/articlesSlice';
 import React, { useEffect, useState } from "react";
 import Loader from "@layouts/components/Loader";
+import { useRouter } from 'next/router';
 
 const { blog_folder } = config.settings;
 
@@ -20,13 +21,13 @@ const Home = ({
   promotion,
 }) => {
   const dispatch = useDispatch();
-  const { items: articles, status, pagination, search, selectedTags, tags } = useSelector((state) => state.articles);
+  const { items: articles, status, pagination, search, selectedTags, tags, featuredArticle } = useSelector((state) => state.articles);
 
-  const [featuredArticle, setFeaturedArticle] = useState(null);
+  // const [featuredArticle, setFeaturedArticle] = useState(null);
   const [filteredArticles, setFilteredArticles] = useState(null);
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
- 
+  const router = useRouter();
 
   useEffect(() => {
     if (status === 'idle') {
@@ -41,6 +42,31 @@ const Home = ({
     }
   }, [status, pagination.currentPage, pagination.pageSize, dispatch]);
 
+
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      if (url === '/') {
+        dispatch(fetchArticles({
+          page: pagination.currentPage,
+          pageSize: pagination.pageSize,
+          tags: selectedTags,
+          search,
+        }));
+  
+        dispatch(fetchTags());
+
+      }
+    };
+
+    // Subscribe to route change events
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    // Cleanup subscription on component unmount
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+
   // useEffect(() => {
   //   if (!articles) {
   //     dispatch(fetchArticles({
@@ -54,12 +80,17 @@ const Home = ({
   //   }
   // }, [status, pagination.currentPage, articles, pagination.pageSize, search, dispatch]);
 
+  // if (url === '/') {
+  //   // Trigger state update when returning to '/'
+  //   setIsHomeVisited(true);
+  // }
 
   useEffect(() => {
-    if (articles) {
+    if (articles ) {
       const featured = articles?.data?.find(article => article?.attributes?.Featured);
       const filteredArticlesData = articles?.data?.filter(article => !article?.attributes?.Featured);
-      setFeaturedArticle(featured);
+      // setFeaturedArticle(featured);
+      dispatch(setFeaturedArticle(featured));
       setFilteredArticles(filteredArticlesData);
     }
     if(!tags){
@@ -108,7 +139,8 @@ const Home = ({
                 <div className="col-9 lg:col-6 relative w-full">
                   <ImageFallback
                     className="mx-auto object-contain w-full h-64 object-cover md:h-96"
-                    src={`${BASE_URL}${featuredArticle.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
+                    src={(BASE_URL + featuredArticle?.attributes.Thumbnail.data.attributes.formats.thumbnail.url)??'/images/placeholder_img.png'}
+                   
                     width={548}
                     height={443}
                     priority
@@ -121,18 +153,29 @@ const Home = ({
                       }}
                     ></div>
                 </div>
-              {/* // )}  */}
+              {/* )}   */}
 
               {/* <div className={banner.image_enable ? "mt-12 text-center lg:mt-0 lg:text-left lg:col-6 inset-0 flex flex-col justify-between items-start p-6 text-zinc-800 w-full" : "mt-12 text-center lg:mt-0 lg:text-left lg:col-12"}> */}
                 <div className="content-container md:mt-12 text-center lg:mt-0 lg:text-left lg:col-6 inset-0 flex flex-col justify-between items-start p-6 text-zinc-800 w-full">
                 <h2 className="banner-title text-3xl font-bold mb-4">
-                  {featuredArticle.attributes.Title}
+                 
+
+                  <Link
+                      href={`/${blog_folder}/${featuredArticle?.attributes.Slug}`}
+                      className="block hover:text-primary"
+                    >
+                       {featuredArticle?.attributes.Title}
+                  </Link>
+
                 </h2>
+
+     
+
                 <p className="text-lg mb-4">
-                  {featuredArticle.attributes.Excerpt}
+                  {featuredArticle?.attributes.Excerpt}
                 </p>
               
-                  <Link className="btn btn-primary mt-6" href={`/posts/${featuredArticle.attributes.Slug}`}>
+                  <Link className="btn btn-primary mt-6" href={`/posts/${featuredArticle?.attributes.Slug}`}>
                     Read More
                   </Link>
              
@@ -142,7 +185,7 @@ const Home = ({
            
           </div>
         </section>
-      )}
+      )} 
 {/* {JSON.stringify(articles)} */}
       {/* Recent Posts Section */}
       <section className="section">

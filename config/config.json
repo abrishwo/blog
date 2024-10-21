@@ -5,6 +5,7 @@
     "favicon": "/images/favicon.png",
     "logo": "/images/logo.png",
     "logo_white": "/images/logo.png",
+    "placeholder": "/images/placeholder_img.png",
     "logo_width": "125",
     "logo_height": "75",
     "logo_text": "Fine Dinings"
