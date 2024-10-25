@@ -5,23 +5,73 @@ import { FaEnvelope, FaMapMarkerAlt, FaUserAlt, FaClock } from "react-icons/fa";
 import ImageFallback from "./components/ImageFallback";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchContactUs, submitContactForm } from "../redux/slices/contactSlice";
+import { fetchContactUs, submitContactForm , setMailConfig} from "../redux/slices/contactSlice";
 
 import React, { useEffect, useState } from "react";
 import Loader from "./components/Loader";
+
+import dynamic from 'next/dynamic'; // To prevent SSR issues with React Quill
+import 'react-quill/dist/quill.snow.css'; // Import Quill styles
+import 'react-quill/dist/quill.bubble.css'; // For a different theme
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import ToastNotification, { showSuccessToast, showErrorToast } from './components/ToastNotification';
+
+
+// const modules = {
+//   toolbar: [
+//     [{ header: '1' }, { header: '2' }, { font: [] }],
+//     [{ list: 'ordered' }, { list: 'bullet' }],
+//     ['bold', 'italic', 'underline'],
+//     [{ align: [] }],
+//     ['blockquote', 'code-block'],
+//     ['link', 'image', 'video'], // Adding image and video options
+//     [{ color: [] }, { background: [] }],
+//     ['clean'], // Remove formatting button
+//   ],
+// };
+const modules = {
+  toolbar: [
+    [{ header: '1' }, { header: '2' }, { font: [] }],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['bold', 'italic', 'underline'],
+    [{ align: [] }],
+    ['blockquote', 'code-block'],
+    [{ color: [] }, { background: [] }],
+    ['clean'], // Remove formatting button
+  ],
+};
+// Editor formats to be used for content
+// const formats = [
+//   'header', 'font', 'list', 'bullet', 'bold', 'italic', 'underline',
+//   'align', 'blockquote', 'code-block', 'link', 'image', 'video', 'color', 'background',
+// ];
+const formats = [
+  'header', 'font', 'list', 'bullet', 'bold', 'italic', 'underline',
+  'align', 'blockquote', 'code-block', 'link', 'color', 'background',
+];
+const editorStyle = {
+  height: '250px',  // Custom height for the text editor
+};
 
 const Contact = ({ data }) => {
   const { frontmatter } = data;
   const { title, form_action, phone, mail, location } = frontmatter;
 
   const dispatch = useDispatch();
-  const { items: contact, formStatus, formError, formSuccess, status } = useSelector((state) => state.contact);
+  const { items: contact, formStatus, formError, formSuccess, status, mailConfig } = useSelector((state) => state.contact);
 
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchContactUs());
     }
   }, [dispatch, status]);
+
+  useEffect(() => {
+
+    if(status === 'complete' || contact){
+         dispatch(setMailConfig(contact?.attributes?.Email_config) ); 
+    }
+  }, [contact, dispatch]);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -41,7 +91,26 @@ const Contact = ({ data }) => {
     e.preventDefault();
     dispatch(submitContactForm(formData));
   };
+  const handleRichTextChange = (content) => {
+    setFormData({ ...formData, message: content });
+  };
+const resetFormData = () => {
+  setFormData({
+    fullName: '',
+    subject: '',
+    email: '',
+    message: '',
+  });
+}
+  if (formSuccess) {
+    resetFormData();
+    showSuccessToast('Your message is submitted successfully!');
+  }
 
+  if (formError) {
+    resetFormData();
+    showErrorToast('Failed to submit the form. Please try again.');
+  }
 
   return (
 
@@ -67,8 +136,29 @@ const Contact = ({ data }) => {
                   "h1 my-10 lg:my-11 lg:pt-11 text-center lg:text-left lg:text-[64px]"
                 )}
 
+                              {/* Animated Work Hours Section */}
+               {contact?.attributes?.FormInstructions && ( <motion.div
+                  className="work-hours mt-8 bg-gray-100 dark:bg-darkmode-bg p-6 rounded-lg shadow-lg items-center"
+                  initial={{ opacity: 0, y: -50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                >
+                  
+                  <hr className="w-full zinc-800 text-2xl mb-6" />
+                  {/* <div className=" flex flex-row justify-between items-start sm:flex-col"> */}
+                  {markdownify(
+                  contact?.attributes?.FormInstructions,
+                  "p",
+                  "p my-10 lg:my-11 lg:pt-11 text-center lg:text-left lg:text-[34px]"
+                )}
+
+                  {/* </div> */}
+                </motion.div>)}
+
+
+
                 {/* Animated Work Hours Section */}
-               {contact?.attributes?.WorkingHours && ( <motion.div
+               {contact?.attributes?.WorkingHours.length>0 && ( <motion.div
                   className="work-hours mt-8 bg-gray-100 dark:bg-darkmode-bg p-6 rounded-lg shadow-lg items-center"
                   initial={{ opacity: 0, y: -50 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -134,7 +224,7 @@ const Contact = ({ data }) => {
                       className="form-input w-full"
                       name="fullName"
                       type="text"
-                      placeholder="Thomas Milano"
+                      placeholder="Abreham Shiferaw"
                       value={formData.name} 
                       onChange={handleChange}
                       required
@@ -149,7 +239,7 @@ const Contact = ({ data }) => {
                       className="form-input w-full"
                       name="email"
                       type="email"
-                      placeholder="enatsoft@gmail.com"
+                      placeholder="info@enatsoft.com"
                       value={formData.email} 
                       onChange={handleChange}
                       required
@@ -175,25 +265,30 @@ const Contact = ({ data }) => {
                       Your Message Here
                       <small className="font-secondary text-sm text-primary">*</small>
                     </label>
-                    <textarea
-                      className="form-textarea w-full"
-                      placeholder="Hello I’m Mr ‘x’ from………….."
-                      rows="7"
-                      name="message"
-                      value={formData.message} 
-                      onChange={handleChange} 
-                    />
-                  </div>
+                    <ReactQuill
+                      theme="snow"
+                      value={formData.message}
+                      onChange={handleRichTextChange}
+                      modules={modules}       // Custom toolbar
+                      formats={formats}       // Custom formats
+                      style={editorStyle}     // Set height
+                      
+                   />
+
                   
-                  <button type="submit" disabled={formStatus === 'loading'} className="btn btn-primary">
-                      Submit
+                  </div>
+                  <div className="mt-16 mx-auto flex justify-evenly">
+                  <button type="submit" disabled={formStatus === 'loading'} className="mt-12 px-5 w-1/3 btn btn-primary">
+                      {formStatus === 'loading' ? 'Submitting...' : 'Submit'}
                     </button>
 
-                    {formStatus === 'loading' && <p>Sending message...</p>}
-                    {formSuccess && <p>{formSuccess}</p>}
-                    {formError && <p>Error: {formError}</p>}
+                    {(formData.fullName!=='' || formData.email!=='' || formData.subject!=='' || formData.message!==''  )&& (<button type="button"  onClick = {resetFormData} className="mt-12 px-5 w-1/3 btn btn-primary bg-red-700">
+                      {formStatus === 'idle' && 'Reset'}
+                    </button>)}
+                  </div>
                 </form>
-              
+                
+                  <ToastNotification />
               </div>
             </div>
 
@@ -229,7 +324,7 @@ const Contact = ({ data }) => {
 
             </div>
 
-          {contact?.attributes?.MapCoordinates && ( <iframe
+          {contact?.attributes?.MapCoordinates?.length>0 && ( <iframe
               src={`https://www.google.com/maps?q=${contact?.attributes?.MapCoordinates?.latitude},${contact?.attributes?.MapCoordinates?.longitude}&z=15&output=embed`}
               width="100%"
               height="400"

@@ -15,20 +15,14 @@ export const fetchContactUs = createAsyncThunk('contact/fetchContactUs', async (
   }
 });
 
-// Submit contact form data and send email notification
+// Submit contact form data
 export const submitContactForm = createAsyncThunk(
   'contact/submitContactForm',
   async (formData, { rejectWithValue }) => {
     try {
-      // 1. Submit form data to Strapi CMS
       const res = await axios.post(`${BASE_URL}/api/messages`, {
         data: formData, // Adjust based on the structure Strapi expects
       });
-
-      
-      // 2. Send email notification (through Next.js API route)
-      await axios.post('/api/contact', formData); // Assuming you have a `/api/contact` route set up in Next.js
-
       return res.data;
     } catch (error) {
       console.error('Error submitting contact form:', error);
@@ -46,13 +40,8 @@ const contactSlice = createSlice({
     error: null,
     formError: null, 
     formSuccess: null, 
-    mailConfig: null,
   },
-  reducers: {
-    setMailConfig: (state, action) => {
-      state.mailConfig = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     
     builder
@@ -68,7 +57,7 @@ const contactSlice = createSlice({
         state.error = action.error.message;
       });
 
-    // Handle contact form submission
+  
     builder
       .addCase(submitContactForm.pending, (state) => {
         state.formStatus = 'loading';
@@ -85,6 +74,5 @@ const contactSlice = createSlice({
       });
   },
 });
-export const {setMailConfig } = contactSlice.actions;
 
 export default contactSlice.reducer;
