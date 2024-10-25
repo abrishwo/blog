@@ -66,12 +66,12 @@ const Contact = ({ data }) => {
     }
   }, [dispatch, status]);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if(status === 'complete' || contact){
-         dispatch(setMailConfig(contact?.attributes?.Email_config) ); 
-    }
-  }, [contact, dispatch]);
+  //   if(status === 'complete' || contact){
+  //        dispatch(setMailConfig(contact?.attributes?.Email_config) ); 
+  //   }
+  // }, [contact, dispatch]);
 
   const [formData, setFormData] = useState({
     fullName: '',

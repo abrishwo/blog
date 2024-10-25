@@ -22,17 +22,28 @@ export default async function handler(req, res) {
     // const {body, hdrs} = req.body;
 
     // Set up Nodemailer transporter
+    // const transporter = nodemailer.createTransport({
+    //   // service: 'gmail', // You can use other services like Yahoo, Outlook, etc.
+    //   host: 'smtp.enatsoft.com',
+    //   port: 465, // SMTP port (587 for Gmail)
+    //   secure: true, // true for port 465, false for other ports
+    //   auth: {
+    //     user: process.env.EMAIL_USER, // Your email address (from environment variable)
+    //     pass: process.env.EMAIL_PASS, // Your email password (or app-specific password)
+    //   },
+    // });
     const transporter = nodemailer.createTransport({
-      // service: 'gmail', // You can use other services like Yahoo, Outlook, etc.
-      host: 'smtp.enatsoft.com',
-      port: 465, // SMTP port (587 for Gmail)
-      secure: true, // true for port 465, false for other ports
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secure: process.env.SMTP_PORT == 465, // True for 465, false for other ports
       auth: {
-        user: process.env.EMAIL_USER, // Your email address (from environment variable)
-        pass: process.env.EMAIL_PASS, // Your email password (or app-specific password)
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false, // Set to true in production
       },
     });
-
     // Email content
     const mailOptions = {
       from: `"${name}" ${email}`, // Sender's email (user's email from form)

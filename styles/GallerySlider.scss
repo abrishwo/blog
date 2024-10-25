@@ -39,10 +39,12 @@
   max-width: 100%; // Adjust as needed
 }
 
-.selected-image {
+// .selected-image {
+.selected-image-container{
   width: 100%;
   height: fit-content !important;
-  max-height: 90% !important;
+  max-height: 100% !important;
   object-fit: contain;
-  aspect-ratio: 3/2 !important;
+  height: 70vh !important;
+  aspect-ratio: 2/3 !important;
 }
