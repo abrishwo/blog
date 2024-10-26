@@ -19,8 +19,8 @@
 
 // Thumbnail images
 .thumbnail {
-  width: 40%;
-  height: 30%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   aspect-ratio: 3/2 !important;
   cursor: pointer;
@@ -41,10 +41,34 @@
 
 // .selected-image {
 .selected-image-container{
+  // max-width: 100% !important;
+  // max-height: 100% !important;
+  // min-width: 300px !important;
+  // // object-fit: fill !important;
+  // height: 90vh;
+  // width: 50vw !important;
+  height: 100%;
   width: 100%;
-  height: fit-content !important;
-  max-height: 100% !important;
-  object-fit: contain;
-  height: 70vh !important;
-  aspect-ratio: 2/3 !important;
+  object-fit: none;
+  // height: 70vh !important;
+  // aspect-ratio: 9/16 !important;
 }
+
+
+.slide-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px; /* Adjust as needed */
+  height: 400px; /* Adjust based on your design */
+  overflow: hidden;
+  border-radius: 8px; /* Optional: for rounded corners */
+}
+
+.slide-image {
+  transition: transform 0.3s ease; /* Adds subtle zoom on hover */
+}
+
+.slide-container:hover .slide-image {
+  transform: scale(1.05); /* Slight zoom on hover for effect */
+}
+

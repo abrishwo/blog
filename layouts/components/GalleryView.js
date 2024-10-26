@@ -14,31 +14,24 @@ const GallerySlider = ({ images }) => {
       {/* import Image from 'next/image'; */}
 
 {/* const YourComponent = ({ selectedImage }) => ( */}
-  <div className="selected-image-container w-full h-[60vh] md:h-[80vh] lg:h-[90vh] relative">
+  <div className="slide-container position-center">
     <Image
       src={`${BASE_URL}${selectedImage}`}
       alt="Selected"
-      className="rounded-lg w-1/2 h-full"
+      className="rounded-lg slide-image"
       fill={true}
-      // width={1280}           // Set width based on container dimensions
-      // height={720}           // Set height for a landscape aspect ratio
-      // sizes="(max-width: 768px) 100vw, 80vw" // Adjust based on container's width
+     
       style={{
-        objectFit: 'contain',      // Ensures the image fits within the div boundaries
+        objectFit: 'fill',      // Ensures the image fits within the div boundaries
         objectPosition: 'center',  // Centers the image if aspect ratios differ
-        minWidth: '60%',
+        maxWidth: '100%',
         maxHeight: '100%',
-        aspectRatio: '2/3 !important',
+        aspectRatio: 'auto scale !important',
         transition: 'transform 0.3s ease',
       }}
       priority
     />
   </div>
-);
-
-
-
-
 
       <div className="thumbnail-slider mt-4 flex overflow-x-auto space-x-2 w-full max-w-3xl">
         <div className="grid grid-flow-col auto-cols-[minmax(100px,_1fr)] sm:auto-cols-[minmax(150px,_1fr)] gap-2">

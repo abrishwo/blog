@@ -80,20 +80,38 @@ const Contact = ({ data }) => {
     message: '',
   });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  // const handleChange = (e) => {
+  //   setFormData({
+  //     ...formData,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
+
+  // Regular input change handler
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData((prevData) => ({
+    ...prevData,
+    [name]: value,
+  }));
+};
+
+// Rich text editor change handler
+const handleRichTextChange = (value) => {
+  setFormData((prevData) => ({
+    ...prevData,
+    message: value,
+  }));
+};
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(submitContactForm(formData));
   };
-  const handleRichTextChange = (content) => {
-    setFormData({ ...formData, message: content });
-  };
+  // const handleRichTextChange = (content) => {
+  //   setFormData({ ...formData, message: content });
+  // };
 const resetFormData = () => {
   setFormData({
     fullName: '',
@@ -102,15 +120,25 @@ const resetFormData = () => {
     message: '',
   });
 }
-  if (formSuccess) {
-    resetFormData();
-    showSuccessToast('Your message is submitted successfully!');
-  }
+  // if (formSuccess === 'succeeded') {
+  //   resetFormData();
+  //   showSuccessToast('Your message is submitted successfully!');
+  // }
 
-  if (formError) {
-    resetFormData();
-    showErrorToast('Failed to submit the form. Please try again.');
-  }
+  // if (formError) {
+  //   // resetFormData();
+  //   showErrorToast('Failed to submit the form. Please try again.');
+  // }
+  useEffect(() => {
+    if (formSuccess) {
+      resetFormData();
+      showSuccessToast('Your message is submitted successfully!');
+    }
+  
+    if (formError) {
+      showErrorToast('Failed to submit the form. Please try again.');
+    }
+  }, [formSuccess, formError]);
 
   return (
 
@@ -211,84 +239,84 @@ const resetFormData = () => {
                 </h2>
                
                 <form
-                  className="contact-form mt-12"
-                  method="POST"
-                  onSubmit={handleSubmit}
-                >
-                  <div className="mb-6">
-                    <label className="mb-2 block font-secondary" htmlFor="name">
-                      Full name
-                      <small className="font-secondary text-sm text-primary">*</small>
-                    </label>
-                    <input
-                      className="form-input w-full"
-                      name="fullName"
-                      type="text"
-                      placeholder="Abreham Shiferaw"
-                      value={formData.name} 
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-6">
-                    <label className="mb-2 block font-secondary" htmlFor="email">
-                      Email Address
-                      <small className="font-secondary text-sm text-primary">*</small>
-                    </label>
-                    <input
-                      className="form-input w-full"
-                      name="email"
-                      type="email"
-                      placeholder="info@enatsoft.com"
-                      value={formData.email} 
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-6">
-                    <label className="mb-2 block font-secondary" htmlFor="subject">
-                      Subject
-                      <small className="font-secondary text-sm text-primary">*</small>
-                    </label>
-                    <input
-                      className="form-input w-full"
-                      name="subject"
-                      type="text"
-                      placeholder="Place Order"
-                      value={formData.subject} 
-                      onChange={handleChange} 
-                      required
-                    />
-                  </div>
-                  <div className="mb-6">
-                    <label className="mb-2 block font-secondary" htmlFor="message">
-                      Your Message Here
-                      <small className="font-secondary text-sm text-primary">*</small>
-                    </label>
-                    <ReactQuill
-                      theme="snow"
-                      value={formData.message}
-                      onChange={handleRichTextChange}
-                      modules={modules}       // Custom toolbar
-                      formats={formats}       // Custom formats
-                      style={editorStyle}     // Set height
-                      
-                   />
+  className="contact-form mt-12"
+  method="POST"
+  onSubmit={handleSubmit}
+>
+  <div className="mb-6">
+    <label className="mb-2 block font-secondary" htmlFor="name">
+      Full name
+      <small className="font-secondary text-sm text-primary">*</small>
+    </label>
+    <input
+      className="form-input w-full"
+      name="fullName"
+      type="text"
+      placeholder="Abreham Shiferaw"
+      value={formData.fullName} 
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div className="mb-6">
+    <label className="mb-2 block font-secondary" htmlFor="email">
+      Email Address
+      <small className="font-secondary text-sm text-primary">*</small>
+    </label>
+    <input
+      className="form-input w-full"
+      name="email"
+      type="email"
+      placeholder="info@enatsoft.com"
+      value={formData.email} 
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div className="mb-6">
+    <label className="mb-2 block font-secondary" htmlFor="subject">
+      Subject
+      <small className="font-secondary text-sm text-primary">*</small>
+    </label>
+    <input
+      className="form-input w-full"
+      name="subject"
+      type="text"
+      placeholder="Place Order"
+      value={formData.subject} 
+      onChange={handleChange} 
+      required
+    />
+  </div>
+  <div className="mb-6">
+    <label className="mb-2 block font-secondary" htmlFor="message">
+      Your Message Here
+      <small className="font-secondary text-sm text-primary">*</small>
+    </label>
+    <ReactQuill
+      theme="snow"
+      value={formData.message}
+      onChange={handleRichTextChange}
+      modules={modules} // Custom toolbar
+      formats={formats} // Custom formats
+      style={editorStyle} // Set height
+    />
+  </div>
+  <div className="mt-16 mx-auto flex justify-evenly">
+    <button type="submit" disabled={formStatus === 'loading'} className="mt-12 px-5 w-1/3 btn btn-primary">
+      {formStatus === 'loading' ? 'Submitting...' : 'Submit'}
+    </button>
+    {formStatus === 'idle' && (formData.fullName || formData.email || formData.subject || formData.message) && (
+      <button type="button" onClick={resetFormData} className="mt-12 px-5 w-1/3 btn btn-primary bg-red-700">
+        Reset
+      </button>
+    )}
+  </div>
+  <ToastNotification />
+</form>
 
-                  
-                  </div>
-                  <div className="mt-16 mx-auto flex justify-evenly">
-                  <button type="submit" disabled={formStatus === 'loading'} className="mt-12 px-5 w-1/3 btn btn-primary">
-                      {formStatus === 'loading' ? 'Submitting...' : 'Submit'}
-                    </button>
-
-                    {(formData.fullName!=='' || formData.email!=='' || formData.subject!=='' || formData.message!==''  )&& (<button type="button"  onClick = {resetFormData} className="mt-12 px-5 w-1/3 btn btn-primary bg-red-700">
-                      {formStatus === 'idle' && 'Reset'}
-                    </button>)}
-                  </div>
-                </form>
                 
-                  <ToastNotification />
+                 
               </div>
             </div>
 
@@ -334,6 +362,8 @@ const resetFormData = () => {
             ></iframe>)}
           </div>
         )}
+
+{/* <ToastNotification /> */}
     </section>
 
   );

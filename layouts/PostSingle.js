@@ -30,12 +30,12 @@ const PostSingle = ({
     
 
     const thumb = [
-      content.attributes.Thumbnail.data.attributes.formats.thumbnail.url,
+      content.attributes.Thumbnail.data.attributes.formats.large.url,
     ];
     
     // Check if there are gallery images, and map them to an array of URLs
     const gall = content.attributes?.Images?.data.map(
-      (image) => image.attributes.formats.thumbnail.url
+      (image) => image.attributes.formats.large.url
     );
     
    
