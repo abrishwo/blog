@@ -38,26 +38,27 @@ const GallerySlider = ({ images }) => {
           {images.map((image, index) => (
             <div
               key={index}
-              className={`thumbnail-wrapper w-[10vw] h-[15vh] ${
+              className={`thumbnail-wrapper flex items-center ${
                 selectedImage === image ? 'border-2 border-green-500' : ''
               } rounded-md cursor-pointer`}
               onClick={() => handleImageClick(image)}
             >
               <Image
                 src={`${BASE_URL}${image}`}
-                width={150}
-                height={150}
+                width={120}
+                height={100}
                
                 style={{
                   objectFit: "contain",
-                  // objectPosition: "center",
-      
-                  maxHeight: "100%",
-                  maxWidth: "100%",
+                  objectPosition: "center",
+
+                  // /Users/macbookair/Desktop/upwork/dirk/blogger/frontend/layouts/components/GalleryView.js
+                  // minHeight: "100%",
+                  // minWidth: "100%",
                   aspectRatio: "scale auto",
                 }}
                 alt={`Thumbnail ${index}`}
-                className="rounded-md"
+                className="rounded-md mx-auto my-auto"
               />
             </div>
           ))}
