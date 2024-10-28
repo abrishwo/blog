@@ -19,10 +19,10 @@ const Post = ({ post }) => {
         {post.attributes && (
           <ImageFallback
             className="rounded"
-            src={`${BASE_URL}${post.attributes.Thumbnail.data.attributes.formats.thumbnail.url}`}
+            src={`${BASE_URL}${post.attributes.Thumbnail.data.attributes.formats.large.url}`}
             alt={post.attributes.Title}
-            width={405}
-            height={208}
+            width={post.attributes.Thumbnail.data.attributes.formats.large.width}
+            height={post.attributes.Thumbnail.data.attributes.formats.large.height}
           />
         )}
 {

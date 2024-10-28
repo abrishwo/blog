@@ -22,7 +22,7 @@ const GallerySlider = ({ images }) => {
       fill={true}
      
       style={{
-        objectFit: 'fill',      // Ensures the image fits within the div boundaries
+        objectFit: 'contain',      // Ensures the image fits within the div boundaries
         objectPosition: 'center',  // Centers the image if aspect ratios differ
         maxWidth: '100%',
         maxHeight: '100%',
@@ -38,19 +38,22 @@ const GallerySlider = ({ images }) => {
           {images.map((image, index) => (
             <div
               key={index}
-              className={`thumbnail-wrapper ${
+              className={`thumbnail-wrapper w-[10vw] h-[15vh] ${
                 selectedImage === image ? 'border-2 border-green-500' : ''
               } rounded-md cursor-pointer`}
               onClick={() => handleImageClick(image)}
             >
               <Image
                 src={`${BASE_URL}${image}`}
-                width={100}
-                height={100}
-                objectFit="cover"
+                width={150}
+                height={150}
+               
                 style={{
-                  minHeight: "100%",
-                  minWidth: "100%",
+                  objectFit: "contain",
+                  // objectPosition: "center",
+      
+                  maxHeight: "100%",
+                  maxWidth: "100%",
                   aspectRatio: "scale auto",
                 }}
                 alt={`Thumbnail ${index}`}
