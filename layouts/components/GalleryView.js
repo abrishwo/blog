@@ -52,9 +52,6 @@ const GallerySlider = ({ images }) => {
                   objectFit: "contain",
                   objectPosition: "center",
 
-                  // /Users/macbookair/Desktop/upwork/dirk/blogger/frontend/layouts/components/GalleryView.js
-                  // minHeight: "100%",
-                  // minWidth: "100%",
                   aspectRatio: "scale auto",
                 }}
                 alt={`Thumbnail ${index}`}

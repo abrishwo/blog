@@ -132,26 +132,30 @@ const Home = ({
             priority
           />
           <div className="container">
-            {/* <div className="row flex-wrap-reverse items-center justify-center lg:flex-row overflow-hidden transition-transform transform hover:scale-95 duration-300 ease-in-out"> */}
+            <div className="row flex-wrap-reverse items-center justify-center lg:flex-row overflow-hidden">
              
-             <div className="sm:flex-wrap row md:flex-wrap-reverse items-center justify-center lg:flex-row overflow-hidden transition-transform transform hover:scale-95 duration-300 ease-in-out">
+             {/* <div className="sm:flex-wrap row md:flex-wrap-reverse items-center justify-center lg:flex-row overflow-hidden transition-transform transform hover:scale-95 duration-300 ease-in-out"> */}
               {/* {banner.image_enable && ( */}
                 <div className="col-9 lg:col-6 relative w-full">
                   <ImageFallback
-                    className="mx-auto object-contain w-full h-64 object-cover md:h-96"
+                    className="mx-auto object-contain w-full h-64 md:h-96"
+                    // className="rounded"
                     src={(BASE_URL + featuredArticle?.attributes.Thumbnail.data.attributes.formats.thumbnail.url)??'/images/placeholder_img.png'}
                    
-                    width={548}
-                    height={443}
+                    width={featuredArticle?.attributes.Thumbnail.data.attributes.formats.thumbnail.width}
+                    height={featuredArticle?.attributes.Thumbnail.data.attributes.formats.thumbnail.height}
+
                     priority
                     alt="Banner Image"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-white pointer-events-none" 
+
+
+                  {/* <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-white pointer-events-none" 
                       style={{
                         backdropFilter: 'blur(55px)',
                         maskImage: 'linear-gradient(to right, transparent, black)'
                       }}
-                    ></div>
+                    ></div> */}
                 </div>
               {/* )}   */}
 
