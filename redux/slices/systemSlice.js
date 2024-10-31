@@ -34,6 +34,7 @@ const systemSlice = createSlice({
     items: [],
     social:[],
     status: 'idle', // idle | loading | succeeded | failed
+    smStatus: 'idle',
     error: null,
   },
   reducers: {},
@@ -54,14 +55,14 @@ const systemSlice = createSlice({
       // social media settings
       builder
       .addCase(fetchSocialMedia.pending, (state) => {
-        state.status = 'loading';
+        state.smStatus = 'loading';
       })
       .addCase(fetchSocialMedia.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.smStatus = 'succeeded';
         state.social = action.payload;
       })
       .addCase(fetchSocialMedia.rejected, (state, action) => {
-        state.status = 'failed';
+        state.smStatus = 'failed';
         state.error = action.error.message;
       });
   },

@@ -138,28 +138,19 @@ const Home = ({
               {/* {banner.image_enable && ( */}
                 <div className="col-9 lg:col-6 relative w-full">
                   <ImageFallback
-                    className="mx-auto object-contain w-full h-64 md:h-96"
+                    className="mx-auto object-contain w-full h-full md:h-96"
                     // className="rounded"
-                    src={(BASE_URL + featuredArticle?.attributes.Thumbnail.data.attributes.formats.thumbnail.url)??'/images/placeholder_img.png'}
+                    src={(BASE_URL + featuredArticle?.attributes.Thumbnail.data.attributes.formats.large.url)??'/images/placeholder_img.png'}
                    
-                    width={featuredArticle?.attributes.Thumbnail.data.attributes.formats.thumbnail.width}
-                    height={featuredArticle?.attributes.Thumbnail.data.attributes.formats.thumbnail.height}
+                    width={featuredArticle?.attributes.Thumbnail.data.attributes.formats.large.width}
+                    height={featuredArticle?.attributes.Thumbnail.data.attributes.formats.large.height}
 
                     priority
                     alt="Banner Image"
                   />
 
-
-                  {/* <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-white pointer-events-none" 
-                      style={{
-                        backdropFilter: 'blur(55px)',
-                        maskImage: 'linear-gradient(to right, transparent, black)'
-                      }}
-                    ></div> */}
                 </div>
-              {/* )}   */}
-
-              {/* <div className={banner.image_enable ? "mt-12 text-center lg:mt-0 lg:text-left lg:col-6 inset-0 flex flex-col justify-between items-start p-6 text-zinc-800 w-full" : "mt-12 text-center lg:mt-0 lg:text-left lg:col-12"}> */}
+            
                 <div className="content-container md:mt-12 text-center lg:mt-0 lg:text-left lg:col-6 inset-0 flex flex-col justify-between items-start p-6 text-zinc-800 w-full">
                 <h2 className="banner-title text-3xl font-bold mb-4">
                  
@@ -179,7 +170,11 @@ const Home = ({
                   {featuredArticle?.attributes.Excerpt}
                 </p>
               
-                  <Link className="btn btn-primary mt-6" href={`/posts/${featuredArticle?.attributes.Slug}`}>
+                  <Link
+                  //  className="btn btn-primary mt-6" 
+                  className="btn btn-outline-primary mt-4"
+                   href={`/posts/${featuredArticle?.attributes.Slug}`}
+                   >
                     Read More
                   </Link>
              

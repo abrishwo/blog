@@ -46,7 +46,10 @@ const Sidebar = ({ posts, categories, className, tags }) => {
             />
             <div className="container text-center">
               {/* Logo Section */}
-              <div className="mb-6 inline-flex items-center">
+              <Link
+              href={'/'}
+              className="mb-6 inline-flex items-center">
+              {/* <div className="mb-6 inline-flex items-center"> */}
                 <ImageFallback
                   src={
                     systemConfig?.attributes?.Logo?.data?.attributes?.formats?.thumbnail?.url
@@ -69,7 +72,8 @@ const Sidebar = ({ posts, categories, className, tags }) => {
                     maxWidth: "40%",
                   }}
                 />
-              </div>
+              {/* </div> */}
+              </Link>
               {/* Bio Section */}
               {/* <div className="mb-6"> */}
                 {markdownify(systemConfig?.attributes?.bio, "p", "mt-4 xl:text-center content-body-p pt-12 sm:pt-24")}

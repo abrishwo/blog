@@ -21,7 +21,11 @@ const Footer = ({configData, socialMedia}) => {
         fill={true}
       />
       <div className="container text-center">
-        <div className="mb-6 inline-flex">
+        {/* <div  className="mb-6 inline-flex"> */}
+        <Link 
+        href={'/'}
+        className="mb-6 inline-flex"
+        >
           {/* <Logo  /> */}
               <ImageFallback
    
@@ -43,7 +47,9 @@ const Footer = ({configData, socialMedia}) => {
                 maxWidth: "60%",
               }}
             />
-        </div>
+
+</Link>
+        {/* </div> */}
         {markdownify(configData?.Title, "h6", "max-w-[638px] mx-auto mt-4 ")}
         {markdownify(configData?.Tagline, "p", "max-w-[638px] mx-auto")}
         {/* footer menu */}

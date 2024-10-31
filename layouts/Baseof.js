@@ -24,16 +24,21 @@ const Base = ({
 
   const dispatch = useDispatch();
 
-  const { items: systemConfig, social: socialMedia, status } = useSelector((state) => state.config);
+  const { items: systemConfig, social: socialMedia, status, smStatus } = useSelector((state) => state.config);
   
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchSystemConfig());
-      dispatch(fetchSocialMedia());
+
     }
   }, [dispatch, status]);
 
-  
+  useEffect(() => {
+    if (status === 'idle') {
+
+      dispatch(fetchSocialMedia());
+    }
+  }, [dispatch, smStatus]);
 
   return (
     <>

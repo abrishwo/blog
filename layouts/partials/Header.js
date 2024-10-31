@@ -22,6 +22,9 @@ const Header = ({configData}) => {
   const [searchBtnActive, setSearchBtnActive] = useState(false);
   // Router
   const router = useRouter();
+  const isHomePage = router.pathname === '/';
+  // const isSearchPage = router.pathname === '/search?{*}';
+  const isSearchPage = router.pathname === '/search' && Object.keys(router.query).length > 0;
 
   //stop scrolling when nav is open
   useEffect(() => {
@@ -30,8 +33,15 @@ const Header = ({configData}) => {
     } else {
       document.body.classList.remove("menu-open");
     }
+
+    // router.path==='/' && setSearchBtnActive(true);
   }, [showMenu]);
 
+  useEffect(() => {
+    if(isHomePage || isSearchPage){
+      setSearchBtnActive(true);
+    }
+  }, [isHomePage, isSearchPage]);
   
 
   return (
@@ -133,35 +143,35 @@ const Header = ({configData}) => {
                     </li>
                   ) : (
                     <li className="nav-item">
-                    { menu.name === "SEARCH" || menu.url==='/search' ?(
+                    {menu.name === "SEARCH" || menu.url === 'search' ? (
                       <Link
-                        // className={`search-button flex items-center justify-center px-4 py-2 text-sm text-white rounded-full bg-primary`}
                         className={`nav-link block ${
-                          (searchBtnActive || menu.url==='/search') && "active"
+                          searchBtnActive ? "active" : ""
                         }`}
                         onClick={() => {
-                          if(router.asPath === '/') {
-                            setSearchBtnActive(true);
-                          }
-                         setSearchModal(true);
+                          setSearchBtnActive(true); // Set the search button as active
+                          setSearchModal(true);
                         }}
-
                         href="#"
                       >
                         {/* <IoSearch /> */}
                         {menu.name}
                       </Link>
-                    ):( <Link
+                    ) : (
+                      <Link
                         href={menu.url}
                         className={`nav-link block ${
-                          router.asPath === menu.url && "active"
+                          !searchBtnActive && router.asPath === menu.url ? "active" : ""
                         }`}
-                       onClick={()=>setSearchBtnActive(false)}
-                     >
+                        onClick={() => {
+                          setSearchBtnActive(false); // Deactivate search button when other links are clicked
+                        }}
+                      >
                         {menu.name}
-                      </Link>)
-}
-                    </li>
+                      </Link>
+                    )}
+                  </li>
+                  
                   )}
                 </React.Fragment>
               ))}

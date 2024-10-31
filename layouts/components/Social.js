@@ -68,7 +68,8 @@ const Social = ({ source, className , social, fromFooter}) => {
   } = source;
   return (
 <>
-{social?(<ul className={`mt-8 ${
+
+{/* (<ul className={`mt-8 ${
   fromFooter? "social-media-icons-footer": "social-media-icons" }`}>
 { social.map((soc, index)=>{
   return (
@@ -89,7 +90,30 @@ const Social = ({ source, className , social, fromFooter}) => {
 }
 
  )}
-</ul>) :(
+</ul>) 
+*/}
+{social?
+(<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+  {
+  // socialMediaIcons.map((social) => (
+    social.map((soc, index)=>{
+   return (<a 
+      key={index} 
+      aria-label={`${soc.attributes.PlatformName.toLowerCase()}flow`}
+        href={soc.attributes.URL}
+      target="_blank" 
+      rel="noopener noreferrer"
+      className={`${fromFooter ? "flex items-center justify-center p-4 text-3xl w-[100px] h-[100px] rounded-full bg-gray-100 hover:bg-gray-200 transition":"flex items-center justify-center text-3xl rounded-full bg-gray-100 hover:bg-gray-200 transition" }`}
+      // aria-label={social.name}
+    >
+      <img src={`${process.env.NEXT_PUBLIC_BASE_URL}${soc.attributes.Icon.data.attributes.formats.thumbnail.url}`}
+           alt={soc.attributes.PlatformName} className="icon" />
+
+      {/* {social.icon} */}
+    </a>);
+})}
+</div>)
+:(
       <ul className={className}>
       {facebook && (
         <li className="inline-block">

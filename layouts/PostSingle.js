@@ -39,8 +39,8 @@ const PostSingle = ({
     );
     
    
-    const imageList = [...thumb, ...(gall || [])]; // Use spread operator to combine arrays
-    
+    // const imageList = [...thumb, ...(gall || [])]; // Use spread operator to combine arrays
+    const imageList = [...(gall || [])];
     console.log(imageList); 
     
 

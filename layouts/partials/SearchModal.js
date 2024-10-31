@@ -17,7 +17,7 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
 
   useEffect(() => {
     dispatch(fetchTags()); // Fetch all available tags on mount
-    dispatch(fetchArticles({ search, tags: selectedTags }));
+    // dispatch(fetchArticles({ search, tags: selectedTags }));
   }, [searchModal]);
 
   useEffect(() => {
@@ -141,7 +141,7 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
           right: 10px;
           background: transparent;
           border: none;
-          font-size: 24px;
+          font-size: 34px;
           cursor: pointer;
         }
 
@@ -210,6 +210,8 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
         @media (max-width: 768px) {
           .search-modal {
             width: 95%;
+            height: 100%;
+            min-height: 100vh;
           }
 
           .search-input {
