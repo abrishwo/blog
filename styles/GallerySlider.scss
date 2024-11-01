@@ -6,16 +6,55 @@
 }
 
 // Vertical thumbnail slider
-.thumbnail-slider {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  max-width: 1000px; // Adjust as needed
-  width: 90%;
-  margin-left: 5%;
-  overflow-y: scroll;
+// .thumbnail-slider {
+//   display: flex;
+//   flex-direction: row;
+//   gap: 8px;
+//   max-width: 1000px; // Adjust as needed
+//   width: 90%;
+//   margin-left: 5%;
+//   overflow-y: scroll;
   
+// }
+
+/* Custom scrollbar styling */
+.thumbnail-slider {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #ccc transparent; /* Firefox */
 }
+
+/* Webkit-based browsers (Chrome, Edge, Safari) */
+.thumbnail-slider::-webkit-scrollbar {
+  height: 6px;
+}
+
+.thumbnail-slider::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.thumbnail-slider::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Chevron button styling */
+.chevron {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chevron:hover {
+  background-color: #f0f0f0;
+}
+
+/* Responsive adjustments */
+@media screen and (min-width: 768px) {
+  .thumbnail-slider {
+    padding-bottom: 6px; /* Additional padding to avoid overlapping */
+  }
+}
+
+
 
 // Thumbnail images
 .thumbnail {

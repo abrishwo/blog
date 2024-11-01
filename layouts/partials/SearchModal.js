@@ -120,19 +120,26 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
 
       {/* Styling */}
       <style jsx>{`
+     
         .search-modal {
           position: fixed;
           top: 0%;
           left: 50%;
           transform: translateX(-50%);
-          width: 90%;
-          max-width: 600px;
+          width: 60%;
+          // max-width: 600px;
           padding: 20px;
-          background-color: white;
+          // background-color: white;
           z-index: 999;
-          border-radius: 8px;
+         
           display: flex;
           flex-direction: column;
+          // height: 40vh;
+
+          background-color: #ffffff;
+  border: 1px solid #e0e0e0; /* Light border for a subtle effect */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.06);
         }
 
         .search-close {

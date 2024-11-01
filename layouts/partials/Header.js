@@ -38,10 +38,10 @@ const Header = ({configData}) => {
   }, [showMenu]);
 
   useEffect(() => {
-    if(isHomePage || isSearchPage){
+    if(isSearchPage){
       setSearchBtnActive(true);
     }
-  }, [isHomePage, isSearchPage]);
+  }, [isSearchPage]);
   
 
   return (
@@ -133,7 +133,7 @@ const Header = ({configData}) => {
                               href={child.url}
                               className={`nav-dropdown-link block ${
                                 router.asPath === child.url && "active"
-                              }`}
+                              } btn btn-outline-primary mt-4`}
                             >
                               {child.name}
                             </Link>
@@ -147,7 +147,7 @@ const Header = ({configData}) => {
                       <Link
                         className={`nav-link block ${
                           searchBtnActive ? "active" : ""
-                        }`}
+                        } btn btn-outline-primary mt-4`}
                         onClick={() => {
                           setSearchBtnActive(true); // Set the search button as active
                           setSearchModal(true);
@@ -162,7 +162,7 @@ const Header = ({configData}) => {
                         href={menu.url}
                         className={`nav-link block ${
                           !searchBtnActive && router.asPath === menu.url ? "active" : ""
-                        }`}
+                        } btn btn-outline-primary mt-4`}
                         onClick={() => {
                           setSearchBtnActive(false); // Deactivate search button when other links are clicked
                         }}

@@ -1,65 +1,116 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const GallerySlider = ({ images }) => {
   const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [showLeftChevron, setShowLeftChevron] = useState(false);
+  const [showRightChevron, setShowRightChevron] = useState(true);
+  const thumbnailRef = useRef(null);
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
   const handleImageClick = (image) => {
     setSelectedImage(image);
   };
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+  const scrollThumbnails = (direction) => {
+    if (thumbnailRef.current) {
+      const scrollAmount = direction === 'left' ? -150 : 150;
+      thumbnailRef.current.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  // Update chevron visibility based on scroll position
+  const updateChevronVisibility = () => {
+    if (thumbnailRef.current) {
+      const { scrollLeft, clientWidth, scrollWidth } = thumbnailRef.current;
+      setShowLeftChevron(scrollLeft > 0);
+      setShowRightChevron(scrollLeft + clientWidth < scrollWidth);
+    }
+  };
+
+  useEffect(() => {
+    updateChevronVisibility(); // Initial visibility check
+    window.addEventListener('resize', updateChevronVisibility); // Check on resize
+    return () => {
+      window.removeEventListener('resize', updateChevronVisibility); // Cleanup
+    };
+  }, [images]); // Re-check visibility whenever images change
+
   return (
     <div className="gallery-container flex flex-col items-center">
-      {/* <div className="selected-image-container w-full max-w-3xl h-[60vh] md:h-[70vh] lg:h-[80vh] relative"> */}
-      {/* import Image from 'next/image'; */}
-
-{/* const YourComponent = ({ selectedImage }) => ( */}
-  <div className="slide-container position-center">
-    <Image
-      src={`${BASE_URL}${selectedImage}`}
-      alt="Selected"
-      className="rounded-lg slide-image"
-      fill={true}
      
-      style={{
-        objectFit: 'contain',      // Ensures the image fits within the div boundaries
-        objectPosition: 'center',  // Centers the image if aspect ratios differ
-        maxWidth: '100%',
-        maxHeight: '100%',
-        aspectRatio: 'auto scale !important',
-        transition: 'transform 0.3s ease',
-      }}
-      priority
-    />
-  </div>
+      <div className="slide-container relative w-full max-w-3xl h-[60vh] md:h-[70vh] lg:h-[80vh]">
+        <Image
+          src={`${BASE_URL}${selectedImage}`}
+          alt="Selected"
+          className="rounded-lg slide-image"
+          fill
+          style={{
+            objectFit: 'contain',
+            objectPosition: 'center',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            transition: 'transform 0.3s ease',
+          }}
+          priority
+        />
+      </div>
 
-      <div className="thumbnail-slider mt-4 flex overflow-x-auto space-x-2 w-full max-w-3xl">
-        <div className="grid grid-flow-col auto-cols-[minmax(100px,_1fr)] sm:auto-cols-[minmax(150px,_1fr)] gap-2">
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className={`thumbnail-wrapper flex items-center ${
-                selectedImage === image ? 'border-2 border-green-500' : ''
-              } rounded-md cursor-pointer`}
-              onClick={() => handleImageClick(image)}
-            >
-              <Image
-                src={`${BASE_URL}${image}`}
-                width={120}
-                height={100}
-               
-                style={{
-                  objectFit: "contain",
-                  objectPosition: "center",
+      
+      <div className="relative w-full max-w-3xl mt-3">
+      {showLeftChevron && (
+          <button
+            onClick={() => scrollThumbnails('left')}
+            className="chevron left absolute top-1/2 left-0 transform -translate-y-1/2 p-4 bg-white bg-opacity-75 rounded-full shadow-md hover:bg-opacity-100 z-10"
+          >
+            <FaChevronLeft size={20} />
+          </button>
+        )}
 
-                  aspectRatio: "scale auto",
-                }}
-                alt={`Thumbnail ${index}`}
-                className="rounded-md mx-auto my-auto"
-              />
-            </div>
-          ))}
+        {/* Thumbnail slider with custom scrollbar */}
+        <div
+          className="thumbnail-slider flex overflow-x-auto space-x-2 scrollbar-custom"
+          ref={thumbnailRef}
+          onScroll={updateChevronVisibility} // Update visibility on scroll
+        >
+          <div className="grid grid-flow-col auto-cols-[minmax(100px,_1fr)] sm:auto-cols-[minmax(150px,_1fr)] gap-2">
+            {images.map((image, index) => (
+              <div
+                key={index}
+                className={`thumbnail-wrapper flex items-center ${
+                  selectedImage === image ? 'border-2 border-green-500' : ''
+                } rounded-md cursor-pointer`}
+                onClick={() => handleImageClick(image)}
+              >
+                <Image
+                  src={`${BASE_URL}${image}`}
+                  width={120}
+                  height={100}
+                  style={{
+                    objectFit: 'contain',
+                    objectPosition: 'center',
+                  }}
+                  alt={`Thumbnail ${index}`}
+                  className="rounded-md mx-auto my-auto"
+                />
+              </div>
+            ))}
+          </div>
         </div>
+
+       {/* Right Chevron */}
+          {showRightChevron && (
+            <button
+              onClick={() => scrollThumbnails('right')}
+              className="chevron right absolute top-1/2 right-0 transform -translate-y-1/2 p-4 bg-white bg-opacity-75 rounded-full shadow-md hover:bg-opacity-100 z-10"
+            >
+              <FaChevronRight size={20} />
+            </button>
+          )}
       </div>
     </div>
   );
