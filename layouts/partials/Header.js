@@ -12,7 +12,7 @@ import { MenuOutline } from 'react-ionicons'
 
 
 
-const Header = ({configData}) => {
+const Header = ({configData, isScrolled}) => {
   // distructuring the main menu from menu object
   const { main } = menu;
 
@@ -34,7 +34,6 @@ const Header = ({configData}) => {
       document.body.classList.remove("menu-open");
     }
 
-    // router.path==='/' && setSearchBtnActive(true);
   }, [showMenu]);
 
   useEffect(() => {
@@ -67,8 +66,9 @@ const Header = ({configData}) => {
 
         </div>
 
+        {/* {!isScrolled && (<hr className="md:hidden lg:hidden w-full h-1/50 mt-24"/>)} */}
         <hr className="md:hidden lg:hidden w-full h-1/50 mt-24"/>
-        <div className="midle-title flex flex-col items-center sm:mx-auto md:justify-evenly">
+        <div className={` "midle-title flex flex-col items-center sm:mx-auto md:justify-evenly" ${isScrolled? "hide-tile":""}`}>
           <h3 className="md:my-2 mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
            {configData?configData.Title:" STARS and TOQUES"}
           </h3>
@@ -145,9 +145,9 @@ const Header = ({configData}) => {
                     <li className="nav-item">
                     {menu.name === "SEARCH" || menu.url === 'search' ? (
                       <Link
-                        className={`nav-link block ${
+                        className={`nav-link block text-center ${
                           searchBtnActive ? "active" : ""
-                        } btn btn-outline-primary mt-4`}
+                        } btn btn-outline-primary mt-2`}
                         onClick={() => {
                           setSearchBtnActive(true); // Set the search button as active
                           setSearchModal(true);
@@ -160,9 +160,9 @@ const Header = ({configData}) => {
                     ) : (
                       <Link
                         href={menu.url}
-                        className={`nav-link block ${
+                        className={`nav-link block text-center ${
                           !searchBtnActive && router.asPath === menu.url ? "active" : ""
-                        } btn btn-outline-primary mt-4`}
+                        } btn btn-outline-primary mt-2`}
                         onClick={() => {
                           setSearchBtnActive(false); // Deactivate search button when other links are clicked
                         }}

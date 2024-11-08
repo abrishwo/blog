@@ -5,7 +5,7 @@ import Header from "@partials/Header";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { fetchSystemConfig, fetchSocialMedia } from "../redux/slices/systemSlice";
 
 const Base = ({
@@ -25,6 +25,17 @@ const Base = ({
   const dispatch = useDispatch();
 
   const { items: systemConfig, social: socialMedia, status, smStatus } = useSelector((state) => state.config);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   
   useEffect(() => {
     if (status === 'idle') {
@@ -113,7 +124,7 @@ const Base = ({
       </Head>
       
  
-      <Header configData = {systemConfig.attributes}/>
+      <Header configData = {systemConfig.attributes} isScrolled={isScrolled}/>
       {/* main site */}
       <main>{children}</main>
       <Footer configData = {systemConfig.attributes} socialMedia={socialMedia}/>
