@@ -58,6 +58,72 @@ export const searchArticles = createAsyncThunk('articles/searchArticles', async 
   else if (tags.length > 0 && !search) {
     // Add tag filtering with OR logic to match any of the selected tags
     const tagsQuery = tags.map((tag, index) =>
+      `filters[$and][${index}][tags][Slug][$eqi]=${tag}`).join('&');
+    conditions.push(tagsQuery);
+  }
+
+  // 3. When both tags and search input are provided (existing condition)
+  else if (tags.length > 0 && search) {
+    // Add tag filtering with OR logic to match any of the selected tags
+    const tagsQuery = tags.map((tag, index) =>
+      `filters[$and][0][$and][${index}][tags][Slug][$eqi]=${tag}`).join('&');
+    conditions.push(tagsQuery);
+
+    // Add search filtering for title, excerpt, content, or slug fields
+    const searchFields = ['Title', 'Excerpt', 'Content', 'Slug'];
+    const searchQuery = searchFields
+      .map((field, index) => `filters[$and][1][$or][${index}][${field}][$containsi]=${search}`)
+      .join('&');
+    
+    conditions.push(searchQuery);
+  }
+
+  // 4. When search input is provided and tags are empty (existing condition)
+  else if (!tags.length && search) {
+    // Add search filtering for title, excerpt, content, or slug fields
+    const searchFields = ['Title', 'Excerpt', 'Content', 'Slug'];
+    const searchQuery = searchFields
+      .map((field, index) => `filters[$or][${index}][${field}][$containsi]=${search}`)
+      .join('&');
+    
+    conditions.push(searchQuery);
+  }
+
+  // Combine conditions into the query string
+  if (conditions.length > 0) {
+    query += `&${conditions.join('&')}`;
+  }
+
+  // Fetch articles from Strapi API
+  try {
+    const response = await axios.get(query);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+    throw error;
+  }
+});
+
+
+export const searchArticles_backup = createAsyncThunk('articles/searchArticles', async (params = {}) => {
+  const { page = 1, pageSize = 4, tags = [], search = "" } = params;
+
+  // Start building the base query with pagination and population
+  let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+
+  // Initialize conditions for filters
+  let conditions = [];
+
+  // 1. When both search input and tags are empty, return all articles
+  if (tags.length === 0 && !search) {
+    // No filtering is needed, return all articles (just pagination)
+    // The base query already handles this case, so we don't need to modify it further
+  }
+
+  // 2. When tags are selected and search input is empty
+  else if (tags.length > 0 && !search) {
+    // Add tag filtering with OR logic to match any of the selected tags
+    const tagsQuery = tags.map((tag, index) =>
       `filters[$or][${index}][tags][Slug][$eqi]=${tag}`).join('&');
     conditions.push(tagsQuery);
   }
@@ -103,9 +169,6 @@ export const searchArticles = createAsyncThunk('articles/searchArticles', async 
     throw error;
   }
 });
-
-
-
 
 // Fetch article details by slug
 export const fetchArticleDetails = createAsyncThunk('articles/fetchArticleDetails', async (slug) => {
