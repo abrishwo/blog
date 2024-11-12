@@ -5,7 +5,7 @@ import { FaEnvelope, FaMapMarkerAlt, FaUserAlt, FaClock } from "react-icons/fa";
 import ImageFallback from "./components/ImageFallback";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchContactUs, submitContactForm, setMailConfig } from "../redux/slices/contactSlice";
+import { fetchContactUs, submitContactForm , setMailConfig} from "../redux/slices/contactSlice";
 
 import React, { useEffect, useState } from "react";
 import Loader from "./components/Loader";
@@ -13,11 +13,22 @@ import Loader from "./components/Loader";
 import dynamic from 'next/dynamic'; // To prevent SSR issues with React Quill
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 import 'react-quill/dist/quill.bubble.css'; // For a different theme
-import { PiSpinnerThin } from "react-icons/pi";
-
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import ToastNotification, { showSuccessToast, showErrorToast } from './components/ToastNotification';
 
+
+// const modules = {
+//   toolbar: [
+//     [{ header: '1' }, { header: '2' }, { font: [] }],
+//     [{ list: 'ordered' }, { list: 'bullet' }],
+//     ['bold', 'italic', 'underline'],
+//     [{ align: [] }],
+//     ['blockquote', 'code-block'],
+//     ['link', 'image', 'video'], // Adding image and video options
+//     [{ color: [] }, { background: [] }],
+//     ['clean'], // Remove formatting button
+//   ],
+// };
 const modules = {
   toolbar: [
     [{ header: '1' }, { header: '2' }, { font: [] }],
@@ -29,7 +40,11 @@ const modules = {
     ['clean'], // Remove formatting button
   ],
 };
-
+// Editor formats to be used for content
+// const formats = [
+//   'header', 'font', 'list', 'bullet', 'bold', 'italic', 'underline',
+//   'align', 'blockquote', 'code-block', 'link', 'image', 'video', 'color', 'background',
+// ];
 const formats = [
   'header', 'font', 'list', 'bullet', 'bold', 'italic', 'underline',
   'align', 'blockquote', 'code-block', 'link', 'color', 'background',
@@ -51,6 +66,12 @@ const Contact = ({ data }) => {
     }
   }, [dispatch, status]);
 
+  // useEffect(() => {
+
+  //   if(status === 'complete' || contact){
+  //        dispatch(setMailConfig(contact?.attributes?.Email_config) ); 
+  //   }
+  // }, [contact, dispatch]);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -59,45 +80,61 @@ const Contact = ({ data }) => {
     message: '',
   });
 
+  // const handleChange = (e) => {
+  //   setFormData({
+  //     ...formData,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
 
   // Regular input change handler
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData((prevData) => ({
+    ...prevData,
+    [name]: value,
+  }));
+};
 
-  // Rich text editor change handler
-  const handleRichTextChange = (value) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      message: value,
-    }));
-  };
+// Rich text editor change handler
+const handleRichTextChange = (value) => {
+  setFormData((prevData) => ({
+    ...prevData,
+    message: value,
+  }));
+};
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(submitContactForm(formData));
   };
+  // const handleRichTextChange = (content) => {
+  //   setFormData({ ...formData, message: content });
+  // };
+const resetFormData = () => {
+  setFormData({
+    fullName: '',
+    subject: '',
+    email: '',
+    message: '',
+  });
+}
+  // if (formSuccess === 'succeeded') {
+  //   resetFormData();
+  //   showSuccessToast('Your message is submitted successfully!');
+  // }
 
-  const resetFormData = () => {
-    setFormData({
-      fullName: '',
-      subject: '',
-      email: '',
-      message: '',
-    });
-  }
-
+  // if (formError) {
+  //   // resetFormData();
+  //   showErrorToast('Failed to submit the form. Please try again.');
+  // }
   useEffect(() => {
     if (formSuccess) {
       resetFormData();
       showSuccessToast('Your message is submitted successfully!');
     }
-
+  
     if (formError) {
       showErrorToast('Failed to submit the form. Please try again.');
     }
@@ -127,21 +164,21 @@ const Contact = ({ data }) => {
                   "h1 my-10 lg:my-11 lg:pt-11 text-center lg:text-left lg:text-[64px]"
                 )}
 
-                {/* Animated Work Hours Section */}
-                {contact?.attributes?.FormInstructions && (<motion.div
+                              {/* Animated Work Hours Section */}
+               {contact?.attributes?.FormInstructions && ( <motion.div
                   className="work-hours mt-8 bg-gray-100 dark:bg-darkmode-bg p-6 rounded-lg shadow-lg items-center"
                   initial={{ opacity: 0, y: -50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, ease: "easeInOut" }}
                 >
-
+                  
                   <hr className="w-full zinc-800 text-2xl mb-6" />
                   {/* <div className=" flex flex-row justify-between items-start sm:flex-col"> */}
                   {markdownify(
-                    contact?.attributes?.FormInstructions,
-                    "p",
-                    "p my-10 lg:my-11 lg:pt-11 text-center lg:text-left lg:text-[34px]"
-                  )}
+                  contact?.attributes?.FormInstructions,
+                  "p",
+                  "p my-10 lg:my-11 lg:pt-11 text-center lg:text-left lg:text-[34px]"
+                )}
 
                   {/* </div> */}
                 </motion.div>)}
@@ -149,7 +186,7 @@ const Contact = ({ data }) => {
 
 
                 {/* Animated Work Hours Section */}
-                {contact?.attributes?.WorkingHours.length > 0 && (<motion.div
+               {contact?.attributes?.WorkingHours.length>0 && ( <motion.div
                   className="work-hours mt-8 bg-gray-100 dark:bg-darkmode-bg p-6 rounded-lg shadow-lg items-center"
                   initial={{ opacity: 0, y: -50 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -193,103 +230,93 @@ const Contact = ({ data }) => {
               </div>
 
               <div className="contact-form-wrapper rounded border border-border p-6 dark:border-darkmode-border lg:col-6">
-                {formStatus === 'loading' ? (<h2>
-                  Sending your message
-                  <span className="ml-1.5 inline-flex items-center text-primary">
-                  
-                    <PiSpinnerThin />
-                  </span>
-                </h2>) : (<h2>
+                <h2>
                   Send Us A
                   <span className="ml-1.5 inline-flex items-center text-primary">
                     Message
                     <BsArrowRightShort />
                   </span>
-                </h2>)}
+                </h2>
+               
+                <form
+  className="contact-form mt-12"
+  method="POST"
+  onSubmit={handleSubmit}
+>
+  <div className="mb-6">
+    <label className="mb-2 block font-secondary" htmlFor="name">
+      Full name
+      <small className="font-secondary text-sm text-primary">*</small>
+    </label>
+    <input
+      className="form-input w-full"
+      name="fullName"
+      type="text"
+      placeholder="Abreham Shiferaw"
+      value={formData.fullName} 
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div className="mb-6">
+    <label className="mb-2 block font-secondary" htmlFor="email">
+      Email Address
+      <small className="font-secondary text-sm text-primary">*</small>
+    </label>
+    <input
+      className="form-input w-full"
+      name="email"
+      type="email"
+      placeholder="info@enatsoft.com"
+      value={formData.email} 
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div className="mb-6">
+    <label className="mb-2 block font-secondary" htmlFor="subject">
+      Subject
+      <small className="font-secondary text-sm text-primary">*</small>
+    </label>
+    <input
+      className="form-input w-full"
+      name="subject"
+      type="text"
+      placeholder="Place Order"
+      value={formData.subject} 
+      onChange={handleChange} 
+      required
+    />
+  </div>
+  <div className="mb-6">
+    <label className="mb-2 block font-secondary" htmlFor="message">
+      Your Message Here
+      <small className="font-secondary text-sm text-primary">*</small>
+    </label>
+    <ReactQuill
+      theme="snow"
+      value={formData.message}
+      onChange={handleRichTextChange}
+      modules={modules} // Custom toolbar
+      formats={formats} // Custom formats
+      style={editorStyle} // Set height
+    />
+  </div>
+  <div className="mt-16 mx-auto flex justify-evenly">
+    <button type="submit" disabled={formStatus === 'loading'} className="mt-12 px-5 w-1/3 btn btn-primary">
+      {formStatus === 'loading' ? 'Submitting...' : 'Submit'}
+    </button>
+    {formStatus === 'idle' && (formData.fullName || formData.email || formData.subject || formData.message) && (
+      <button type="button" onClick={resetFormData} className="mt-12 px-5 w-1/3 btn btn-primary bg-red-700">
+        Reset
+      </button>
+    )}
+  </div>
+  <ToastNotification />
+</form>
 
-                {formStatus === 'loading' ? (
-                  <div className="contact-form mt-12">
-                    <Loader />
-                  </div>
-                ) : (<form
-                  className="contact-form mt-12"
-                  method="POST"
-                  onSubmit={handleSubmit}
-                >
-                  <div className="mb-6">
-                    <label className="mb-2 block font-secondary" htmlFor="name">
-                      Full name
-                      <small className="font-secondary text-sm text-primary">*</small>
-                    </label>
-                    <input
-                      className="form-input w-full"
-                      name="fullName"
-                      type="text"
-                      placeholder="Abreham Shiferaw"
-                      value={formData.fullName}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-6">
-                    <label className="mb-2 block font-secondary" htmlFor="email">
-                      Email Address
-                      <small className="font-secondary text-sm text-primary">*</small>
-                    </label>
-                    <input
-                      className="form-input w-full"
-                      name="email"
-                      type="email"
-                      placeholder="info@enatsoft.com"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-6">
-                    <label className="mb-2 block font-secondary" htmlFor="subject">
-                      Subject
-                      <small className="font-secondary text-sm text-primary">*</small>
-                    </label>
-                    <input
-                      className="form-input w-full"
-                      name="subject"
-                      type="text"
-                      placeholder="Place Order"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-6">
-                    <label className="mb-2 block font-secondary" htmlFor="message">
-                      Your Message Here
-                      <small className="font-secondary text-sm text-primary">*</small>
-                    </label>
-                    <ReactQuill
-                      theme="snow"
-                      value={formData.message}
-                      onChange={handleRichTextChange}
-                      modules={modules} // Custom toolbar
-                      formats={formats} // Custom formats
-                      style={editorStyle} // Set height
-                    />
-                  </div>
-                  <div className="mt-16 mx-auto flex justify-evenly">
-                    <button type="submit" disabled={formStatus === 'loading'} className="mt-12 px-5 md:w-1/3 sm:w-1/2 btn btn-primary">
-                      {formStatus === 'loading' ? 'Submitting...' : 'Submit'}
-                    </button>
-                    {formStatus === 'idle' && (formData.fullName || formData.email || formData.subject || formData.message) && (
-                      <button type="button" onClick={resetFormData} className="mt-12 px-5 w-1/3 btn btn-primary bg-red-700">
-                        Reset
-                      </button>
-                    )}
-                  </div>
-
-                </form>
-                )}
-
-                <ToastNotification />
+                
+                 
               </div>
             </div>
 
@@ -325,7 +352,7 @@ const Contact = ({ data }) => {
 
             </div>
 
-            {contact?.attributes?.MapCoordinates?.length > 0 && (<iframe
+          {contact?.attributes?.MapCoordinates?.length>0 && ( <iframe
               src={`https://www.google.com/maps?q=${contact?.attributes?.MapCoordinates?.latitude},${contact?.attributes?.MapCoordinates?.longitude}&z=15&output=embed`}
               width="100%"
               height="400"
@@ -336,6 +363,7 @@ const Contact = ({ data }) => {
           </div>
         )}
 
+{/* <ToastNotification /> */}
     </section>
 
   );
