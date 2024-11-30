@@ -104,13 +104,13 @@ const ImageGallery = ({ images, layout, position, smallImagePosition }) => {
           {/* {smallImagePosition === "above-large-image" && ( */}
             {/* <div className={styles.smallImages}> */}
             {/* // <div className="slider-container"> */}
-            <Slider {...carouselSettings}>
+            <Slider {...carouselSettings} >
               {images.map((image, index) => (
                 <img
                   key={index}
                   src={image.url}
                   alt={image.alt}
-                  className={`${styles.smallImage}`}
+                  className={`${styles.smallImage} px-2 item-center `}
                   onClick={() => handleImageClick(image.url)}
                 />
               ))}
