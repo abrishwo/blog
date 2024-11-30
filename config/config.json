@@ -1,6 +1,6 @@
 {
   "site": {
-    "title": "Fine Dining",
+    "title": "starsandtoques",
     "base_url": "/",
     "favicon": "/images/favicon.png",
     "logo": "/images/logo.png",
@@ -8,7 +8,7 @@
     "placeholder": "/images/placeholder_img.png",
     "logo_width": "125",
     "logo_height": "75",
-    "logo_text": "Fine Dinings"
+    "logo_text": "starsandtoques"
   },
   "settings": {
     "theme_switcher": true,
@@ -24,12 +24,12 @@
   "params": {
     "tag_manager_id": "",
     "footer_content": "Lorem ipsum dolor sit amt, conse adip iscing. donec iaculis tempasus laoreet. Libero ullam rgscper.",
-    "copyright": "© 2024 Fine Dining. All rights reserved."
+    "copyright": "© 2024 starsandtoques. All rights reserved."
   },
   "metadata": {
     "meta_author": "Statichunt",
     "meta_image": "/images/og-image.png",
-    "meta_description": "STARS and TOQUES | Mostly Fine Dining Restuarant Reviews"
+    "meta_description": "STARS and TOQUES | Mostly starsandtoques Restuarant Reviews"
   },
   "widgets": {
     "about": {

@@ -137,6 +137,10 @@ const Home = ({
               {/* <div className="sm:flex-wrap row md:flex-wrap-reverse items-center justify-center lg:flex-row overflow-hidden transition-transform transform hover:scale-95 duration-300 ease-in-out"> */}
               {/* {banner.image_enable && ( */}
               <div className="col-9 lg:col-6 relative w-full">
+              <Link
+                    href={`/${blog_folder}/${featuredArticle?.attributes.Slug}`}
+                    className="block hover:text-primary"
+                  >
                 <ImageFallback
                   className="mx-auto object-contain w-full h-full md:h-96"
                   // className="rounded"
@@ -148,7 +152,7 @@ const Home = ({
                   priority
                   alt="Banner Image"
                 />
-
+                </Link>
               </div>
 
               <div className="content-container md:mt-12 text-center lg:mt-0 lg:text-left lg:col-6 inset-0 flex flex-col justify-between items-start p-6 text-zinc-800 w-full">

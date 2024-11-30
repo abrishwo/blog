@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-const GallerySlider = ({ images }) => {
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+const GallerySlider = ({ images, smallImagePosition }) => {
+  const [selectedImage, setSelectedImage] = useState();
   const [showLeftChevron, setShowLeftChevron] = useState(false);
   const [showRightChevron, setShowRightChevron] = useState(true);
   const thumbnailRef = useRef(null);
@@ -33,6 +33,10 @@ const GallerySlider = ({ images }) => {
   };
 
   useEffect(() => {
+    setSelectedImage(images[0]);
+  }, [images]);
+  useEffect(() => {
+    
     updateChevronVisibility(); // Initial visibility check
     window.addEventListener('resize', updateChevronVisibility); // Check on resize
     return () => {
@@ -42,9 +46,9 @@ const GallerySlider = ({ images }) => {
 
   return (
     <div className="gallery-container flex flex-col items-center">
-     
+     {smallImagePosition === 'below-large-image' && (
       <div className="slide-container relative w-full max-w-3xl h-[60vh] md:h-[70vh] lg:h-[80vh]">
-        <Image
+        { selectedImage && (<Image
           src={`${BASE_URL}${selectedImage}`}
           alt="Selected"
           className="rounded-lg slide-image"
@@ -57,9 +61,10 @@ const GallerySlider = ({ images }) => {
             transition: 'transform 0.3s ease',
           }}
           priority
-        />
+        />)}
       </div>
-
+     )}
+      {/* blogger/frontend/layouts/components/GalleryView.js */}
       
       <div className="relative w-full max-w-3xl mt-3">
       {showLeftChevron && (
@@ -81,7 +86,7 @@ const GallerySlider = ({ images }) => {
             {images.map((image, index) => (
               <div
                 key={index}
-                className={`thumbnail-wrapper flex items-center ${
+                className={`thumbnail-wrapper flex items-center justify-center ${
                   selectedImage === image ? 'border-2 border-green-500' : ''
                 } rounded-md cursor-pointer`}
                 onClick={() => handleImageClick(image)}
@@ -112,6 +117,26 @@ const GallerySlider = ({ images }) => {
             </button>
           )}
       </div>
+
+      {smallImagePosition === 'above-large-image' && (
+      <div className="slide-container relative w-full max-w-3xl h-[60vh] md:h-[70vh] lg:h-[80vh]">
+        { selectedImage && (<Image
+          src={`${BASE_URL}${selectedImage}`}
+          alt="Selected"
+          className="rounded-lg slide-image"
+          fill
+          style={{
+            objectFit: 'contain',
+            objectPosition: 'center',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            transition: 'transform 0.3s ease',
+          }}
+          priority
+        />)}
+      </div>
+     )}
+
     </div>
   );
 };

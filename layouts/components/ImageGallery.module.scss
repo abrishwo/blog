@@ -1,0 +1,80 @@
+.gallery {
+  &.belowTitle {
+    margin-bottom: 20px;
+  }
+
+  &.endOfArticle {
+    margin-top: 20px;
+  }
+}
+
+.grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+  .gridItem {
+    cursor: pointer;
+
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.carouselContainer {
+  .smallImages {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+
+    // max-width: 80%;
+
+    .smallImage {
+      width: 20%;
+      height: auto;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  .carouselItem img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+}
+
+.zoomOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  .zoomImage {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+    object-fit: contain;
+  }
+}

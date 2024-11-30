@@ -15,6 +15,7 @@ import shortcodes from "./shortcodes/all";
 const { disqus } = config;
 const { meta_author } = config.metadata;
 import GallerySlider from "./components/GalleryView";
+import ImageGallery from "./components/GalleryImages";
 
 const PostSingle = ({
   content,
@@ -38,9 +39,12 @@ const PostSingle = ({
       (image) => image.attributes.formats.large.url
     );
     
+    const imageUrls = content.attributes?.gallery?.images?.data?.map(
+      (img) => img?.attributes?.formats?.large?.url
+    );
    
     // const imageList = [...thumb, ...(gall || [])]; // Use spread operator to combine arrays
-    const imageList = [...(gall || [])];
+    const imageList = gall || [];
     console.log(imageList); 
     
 
@@ -51,14 +55,46 @@ const PostSingle = ({
    {content.attributes && ( <Base title={content.attributes.Title} description={content.attributes.Content}>
       <section className="section single-blog md:mt-6">
         <div className="container">
+        {markdownify(content.attributes.Title, "h1", "title-h2 lg:text-[42px] mt-4")}
+         
+      
+         
           <div className="row">
+
+          {(content.attributes?.gallery && content.attributes?.gallery?.Position === 'below-title' && content.attributes?.gallery?.Layout === 'grid') && (
+              <ImageGallery
+                images={content.attributes?.gallery?.images?.data?.map((img) => ({
+                  url: BASE_URL + img?.attributes?.formats?.large?.url,
+                  alt: img.alt || "Gallery Image",
+                }))}
+                layout={content.attributes?.gallery?.Layout}
+                position={content.attributes?.gallery?.Position}
+                smallImagePosition={content.attributes?.gallery?.smallImagePosition}
+              />
+            )}
+
+
+
+
             <div className="lg:col-8">
               <article>
+              {(content.attributes?.gallery && (content.attributes?.gallery?.Position === 'below-title' && content.attributes?.gallery?.Layout === 'carousel')) && (
                 <div className="relative">
-                    <GallerySlider images={imageList} />
+                    <GallerySlider 
+                    images={imageUrls}
+                    
+                    // images={content.attributes?.gallery?.images?.data?.map((img) => ({
+                    //   url: img?.attributes?.formats?.thumbnail?.url,
+                    //   alt: img.alt || "Gallery Image",
+                    // }))}
+                    // layout={content.attributes?.gallery?.Layout}
+                    position={content.attributes?.gallery?.Position}
+                    smallImagePosition={content.attributes?.gallery?.smallImagePosition}
+                  />
+                  
                 </div>
-             
-                {markdownify(content.attributes.Title, "h1", "title-h2 lg:text-[42px] mt-4")}
+              )}
+                {/* {markdownify(content.attributes.Title, "h1", "title-h2 lg:text-[42px] mt-4")} */}
                 <ul className="flex items-center space-x-4">
                   <li>
                     <Link
@@ -95,6 +131,23 @@ const PostSingle = ({
 
                 {markdownify(content.attributes.Content, "div", "enatsoft-post-content sm:mx-0 sm:p-0 sm:left-0")}
                  
+               
+
+
+        {(content.attributes?.gallery && content.attributes?.gallery?.Position === 'end-of-article') && (
+            <div className="relative">
+              <ImageGallery
+                images={content.attributes?.gallery?.images?.data?.map((img) => ({
+                  url: BASE_URL + img?.attributes?.formats?.large?.url,
+                  alt: img.alt || "Gallery Image",
+                }))}
+                layout={content.attributes?.gallery?.Layout}
+                position={content.attributes?.gallery?.Position}
+                smallImagePosition={content.attributes?.gallery?.smallImagePosition}
+              />
+             
+             </div>
+            )}
               </article>
              
             </div>
@@ -106,6 +159,8 @@ const PostSingle = ({
           </div>
         </div>
      
+
+
 
         {/* Related posts */}
         {relatedPost && (<div className="container mt-20">

@@ -225,7 +225,7 @@ const Contact = ({ data }) => {
                       className="form-input w-full"
                       name="fullName"
                       type="text"
-                      placeholder="Abreham Shiferaw"
+                      placeholder="Your name"
                       value={formData.fullName}
                       onChange={handleChange}
                       required
@@ -240,7 +240,7 @@ const Contact = ({ data }) => {
                       className="form-input w-full"
                       name="email"
                       type="email"
-                      placeholder="info@enatsoft.com"
+                      placeholder="e-mail address"
                       value={formData.email}
                       onChange={handleChange}
                       required
@@ -255,7 +255,7 @@ const Contact = ({ data }) => {
                       className="form-input w-full"
                       name="subject"
                       type="text"
-                      placeholder="Place Order"
+                      placeholder="subject"
                       value={formData.subject}
                       onChange={handleChange}
                       required

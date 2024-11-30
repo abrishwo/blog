@@ -20,10 +20,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 //   }
 // });
 // Fetch all articles 
-export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (params = {}) => {
 
+export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (params = {}) => {
+  // blogger/frontend/redux/slices/articlesSlice.js
   const { page = 1, pageSize = 4, tags = [], search = "" } = params;
-  let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+  let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort[0]=Date:desc`;
   
   if (tags.length > 0) {
     const tagsQuery = tags.map(tag => `filters[tags][Name][$eq]=${tag}`).join('&');
@@ -38,6 +39,26 @@ export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (p
   return response.data;
 });
 
+
+/*
+export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (params = {}) => {
+  const { page = 1, pageSize = 4, tags = [], search = "" } = params;
+  let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort[0]=Date:desc`;
+
+  if (tags.length > 0) {
+    const tagsQuery = tags.map(tag => `filters[tags][Name][$eq]=${tag}`).join('&');
+    query += `&${tagsQuery}`;
+  }
+
+  if (search) {
+    query += `&filters[Title][$containsi]=${search}`;
+  }
+
+  const response = await axios.get(query);
+  return response.data;
+});
+
+*/
 // search all articles with advanced search functionality
 export const searchArticles = createAsyncThunk('articles/searchArticles', async (params = {}) => {
   const { page = 1, pageSize = 4, tags = [], search = "" } = params;
@@ -172,7 +193,10 @@ export const searchArticles_backup = createAsyncThunk('articles/searchArticles',
 
 // Fetch article details by slug
 export const fetchArticleDetails = createAsyncThunk('articles/fetchArticleDetails', async (slug) => {
-  const response = await axios.get(`${BASE_URL}/api/articles?filters[Slug][$eq]=${slug}&populate=*`);
+  // https://admin.starsandtoques.com/api/articles?filters[Slug][$eq]=data-management&populate[gallery][populate][images]=*
+  // https://admin.starsandtoques.com/api/articles?filters[Slug][$eq]=data-management&populate[gallery][populate][images]=*&populate[Images]=*   for all population
+  // const response = await axios.get(`${BASE_URL}/api/articles?filters[Slug][$eq]=${slug}&populate=*`);
+  const response = await axios.get(`${BASE_URL}/api/articles?filters[Slug][$eq]=${slug}&populate[gallery][populate][images]=*&populate[Images]=*&populate[Thumbnail]=*&populate[tags]=*`);
   return response.data;
 });
 
