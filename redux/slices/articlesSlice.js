@@ -196,7 +196,8 @@ export const fetchArticleDetails = createAsyncThunk('articles/fetchArticleDetail
   // https://admin.starsandtoques.com/api/articles?filters[Slug][$eq]=data-management&populate[gallery][populate][images]=*
   // https://admin.starsandtoques.com/api/articles?filters[Slug][$eq]=data-management&populate[gallery][populate][images]=*&populate[Images]=*   for all population
   // const response = await axios.get(`${BASE_URL}/api/articles?filters[Slug][$eq]=${slug}&populate=*`);
-  const response = await axios.get(`${BASE_URL}/api/articles?filters[Slug][$eq]=${slug}&populate[gallery][populate][images]=*&populate[Images]=*&populate[Thumbnail]=*&populate[tags]=*`);
+  // const response = await axios.get(`${BASE_URL}/api/articles?filters[Slug][$eq]=${slug}&populate[gallery][populate][images]=*&populate[Images]=*&populate[Thumbnail]=*&populate[tags]=*`);
+  const response = await axios.get(`${BASE_URL}/api/articles?filters[Slug][$eq]=${slug}&populate[gallery][populate][images]=*&populate[Thumbnail]=*&populate[tags]=*`);
   return response.data;
 });
 

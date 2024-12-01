@@ -17,6 +17,10 @@ const Post = ({ post }) => {
     { post.attributes &&(<div className="post">
       <div className="relative">
         {post.attributes && (
+           <Link
+           href={`/${blog_folder}/${post.attributes.Slug}`}
+           className="block hover:text-primary"
+         >
           <ImageFallback
             className="rounded"
             src={`${BASE_URL}${post.attributes.Thumbnail.data.attributes.formats.large.url}`}
@@ -24,6 +28,7 @@ const Post = ({ post }) => {
             width={post.attributes.Thumbnail.data.attributes.formats.large.width}
             height={post.attributes.Thumbnail.data.attributes.formats.large.height}
           />
+          </Link>
         )}
 {
   post.attributes.tags.data.length>0 &&

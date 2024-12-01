@@ -11,10 +11,14 @@
 .grid {
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 
   .gridItem {
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
 
     img {
       width: 100%;
@@ -52,7 +56,15 @@
       }
     }
   }
-
+  .carouselItem{
+    width: 100%;
+    height: 100%;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    justify-content: flex-end !important;
+    cursor: pointer;
+  }
   .carouselItem img {
     width: 100%;
     height: auto;

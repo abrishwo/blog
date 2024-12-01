@@ -34,7 +34,7 @@ const ImageGallery = ({ images, layout, position, smallImagePosition }) => {
   const carouselSettings = {
 
     dots: true,
-    infinite: false,
+    infinite: true,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 4,
@@ -92,7 +92,7 @@ const ImageGallery = ({ images, layout, position, smallImagePosition }) => {
               className={styles.gridItem}
               onClick={() => handleImageClick(image.url)}
             >
-              <img src={image.url} alt={image.alt} loading="lazy" />
+              <img src={image.url} alt={image.alt}/>
             </div>
           ))}
         </div>
@@ -104,15 +104,18 @@ const ImageGallery = ({ images, layout, position, smallImagePosition }) => {
           {/* {smallImagePosition === "above-large-image" && ( */}
             {/* <div className={styles.smallImages}> */}
             {/* // <div className="slider-container"> */}
-            <Slider {...carouselSettings} >
+            <Slider {...carouselSettings}>
               {images.map((image, index) => (
+              <div key={index} className={styles.carouselItem}>
                 <img
-                  key={index}
+                  // key={index}
                   src={image.url}
                   alt={image.alt}
                   className={`${styles.smallImage} px-2 item-center `}
+                  
                   onClick={() => handleImageClick(image.url)}
                 />
+                </div>
               ))}
               </Slider>
             {/* </div> */}

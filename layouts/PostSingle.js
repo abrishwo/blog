@@ -30,22 +30,22 @@ const PostSingle = ({
 
     
 
-    const thumb = [
-      content.attributes.Thumbnail.data.attributes.formats.large.url,
-    ];
+    // const thumb = [
+    //   content.attributes.Thumbnail.data.attributes.formats.large.url,
+    // ];
     
     // Check if there are gallery images, and map them to an array of URLs
-    const gall = content.attributes?.Images?.data.map(
-      (image) => image.attributes.formats.large.url
-    );
+    // const gall = content.attributes?.Images?.data.map(
+    //   (image) => image.attributes.formats.large.url
+    // );
     
     const imageUrls = content.attributes?.gallery?.images?.data?.map(
       (img) => img?.attributes?.formats?.large?.url
     );
    
     // const imageList = [...thumb, ...(gall || [])]; // Use spread operator to combine arrays
-    const imageList = gall || [];
-    console.log(imageList); 
+    // const imageList = gall || [];
+    // console.log(imageList); 
     
 
   return (
@@ -55,7 +55,7 @@ const PostSingle = ({
    {content.attributes && ( <Base title={content.attributes.Title} description={content.attributes.Content}>
       <section className="section single-blog md:mt-6">
         <div className="container">
-        {markdownify(content.attributes.Title, "h1", "title-h2 lg:text-[42px] mt-4")}
+        {markdownify(content.attributes.Title, "h1", "title-h2 lg:text-[42px] my-4")}
          
       
          
@@ -83,11 +83,6 @@ const PostSingle = ({
                     <GallerySlider 
                     images={imageUrls}
                     
-                    // images={content.attributes?.gallery?.images?.data?.map((img) => ({
-                    //   url: img?.attributes?.formats?.thumbnail?.url,
-                    //   alt: img.alt || "Gallery Image",
-                    // }))}
-                    // layout={content.attributes?.gallery?.Layout}
                     position={content.attributes?.gallery?.Position}
                     smallImagePosition={content.attributes?.gallery?.smallImagePosition}
                   />
