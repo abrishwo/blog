@@ -129,7 +129,7 @@ const PostSingle = ({
                
 
 
-        {(content.attributes?.gallery && content.attributes?.gallery?.Position === 'end-of-article') && (
+         {(content.attributes?.gallery && (content.attributes?.gallery?.Position === 'end-of-article' && content.attributes?.gallery?.Layout === 'grid')) && (
             <div className="relative">
               <ImageGallery
                 images={content.attributes?.gallery?.images?.data?.map((img) => ({
@@ -142,7 +142,19 @@ const PostSingle = ({
               />
              
              </div>
-            )}
+            )} 
+{/* blogger/frontend/layouts/PostSingle.js */}
+{(content.attributes?.gallery && (content.attributes?.gallery?.Position === 'end-of-article' && content.attributes?.gallery?.Layout === 'carousel')) && (
+                <div className="relative">
+                    <GallerySlider 
+                    images={imageUrls}
+                    
+                    position={content.attributes?.gallery?.Position}
+                    smallImagePosition={content.attributes?.gallery?.smallImagePosition}
+                  />
+                  
+                </div>
+              )}
               </article>
              
             </div>

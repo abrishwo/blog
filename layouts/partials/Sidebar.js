@@ -11,6 +11,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaRegCalendar } from "react-icons/fa";
 import MailchimpSubscribe from "react-mailchimp-subscribe";
+
+import AgendaWidget from "@layouts/components/AgendaWidget";
+import axios from "axios";
+
 const { blog_folder } = config.settings;
 const { about, featured_posts, newsletter } = config.widgets;
 
@@ -23,6 +27,22 @@ const Sidebar = ({ posts, categories, className, tags }) => {
   const dispatch = useDispatch();
   const { items: systemConfig, social: socialMedia, status } = useSelector((state) => state.config);
   const { logo, logo_white, logo_width, logo_height, logo_text, title } = config.site;
+
+  const [position, setPosition] = useState("Above News");
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const { data } = await axios.get("/api/agenda");
+        setPosition(data.settings.position);
+      } catch (error) {
+        console.error("Error fetching settings:", error);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchSystemConfig());
@@ -75,8 +95,17 @@ const Sidebar = ({ posts, categories, className, tags }) => {
               {/* </div> */}
               </Link>
               {/* Bio Section */}
+              {/* AgendaPosition */}
+
+              {systemConfig?.attributes?.ShowAgenda && systemConfig?.attributes?.AgendaPosition === "AboveNews" && 
+              <div className="mt-24 pt-12 w-full">
+                 <AgendaWidget position="Above News" />
+              </div>
+              }
               {/* <div className="mb-6"> */}
-                {markdownify(systemConfig?.attributes?.bio, "p", "mt-4 xl:text-center content-body-p pt-12 sm:pt-24")}
+                {markdownify(systemConfig?.attributes?.bio, "p", " xl:text-center content-body-p pt-12 sm:pt-24")}
+ {/* </div> */}
+                {systemConfig?.attributes?.ShowAgenda && systemConfig?.attributes?.AgendaPosition === "BelowNews" && <AgendaWidget position="Below News" />}
               {/* </div> */}
               {/* Social Media Section */}
               <Social

@@ -100,7 +100,7 @@ const ImageGallery = ({ images, layout, position, smallImagePosition }) => {
 
       {layout === "carousel" && (
        
-        <div className={`slider-container ${styles.carouselContainer}`}> 
+        <div className={`${styles.carouselContainer}`}> 
           {/* {smallImagePosition === "above-large-image" && ( */}
             {/* <div className={styles.smallImages}> */}
             {/* // <div className="slider-container"> */}
