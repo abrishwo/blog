@@ -98,9 +98,9 @@ const Sidebar = ({ posts, categories, className, tags }) => {
               {/* AgendaPosition */}
 
               {systemConfig?.attributes?.ShowAgenda && systemConfig?.attributes?.AgendaPosition === "AboveNews" && 
-              <div className="mt-24 pt-12 w-full">
+              // <div className="mt-24 pt-12 w-full">
                  <AgendaWidget position="Above News" />
-              </div>
+              // </div>
               }
               {/* <div className="mb-6"> */}
                 {markdownify(systemConfig?.attributes?.bio, "p", " xl:text-center content-body-p pt-12 sm:pt-24")}

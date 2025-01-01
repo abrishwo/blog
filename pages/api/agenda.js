@@ -10,11 +10,11 @@ export default async function handler(req, res) {
 
     console.log("===============================+"+JSON.stringify(agendaRes.data )+"+================================")
     const today = new Date();
-    // const filteredAgenda = agendaRes?.data?.data?.filter(
-    //     (item) => new Date(item.attributes.Date) >= today
-    //   (item) => item.status && new Date(item.date) >= today
-    // );
-const filteredAgenda = agendaRes?.data?.data;
+    const filteredAgenda = agendaRes?.data?.data?.filter(
+        (item) => new Date(item.attributes.Date) >= today
+      // (item) => item.status && new Date(item.date) >= today
+    );
+// const filteredAgenda = agendaRes?.data?.data;
     console.log(filteredAgenda);
     res.status(200).json({
       agenda: filteredAgenda.sort((a, b) => new Date(a.date) - new Date(b.date)),

@@ -34,8 +34,10 @@ const AgendaWidget = ({ position }) => {
   if (!showAgenda) return null;
 
   return (
+    <>
+    { agendaItems.length > 0 && (
     <div
-      className={`w-full ${styles["agenda-widget"]} ${
+      className={`w-full mt-24 pt-12 w-full ${styles["agenda-widget"]} ${
         position === "Below News" ? styles["below-news"] : styles["above-news"]
       }`}
     >
@@ -58,6 +60,9 @@ const AgendaWidget = ({ position }) => {
         ))}
       </div>
     </div>
+
+      )}
+      </>
   );
 };
 
