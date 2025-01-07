@@ -7,16 +7,17 @@ export default async function handler(req, res) {
       axios.get("https://admin.starsandtoques.com/api/system-configs"),
     ]);
 
-    const today = new Date();
-    const filteredAgenda = agendaRes?.data?.data?.filter((item) => {
-      const itemDate = new Date(item.attributes.Date);
-      return itemDate.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0);
-    });
 
+    console.log("===============================+"+JSON.stringify(agendaRes.data )+"+================================")
+    const today = new Date();
+    const filteredAgenda = agendaRes?.data?.data?.filter(
+        (item) => new Date(item.attributes.Date) >= today
+      // (item) => item.status && new Date(item.date) >= today
+    );
+// const filteredAgenda = agendaRes?.data?.data;
+    console.log(filteredAgenda);
     res.status(200).json({
-      agenda: filteredAgenda.sort(
-        (a, b) => new Date(a.attributes.Date) - new Date(b.attributes.Date)
-      ),
+      agenda: filteredAgenda.sort((a, b) => new Date(a.date) - new Date(b.date)),
       settings: settingsRes.data.data,
     });
   } catch (error) {

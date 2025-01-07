@@ -12,6 +12,7 @@ const AgendaWidget = ({ position }) => {
       try {
         const { data } = await axios.get("/api/agenda");
         if (data.agenda.length > 0 || data.settings[0].attributes.ShowAgenda) {
+          console.log(JSON.stringify(data));
           setAgendaItems(data.agenda);
         } else {
           setShowAgenda(false);
@@ -34,39 +35,34 @@ const AgendaWidget = ({ position }) => {
 
   return (
     <>
-      {agendaItems.length > 0 && (
-        <div
-          className={`w-full mt-24 pt-12 ${styles["agenda-widget"]} ${
-            position === "Below News" ? styles["below-news"] : styles["above-news"]
-          }`}
-        >
-          <h2 className={styles["agenda-title"]}>Upcoming Events</h2>
-          <div
-            className={`${styles["agenda-cards"]}`}
-            style={{
-              maxHeight: "300px", // Adjust height for 2-3 items
-              overflowY: "auto",
-            }}
-          >
-            {agendaItems.map((item) => (
-              <div key={item.id} className={styles["agenda-card"]}>
-                <div className={styles["agenda-date"]}>
-                  {formatDate(item.attributes.Date)}
-                </div>
-                <h4 className={styles["agenda-title"]}>
-                  {item.attributes.Title}
-                </h4>
-                {markdownify(
-                  item.attributes.Description,
-                  "p",
-                  `${styles["agenda-description"]}`
-                )}
-              </div>
-            ))}
+    { agendaItems.length > 0 && (
+    <div
+      className={`w-full mt-24 pt-12 w-full ${styles["agenda-widget"]} ${
+        position === "Below News" ? styles["below-news"] : styles["above-news"]
+      }`}
+    >
+      <h2 className={styles["agenda-title"]}>Upcoming Events</h2>
+      <div className={styles["agenda-cards"]}>
+        {agendaItems.map((item) => (
+          <div key={item.id} className={styles["agenda-card"]}>
+            <div className={styles["agenda-date"]}>
+              {formatDate(item.attributes.Date)}
+            </div>
+            <h4 className={styles["agenda-title"]}>
+              {item.attributes.Title}
+            </h4>
+            {markdownify(
+              item.attributes.Description,
+              "p",
+              `${styles["agenda-description"]}`
+            )}
           </div>
-        </div>
+        ))}
+      </div>
+    </div>
+
       )}
-    </>
+      </>
   );
 };
 
