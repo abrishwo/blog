@@ -21,7 +21,7 @@ const Home = ({
   promotion,
 }) => {
   const dispatch = useDispatch();
-  const { items: articles, status, pagination, search, selectedTags, tags, featuredArticle } = useSelector((state) => state.articles);
+  const { items: articles, status, pagination, search, selectedTags, featuredArticle, tags } = useSelector((state) => state.articles);
 
   // const [featuredArticle, setFeaturedArticle] = useState(null);
   const [filteredArticles, setFilteredArticles] = useState(null);
@@ -31,16 +31,19 @@ const Home = ({
 
   useEffect(() => {
     if (status === 'idle') {
+
       dispatch(fetchArticles({
-        page: pagination.currentPage,
+        page: 1,
         pageSize: pagination.pageSize,
         tags: selectedTags,
         search,
       }));
-
       dispatch(fetchTags());
+     
+     
     }
-  }, [status, pagination.currentPage, pagination.pageSize, dispatch]);
+
+  }, [status, articles, pagination.currentPage, pagination.pageSize, dispatch]);
 
 
   useEffect(() => {
@@ -88,9 +91,12 @@ const Home = ({
   useEffect(() => {
     if (articles) {
       const featured = articles?.data?.find(article => article?.attributes?.Featured);
-      const filteredArticlesData = articles?.data?.filter(article => !article?.attributes?.Featured);
       // setFeaturedArticle(featured);
-      dispatch(setFeaturedArticle(featured));
+      const filteredArticlesData = articles?.data?.filter(article => !article?.attributes?.Featured);
+      if(!featuredArticle){
+        dispatch(setFeaturedArticle(featured));
+      }
+      
       setFilteredArticles(filteredArticlesData);
     }
     if (!tags) {
@@ -106,19 +112,27 @@ const Home = ({
   const handleTagClick = (tag) => {
     dispatch(setSelectedTags([tag]));
   };
-
+/*
   useEffect(() => {
     // Only fetch articles if the items array is empty
     if (articles?.data?.length === 0 && status !== 'loading') {
       dispatch(fetchArticles({ page: pagination.currentPage, pageSize: pagination.pageSize }));
     }
   }, [dispatch, articles, pagination.currentPage, pagination.pageSize, status]);
-
+*/
+    // Function to handle page change
+    const handlePageChange = (page) => {
+      // Dispatch action to update the pagination in the global state
+      dispatch(setPagination({ ...pagination, currentPage: page }));
+  
+      // Call your function to fetch data based on the page number
+      dispatch(fetchArticles({ page: page, pageSize: pagination.pageSize }));
+    };
 
   return (
     <Base>
 
-      {status === 'loading' && <Loader />}
+      {/* {(status === 'loading' || status === 'idle' && !featuredArticle) && <Loader />} */}
       {/* Banner Section */}
 
       {featuredArticle && (
@@ -191,6 +205,8 @@ const Home = ({
       )}
       {/* {JSON.stringify(articles)} */}
       {/* Recent Posts Section */}
+      {(status === 'loading' || status === 'idle' || !articles ) && <Loader />}
+      {(status !== 'loading' && status !== 'idle' &&  articles?.data ) && (
       <section className="section">
         <div className="container">
           <div className="row items-start">
@@ -202,7 +218,8 @@ const Home = ({
                 <div className="section pt-0 mx-auto flex flex-col items-center">
                   {markdownify('Recent Posts', "h2", "section-title")}
                   <div className="row mx-auto">
-                    {filteredArticles?.slice(0, pagination.pageSize).map((post) => (
+                    {/* {filteredArticles?.slice(0, pagination.pageSize).map((post) => ( */}
+                    {filteredArticles?.map((post) => (
                       <div className="mb-8 md:col-6" key={post.attributes.Slug}>
                         <Post post={post} />
                       </div>
@@ -211,11 +228,18 @@ const Home = ({
                 </div>
               )}
 
-              <Pagination
-                totalPages={Math.ceil(articles?.meta?.pagination?.total / articles?.meta?.pagination?.pageSize)}
-                currentPage={pagination.currentPage}
-                onPageChange={(page) => dispatch(setPagination({ ...pagination, currentPage: page }))}
-              />
+             
+                    {articles?.meta?.pagination && (
+        <Pagination
+          section={router.query.section || ""}
+          totalPages={Math.ceil(
+            (articles.meta.pagination.total) / (articles.meta.pagination.pageSize )
+          )}
+          currentPage={pagination.currentPage}
+          onPageChange={handlePageChange} // Pass the handler to the Pagination component
+        />
+      )}
+
             </div>
 
 
@@ -227,7 +251,7 @@ const Home = ({
         </div>
       </section>
 
-
+    )}
 
     </Base>
   );

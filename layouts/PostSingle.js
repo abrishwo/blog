@@ -124,7 +124,7 @@ const PostSingle = ({
                             </ul>
                   </div>
 
-                {markdownify(content.attributes.Content, "div", "enatsoft-post-content sm:mx-0 sm:p-0 sm:left-0")}
+                {markdownify(content.attributes.Content, "div", "enatsoft-post-content sm:mx-0 sm:p-0 sm:left-0 content text-left")}
                  
                
 

@@ -64,8 +64,8 @@ export const searchArticles = createAsyncThunk('articles/searchArticles', async 
   const { page = 1, pageSize = 4, tags = [], search = "" } = params;
 
   // Start building the base query with pagination and population
-  let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
-
+  let query = `${BASE_URL}/api/articles?populate=*`;
+  // let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
   // Initialize conditions for filters
   let conditions = [];
 
@@ -124,6 +124,7 @@ export const searchArticles = createAsyncThunk('articles/searchArticles', async 
     throw error;
   }
 });
+
 
 
 export const searchArticles_backup = createAsyncThunk('articles/searchArticles', async (params = {}) => {
@@ -258,7 +259,7 @@ const articlesSlice = createSlice({
     error: null,
     pagination: {
       currentPage: 1,
-      totalItems: 0,
+      totalItems: 20,
       pageSize: 10,
       totalPages: 1,
     },

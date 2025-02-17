@@ -4,7 +4,7 @@ import { MDXRemote } from "next-mdx-remote";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAboutUs } from "../redux/slices/aboutSlice";
-
+import parse from "html-react-parser";
 
 import React, {useEffect, useState} from "react";
 import Loader from "./components/Loader";
@@ -60,7 +60,10 @@ const About = ({ data }) => {
         {markdownify(about?.attributes?.Title, "h1", "title-h2 text-left lg:text-[55px] mt-12")}
 
         {/* <div className="content text-left"> */}
-           {markdownify(about?.attributes?.Content, "div", "enatsoft-post-content")}
+        {/* <div dangerouslySetInnerHTML={{ __html: about?.attributes?.Content }} /> */}
+           {markdownify(about?.attributes?.Content, "div", "content text-left enatsoft-post-content")}
+           {/* {parse(about?.attributes?.Content)} */}
+           {/* {about?.attributes?.Content} */}
         {/* </div> */}
       </div>
         )

@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { BsArrowRightShort, BsArrowLeftShort } from "react-icons/bs";
 
-const Pagination = ({ section, currentPage, totalPages }) => {
+const Pagination = ({ section, currentPage, totalPages, onPageChange }) => {
   const indexPageLink = currentPage === 2;
   const hasPrevPage = currentPage > 1;
   const hasNextPage = totalPages > currentPage;
@@ -21,19 +21,15 @@ const Pagination = ({ section, currentPage, totalPages }) => {
         >
           {/* previous */}
           {hasPrevPage ? (
-            <Link
-              href={
-                indexPageLink
-                  ? `${section ? "/" + section : "/"}`
-                  : `${section ? "/" + section : ""}/page/${currentPage - 1}`
-              }
+            <button
+              onClick={() => onPageChange(currentPage - 1)} // Trigger onPageChange with previous page
               className="flex items-center rounded-full px-2 py-1 text-3xl font-bold leading-none text-dark dark:text-darkmode-light"
             >
               <>
                 <BsArrowLeftShort />
-                <span className="ml-3 text-lg ">Previous</span>
+                <span className="ml-3 text-lg">Previous</span>
               </>
-            </Link>
+            </button>
           ) : (
             <span className="flex items-center rounded-full px-2 py-1 text-3xl font-bold text-dark dark:text-darkmode-light ">
               <>
@@ -54,33 +50,27 @@ const Pagination = ({ section, currentPage, totalPages }) => {
                   {pagination}
                 </span>
               ) : (
-                <Link
-                  href={
-                    i === 0
-                      ? `${section ? "/" + section : "/"}`
-                      : `${section ? "/" + section : ""}/page/${pagination}`
-                  }
-                  passHref
-                  aria-current="page"
+                <button
+                  onClick={() => onPageChange(pagination)} // Trigger onPageChange with the selected page number
                   className={`inline-flex h-[38px] w-[38px] items-center justify-center rounded-full px-4 py-1 font-secondary text-lg font-bold leading-none text-dark dark:text-darkmode-light`}
                 >
                   {pagination}
-                </Link>
+                </button>
               )}
             </React.Fragment>
           ))}
 
           {/* next page */}
           {hasNextPage ? (
-            <Link
-              href={`${section ? "/" + section : ""}/page/${currentPage + 1}`}
+            <button
+              onClick={() => onPageChange(currentPage + 1)} // Trigger onPageChange with next page
               className="ml-4 flex items-center rounded-full px-2 py-1 text-3xl font-bold leading-none text-dark dark:text-darkmode-light"
             >
               <>
                 <span className="mr-3 text-lg">Next</span>
                 <BsArrowRightShort />
               </>
-            </Link>
+            </button>
           ) : (
             <span className="ml-4 flex items-center rounded-full px-2 py-1 text-3xl font-bold text-dark dark:text-darkmode-light">
               <>

@@ -30,6 +30,17 @@
     justify-content: center;
   }
 
+  .agenda-cards {
+    max-height: 300px; // Adjust height for 2-3 items
+    overflow-y: auto; // Enable scrolling for overflow
+    scrollbar-width: none; // For Firefox
+    -ms-overflow-style: none; // For IE and Edge
+  
+    &::-webkit-scrollbar {
+      display: none; // For Chrome, Safari, and Opera
+    }
+  }
+  
   .agenda-card {
     background: linear-gradient(135deg, #6e45e1, #88d3ce);
     color: #fff;
