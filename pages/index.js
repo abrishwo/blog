@@ -48,9 +48,9 @@ const Home = ({
 
   useEffect(() => {
     const handleRouteChange = (url) => {
-      if (url === '/') {
+      if (url === '/' || url === '') {
         dispatch(fetchArticles({
-          page: pagination.currentPage,
+          page: 1,
           pageSize: pagination.pageSize,
           tags: selectedTags,
           search,
@@ -70,18 +70,18 @@ const Home = ({
     };
   }, [router.events]);
 
-  // useEffect(() => {
-  //   if (!articles) {
-  //     dispatch(fetchArticles({
-  //       page: pagination.currentPage,
-  //       pageSize: pagination.pageSize,
-  //       tags: selectedTags,
-  //       search,
-  //     }));
+  useEffect(() => {
+    if (!articles) {
+      dispatch(fetchArticles({
+        page: 1,
+        pageSize: pagination.pageSize,
+        tags: selectedTags,
+        search,
+      }));
 
-  //     dispatch(fetchTags());
-  //   }
-  // }, [status, pagination.currentPage, articles, pagination.pageSize, search, dispatch]);
+      dispatch(fetchTags());
+    }
+  }, [status, pagination.currentPage, articles, pagination.pageSize, search, dispatch]);
 
   // if (url === '/') {
   //   // Trigger state update when returning to '/'
@@ -112,14 +112,14 @@ const Home = ({
   const handleTagClick = (tag) => {
     dispatch(setSelectedTags([tag]));
   };
-/*
+
   useEffect(() => {
     // Only fetch articles if the items array is empty
     if (articles?.data?.length === 0 && status !== 'loading') {
       dispatch(fetchArticles({ page: pagination.currentPage, pageSize: pagination.pageSize }));
     }
   }, [dispatch, articles, pagination.currentPage, pagination.pageSize, status]);
-*/
+
     // Function to handle page change
     const handlePageChange = (page) => {
       // Dispatch action to update the pagination in the global state
