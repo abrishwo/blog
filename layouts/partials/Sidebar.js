@@ -118,7 +118,37 @@ const Sidebar = ({ posts, categories, className, tags }) => {
         )}
   
         {/* Tags Section */}
-        {tags && (
+
+        {/* Tags Section */}
+{/* Tags Section */}
+{tags && (
+  <div className="mt-6 rounded border border-border p-6 text-center dark:border-darkmode-border">
+    <div className="flex flex-wrap my-2">
+      {markdownify('Filter By Tags', "h2", "title-h2")}
+      <ul className="flex flex-wrap items-center justify-center">
+        {/* Create a new array with sorted tags */}
+        {Array.isArray(tags?.data) &&
+          [...tags?.data] // Create a shallow copy of the array
+            .sort((a, b) => a.attributes.Name.localeCompare(b.attributes.Name)) // Sort the copied array
+            .map((tag, index) => (
+              <li
+                className="mx-2 my-2 inline-flex h-7 rounded-[35px] bg-primary px-3 text-white"
+                key={"tag-" + index}
+              >
+                <Link
+                  className="capitalize"
+                  href={`/categories/${tag.attributes.Slug}`}
+                >
+                  {tag.attributes.Name}
+                </Link>
+              </li>
+            ))}
+      </ul>
+    </div>
+  </div>
+)}
+
+        {/* {tags && (
           <div className="mt-6 rounded border border-border p-6 text-center dark:border-darkmode-border">
             <div className="flex flex-wrap my-2">
               {markdownify('Filter By Tags', "h2", "title-h2")}
@@ -139,7 +169,7 @@ const Sidebar = ({ posts, categories, className, tags }) => {
               </ul>
             </div>
           </div>
-        )}
+        )} */}
   
         {/* Newsletter Section */}
         {/* {newsletter.enable && (
