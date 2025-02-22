@@ -53,9 +53,32 @@ font-size: 1.2em;
     }
   }
 }
+// .collapse-menu {
+//   @apply fixed right-0 top-0 z-10 mx-0 h-[100vh] w-full max-w-[400px] items-center border-l border-l-dark  bg-body p-6 transition-transform duration-300 ease-in-out dark:bg-darkmode-body lg:static lg:flex lg:h-auto lg:w-auto lg:max-w-full lg:space-x-4 lg:border-l-0 lg:bg-transparent lg:p-0 xl:space-x-8;
+// }
+
 .collapse-menu {
-  @apply fixed right-0 top-0 z-10 mx-0 h-[100vh] w-full max-w-[400px] items-center border-l border-l-dark  bg-body p-6 transition-transform duration-300 ease-in-out dark:bg-darkmode-body lg:static lg:flex lg:h-auto lg:w-auto lg:max-w-full lg:space-x-4 lg:border-l-0 lg:bg-transparent lg:p-0 xl:space-x-8;
+    // Hide scrollbar for all browsers
+
+  @apply fixed right-0 top-0 z-10 mx-0 h-[100vh] w-full max-w-[400px] 
+         items-center border-l border-l-dark bg-body p-6 
+         transition-transform duration-300 ease-in-out dark:bg-darkmode-body 
+         lg:static lg:flex lg:h-auto lg:w-auto lg:max-w-full 
+         lg:space-x-4 lg:border-l-0 lg:bg-transparent lg:p-0 xl:space-x-8;
+
+  // Hide menu when closed
+  &.hidden {
+    @apply translate-x-full lg:translate-x-0;
+  }
+
+  // Fix for Firefox scrollbar issue
+  padding-right: 15px;
+
+  @supports (-moz-appearance: none) {
+    padding-right: 20px;
+  }
 }
+
 
 .navbar-brand {
   @apply text-xl font-semibold text-dark;

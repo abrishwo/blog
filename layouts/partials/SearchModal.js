@@ -103,7 +103,40 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
       </div>
 
       {/* Tags Filter */}
-      <div className="tags-filter">
+      {/* Tags Filter */}
+<div className="tags-filter">
+  {(tags && tags?.data?.length>0) &&
+    [...tags.data]
+      .sort((a, b) => {
+        const nameA = a.attributes.Name.toLowerCase();
+        const nameB = b.attributes.Name.toLowerCase();
+
+        const isNumA = /^\d/.test(nameA);
+        const isNumB = /^\d/.test(nameB);
+
+        if (isNumA && isNumB) {
+          return parseInt(nameA) - parseInt(nameB); // Numeric sorting
+        } else if (isNumA) {
+          return -1; // Numbers come first
+        } else if (isNumB) {
+          return 1;
+        }
+        return nameA.localeCompare(nameB); // Alphabetical sorting
+      })
+      .map((tag, index) => (
+        <button
+          key={index}
+          className={`tag-btn ${
+            selectedTags.includes(tag.attributes.Slug) ? "tag-selected" : ""
+          }`}
+          onClick={() => handleTagClick(tag.attributes.Slug)}
+        >
+          {tag.attributes.Name}
+        </button>
+      ))}
+</div>
+
+      {/* <div className="tags-filter">
         {tags && tags?.data?.map((tag, index) => (
           <button
             key={index}
@@ -115,7 +148,7 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
             {tag?.attributes?.Name}
           </button>
         ))}
-      </div>
+      </div> */}
 
 
       {/* Styling */}

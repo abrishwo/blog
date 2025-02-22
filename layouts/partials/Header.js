@@ -80,11 +80,19 @@ const Header = ({configData, isScrolled}) => {
 
         <div className="flex items-center space-x-4 xl:space-x-8">
           
-          <div
+          {/* <div
             className={`collapse-menu ${
               !showMenu && "translate-x-full"
             } lg:flex lg:translate-x-0`}
+          > */}
+
+          <div
+            className={`collapse-menu ${
+              !showMenu ? "hidden" : "block"
+            } lg:flex lg:translate-x-0`}
           >
+
+
             <button
               className="absolute right-6 top-11 lg:hidden"
               onClick={() => setShowMenu(false)}

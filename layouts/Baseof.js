@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import React, {useEffect, useState} from "react";
 import { fetchSystemConfig, fetchSocialMedia } from "../redux/slices/systemSlice";
-
+import ScrollToTop from "@partials/ScrollToTop";
 const Base = ({
   title,
   meta_title,
@@ -127,6 +127,7 @@ const Base = ({
       <Header configData = {systemConfig.attributes} isScrolled={isScrolled}/>
       {/* main site */}
       <main>{children}</main>
+      <ScrollToTop />
       <Footer configData = {systemConfig.attributes} socialMedia={socialMedia}/>
     </>
   );

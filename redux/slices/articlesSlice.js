@@ -60,12 +60,13 @@ export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (p
 
 */
 // search all articles with advanced search functionality
+/*
 export const searchArticles = createAsyncThunk('articles/searchArticles', async (params = {}) => {
   const { page = 1, pageSize = 4, tags = [], search = "" } = params;
 
   // Start building the base query with pagination and population
-  let query = `${BASE_URL}/api/articles?populate=*`;
-  // let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+  // let query = `${BASE_URL}/api/articles?populate=*`;
+  let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
   // Initialize conditions for filters
   let conditions = [];
 
@@ -125,7 +126,51 @@ export const searchArticles = createAsyncThunk('articles/searchArticles', async 
   }
 });
 
+*/
+export const searchArticles = createAsyncThunk(
+  "articles/searchArticles",
+  async (params = {}) => {
+    const { page = 1, pageSize = 8, tags = [], search = "" } = params;
 
+    let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+    let conditions = [];
+
+    if (tags.length > 0) {
+      const tagsQuery = tags
+        .map((tag, index) => `filters[$and][${index}][tags][Slug][$eqi]=${tag}`)
+        .join("&");
+      conditions.push(tagsQuery);
+    }
+
+    if (search) {
+      const searchFields = ["Title", "Excerpt", "Content", "Slug"];
+      const searchQuery = searchFields
+        .map(
+          (field, index) =>
+            `filters[$or][${index}][${field}][$containsi]=${search}`
+        )
+        .join("&");
+      conditions.push(searchQuery);
+    }
+
+    if (conditions.length > 0) {
+      query += `&${conditions.join("&")}`;
+    }
+
+    try {
+      const response = await axios.get(query);
+      
+      return {
+        articles: response.data.data,
+        totalPages: response.data.meta.pagination.pageCount, // Get total pages
+        totalArticles: response.data.meta.pagination.total, // Total articles count
+      };
+    } catch (error) {
+      console.error("Error fetching articles:", error);
+      throw error;
+    }
+  }
+);
 
 export const searchArticles_backup = createAsyncThunk('articles/searchArticles', async (params = {}) => {
   const { page = 1, pageSize = 4, tags = [], search = "" } = params;
@@ -312,10 +357,18 @@ const articlesSlice = createSlice({
     // })
     .addCase(searchArticles.fulfilled, (state, action) => {
       state.searchStatus = 'succeeded';
-      state.searchData = action.payload?.data || [];
+      state.searchData = action.payload || [];
       state.pagination.totalItems = action.payload?.meta?.pagination?.total || 0;
       state.pagination.totalPages = action.payload?.meta?.pagination?.pageCount || 1;
-    })    
+    }) 
+    // .addCase(searchArticles.fulfilled, (state, action) => {
+    //   console.log("🔍 Payload Received:", action.payload); // Debugging
+    //   state.searchStatus = 'succeeded';
+    //   state.searchData = action.payload?.data || [];
+    //   state.pagination.totalItems = action.payload?.meta?.pagination?.total || 0;
+    //   state.pagination.totalPages = action.payload?.meta?.pagination?.pageCount || 1;
+    // })
+       
     .addCase(searchArticles.rejected, (state, action) => {
       state.searchStatus = 'failed';
       state.error = action.error.message;
