@@ -48,7 +48,8 @@ const Home = ({
 
   useEffect(() => {
     const handleRouteChange = (url) => {
-      if (url === '/' || url === '') {
+      if (url === '/') {
+        dispatch(setPagination({ ...pagination, currentPage: 1 }));
         dispatch(fetchArticles({
           page: 1,
           pageSize: pagination.pageSize,
@@ -81,7 +82,7 @@ const Home = ({
 
       dispatch(fetchTags());
     }
-  }, [status, pagination.currentPage, articles, pagination.pageSize, search, dispatch]);
+  }, [status, articles, pagination.pageSize, search, dispatch]);
 
   // if (url === '/') {
   //   // Trigger state update when returning to '/'
@@ -182,6 +183,25 @@ const Home = ({
 
                 </h2>
 
+                {
+  featuredArticle?.attributes.tags.data.length>0 &&
+        (<ul className="flex flex-wrap items-center mb-4">
+          {featuredArticle?.attributes.tags.data.slice(0,3).map((tag, index) => (
+            <li
+              className="mx-2 inline-flex h-7 rounded-[35px] bg-primary px-3 text-white"
+              key={"tag-" + index}
+            >
+              <Link
+                className="capitalize"
+                href={`/categories/${tag.attributes.Slug.replace(" ", "-")}`}
+              >
+                {tag.attributes.Name}
+              </Link>
+            </li>
+          ))}
+        </ul>)
+        
+        }
 
 
                 <p className="text-lg mb-4">
