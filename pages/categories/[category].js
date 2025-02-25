@@ -13,10 +13,10 @@ const Category = ({ slug }) => {
   const { postsByTag, relatedPosts, byTagStatus } = useSelector((state) => state.articles);
 
   useEffect(() => {
-    if (byTagStatus === 'idle' && slug) {
+    // if (byTagStatus === 'idle' && slug) {
       dispatch(fetchPostsByTags(slug));
-    }
-  }, [slug, dispatch, byTagStatus]);
+    // }
+  }, [slug]);
 
   // useEffect(() => {
   //   if (postsByTag && postsByTag.length > 0) {

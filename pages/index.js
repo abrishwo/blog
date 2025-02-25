@@ -9,7 +9,7 @@ import Link from "next/link";
 import { FaRegCalendar } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchArticles, setSearch, setSelectedTags, setPagination, fetchTags, setFeaturedArticle } from '../redux/slices/articlesSlice';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Loader from "@layouts/components/Loader";
 import { useRouter } from 'next/router';
 
@@ -25,6 +25,8 @@ const Home = ({
 
   // const [featuredArticle, setFeaturedArticle] = useState(null);
   const [filteredArticles, setFilteredArticles] = useState(null);
+  
+  const containerRef = useRef(null);
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const router = useRouter();
@@ -84,11 +86,28 @@ const Home = ({
     }
   }, [status, articles, pagination.pageSize, search, dispatch]);
 
-  // if (url === '/') {
-  //   // Trigger state update when returning to '/'
-  //   setIsHomeVisited(true);
-  // }
+ 
 
+  const filterArticles = ()=>{
+    if (articles) {
+      const featured = articles?.data?.find(article => article?.attributes?.Featured);
+      // setFeaturedArticle(featured);
+      const filteredArticlesData = articles?.data?.filter(article => !article?.attributes?.Featured);
+      if(!featuredArticle){
+        dispatch(setFeaturedArticle(featured));
+      }
+      
+      setFilteredArticles(filteredArticlesData);
+      if (containerRef.current) {
+        containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        console.warn("containerRef is null, make sure it's assigned correctly.");
+      }
+    }
+    if (!tags) {
+      dispatch(fetchTags());
+    }
+  }
   useEffect(() => {
     if (articles) {
       const featured = articles?.data?.find(article => article?.attributes?.Featured);
@@ -113,7 +132,20 @@ const Home = ({
   const handleTagClick = (tag) => {
     dispatch(setSelectedTags([tag]));
   };
+  useEffect(() => {
+    if (containerRef.current) {
 
+      
+     containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+     
+      
+      console.log("✅ containerRef is set:", containerRef.current);
+    } else {
+      console.log("❌ containerRef is null");
+    }
+  }, [filteredArticles]); // Runs when filteredArticles updates
+  
+  
   useEffect(() => {
     // Only fetch articles if the items array is empty
     if (articles?.data?.length === 0 && status !== 'loading') {
@@ -121,14 +153,13 @@ const Home = ({
     }
   }, [dispatch, articles, pagination.currentPage, pagination.pageSize, status]);
 
-    // Function to handle page change
-    const handlePageChange = (page) => {
-      // Dispatch action to update the pagination in the global state
-      dispatch(setPagination({ ...pagination, currentPage: page }));
+  const handlePageChange = (page) => {
+    dispatch(setPagination({ ...pagination, currentPage: page }));
+    dispatch(fetchArticles({ page: page, pageSize: pagination.pageSize }));
+    
+  };
   
-      // Call your function to fetch data based on the page number
-      dispatch(fetchArticles({ page: page, pageSize: pagination.pageSize }));
-    };
+  
 
   return (
     <Base>
@@ -227,40 +258,37 @@ const Home = ({
       {/* Recent Posts Section */}
       {(status === 'loading' || status === 'idle' || !articles ) && <Loader />}
       {(status !== 'loading' && status !== 'idle' &&  articles?.data ) && (
-      <section className="section">
+      <section className="section" >
         <div className="container">
           <div className="row items-start">
 
             {/* <div className="mb-12 lg:mb-0 lg:col-8 flex items-center flex-col">
              */}
-            <div className="mb-12 lg:mb-0 lg:col-8">
-              {filteredArticles && (
-                <div className="section pt-0 mx-auto flex flex-col items-center">
-                  {markdownify('Recent Posts', "h2", "section-title")}
-                  <div className="row mx-auto">
-                    {/* {filteredArticles?.slice(0, pagination.pageSize).map((post) => ( */}
-                    {filteredArticles?.map((post) => (
-                      <div className="mb-8 md:col-6" key={post.attributes.Slug}>
-                        <Post post={post} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+  <div className="mb-12 lg:mb-0 lg:col-8">
+  {/* Make sure ref is attached to a div that always renders */}
+  <div ref={containerRef} className="section pt-0 mx-auto flex flex-col items-center">
+    {markdownify("Recent Posts", "h2", "section-title")}
+    <div className="row mx-auto">
+      {filteredArticles?.map((post) => (
+        <div className="mb-8 md:col-6" key={post.attributes.Slug}>
+          <Post post={post} />
+        </div>
+      ))}
+    </div>
+  </div>
 
-             
-                    {articles?.meta?.pagination && (
-        <Pagination
-          section={router.query.section || ""}
-          totalPages={Math.ceil(
-            (articles.meta.pagination.total) / (articles.meta.pagination.pageSize )
-          )}
-          currentPage={pagination.currentPage}
-          onPageChange={handlePageChange} // Pass the handler to the Pagination component
-        />
-      )}
+  {/* Pagination */}
+  {articles?.meta?.pagination && (
+    <Pagination
+      section={router.query.section || "page"}
+      totalPages={Math.ceil(articles.meta.pagination.total / articles.meta.pagination.pageSize)}
+      currentPage={pagination.currentPage}
+      onPageChange={handlePageChange}
+    />
+  )}
+</div>
 
-            </div>
+
 
 
             <Sidebar
