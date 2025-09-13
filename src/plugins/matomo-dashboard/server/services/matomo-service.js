@@ -43,7 +43,7 @@ const getApiClient = (config) => {
 
 module.exports = ({ strapi }) => ({
   async getDashboardData() {
-    const config = strapi.config.get('plugin.matomo-dashboard');
+    const config = strapi.plugin('matomo-dashboard').config;
     const apiClient = getApiClient(config);
 
     const [
