@@ -4,4 +4,8 @@ module.exports = () => ({
     enabled: true,
     resolve: './src/plugins/custom-sidebar'
   },
+  'matomo-dashboard': {
+    enabled: true,
+    resolve: './src/plugins/matomo-dashboard'
+  },
 });
