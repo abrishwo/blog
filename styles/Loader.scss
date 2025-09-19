@@ -1,28 +1,36 @@
-// Center the loader
 .loader-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 90vh; // Full-screen height
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 20rem;
+  width: 100%;
+}
+
+.loader {
+  display: flex;
+  justify-content: space-around;
+  width: 80px;
+}
+
+.loader div {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #2ba283;
+  animation: bounce 0.6s infinite alternate;
+}
+
+.loader div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loader div:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  to {
+    transform: translateY(-16px);
+    opacity: 0.6;
   }
-  
-  // Loader animation
-  .loader {
-    border: 16px solid #f3f3f3; /* Light gray */
-    border-top: 16px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    animation: spin 1.5s linear infinite; // Infinite spinning animation
-  }
-  
-  // Keyframe for spinning animation
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  
+}
