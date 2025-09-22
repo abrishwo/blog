@@ -69,10 +69,10 @@ const Pagination = ({ section, currentPage, totalPages, onPageChange }) => {
           <button
             onClick={() => onPageChange(currentPage - 1)}
             disabled={!hasPrevPage}
-            className="flex items-center rounded-full px-2 py-1 text-3xl font-bold leading-none text-dark disabled:text-gray-400 dark:text-darkmode-light dark:disabled:text-gray-600"
+            className="flex items-center rounded-full px-2 py-1 text-2xl font-bold leading-none text-dark disabled:text-gray-400 dark:text-darkmode-light dark:disabled:text-gray-600"
           >
             <BsArrowLeftShort />
-            <span className="ml-3 text-lg">Previous</span>
+            <span className="ml-1 hidden text-lg sm:inline">Previous</span>
           </button>
 
           {/* page index */}
@@ -106,9 +106,9 @@ const Pagination = ({ section, currentPage, totalPages, onPageChange }) => {
           <button
             onClick={() => onPageChange(currentPage + 1)}
             disabled={!hasNextPage}
-            className="ml-4 flex items-center rounded-full px-2 py-1 text-3xl font-bold leading-none text-dark disabled:text-gray-400 dark:text-darkmode-light dark:disabled:text-gray-600"
+            className="ml-2 flex items-center rounded-full px-2 py-1 text-2xl font-bold leading-none text-dark disabled:text-gray-400 dark:text-darkmode-light dark:disabled:text-gray-600"
           >
-            <span className="mr-3 text-lg">Next</span>
+            <span className="mr-1 hidden text-lg sm:inline">Next</span>
             <BsArrowRightShort />
           </button>
         </nav>
