@@ -278,9 +278,9 @@ export const fetchRelatedPosts = createAsyncThunk('articles/fetchRelatedPosts', 
 });
 
 // Fetch posts by tag
-export const fetchPostsByTags = createAsyncThunk('articles/fetchPostsByTags', async (tag) => {
-  const response = await axios.get(`${BASE_URL}/api/articles/?filters[tags][Slug][$eqi]=${tag}&populate=*`);
-  return response.data.data;
+export const fetchPostsByTags = createAsyncThunk('articles/fetchPostsByTags', async ({ tag, page = 1, pageSize = 8 }) => {
+  const response = await axios.get(`${BASE_URL}/api/articles/?filters[tags][Slug][$eqi]=${tag}&populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort[0]=Date:desc`);
+  return response.data;
 });
 
 // Fetch tags
@@ -422,7 +422,9 @@ const articlesSlice = createSlice({
       })
       .addCase(fetchPostsByTags.fulfilled, (state, action) => {
         state.byTagStatus = 'succeeded';
-        state.postsByTag = action.payload;
+        state.postsByTag = action.payload.data;
+        state.pagination.totalItems = action.payload.meta.pagination.total;
+        state.pagination.totalPages = action.payload.meta.pagination.pageCount;
       })
       .addCase(fetchPostsByTags.rejected, (state, action) => {
         state.byTagStatus = 'failed';

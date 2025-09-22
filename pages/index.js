@@ -270,7 +270,7 @@ const Home = ({
     {markdownify("Recent Posts", "h2", "section-title")}
     <div className="row mx-auto">
       {filteredArticles?.map((post) => (
-        <div className="mb-8 md:col-6" key={post.attributes.Slug}>
+        <div className="col-12 mb-8 md:col-6" key={post.attributes.Slug}>
           <Post post={post} />
         </div>
       ))}

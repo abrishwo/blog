@@ -1,30 +1,33 @@
 import Base from "@layouts/Baseof";
 import Post from "@partials/Post";
-import { fetchPostsByTags, fetchRelatedPosts } from "../../redux/slices/articlesSlice";
+import { fetchPostsByTags } from "../../redux/slices/articlesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "@layouts/components/Loader";
-import React, { useEffect } from "react";
+import Pagination from "@layouts/components/Pagination";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // category page
 const Category = ({ slug }) => {
   const dispatch = useDispatch();
-  const { postsByTag, relatedPosts, byTagStatus } = useSelector((state) => state.articles);
+  const router = useRouter();
+  const { postsByTag, pagination, byTagStatus } = useSelector((state) => state.articles);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    // if (byTagStatus === 'idle' && slug) {
-      dispatch(fetchPostsByTags(slug));
-    // }
+    dispatch(fetchPostsByTags({ tag: slug, page: currentPage }));
+  }, [slug, currentPage, dispatch]);
+
+  // Reset pagination when category changes
+  useEffect(() => {
+    setCurrentPage(1);
   }, [slug]);
 
-  // useEffect(() => {
-  //   if (postsByTag && postsByTag.length > 0) {
-  //     dispatch(fetchRelatedPosts("Belgium")); // Adjust this if needed
-  //   }
-  // }, [postsByTag, dispatch]);
-
-  // if (byTagStatus === 'loading') return <Loader />;
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <Base title={slug}>
@@ -37,21 +40,30 @@ const Category = ({ slug }) => {
             </span>
           </h1>
 
-          
           <div className="row">
             <div className="lg:col-12">
               <div className="row rounded border border-border p-4 px-3 dark:border-darkmode-border lg:p-6">
-                {(byTagStatus === 'loading')? (<Loader />) 
-                : (postsByTag && postsByTag.length > 0 ? (
+                {byTagStatus === 'loading' ? (
+                  <Loader />
+                ) : postsByTag && postsByTag.length > 0 ? (
                   postsByTag.map((post, i) => (
-                    <div key={`key-${i}`} className="col-12 mb-8 sm:col-6">
+                    <div key={`key-${i}`} className="col-12 mb-8 md:col-6">
                       <Post post={post} />
                     </div>
                   ))
                 ) : (
-                  JSON.stringify(postsByTag),
-                  <p>No posts found for this category.</p>
-                ))}
+                  <p className="w-full text-center">No posts found for this category.</p>
+                )}
+              </div>
+              <div className="mt-8">
+                {pagination.totalPages > 1 && (
+                  <Pagination
+                    section={router.query.section || ""}
+                    totalPages={pagination.totalPages}
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange}
+                  />
+                )}
               </div>
             </div>
           </div>
