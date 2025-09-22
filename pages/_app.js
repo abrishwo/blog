@@ -8,6 +8,7 @@ import TagManager from "react-gtm-module";
 import { Provider } from "react-redux";
 import store from "../redux/store";
 import "styles/style.scss";
+import { init, push } from "@socialgouv/matomo-next";
 
 const App = ({ Component, pageProps }) => {
   // default theme setup
@@ -36,6 +37,20 @@ const App = ({ Component, pageProps }) => {
         TagManager.initialize(tagManagerArgs);
     }, 5000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    init({
+      url: "//stats.starsandtoques.com/",
+      siteId: "1",
+      onInitialization: () => {
+        push(["setDocumentTitle", document.domain + "/" + document.title]);
+        push(["setCookieDomain", "*.starsandtoques.com"]);
+        push(["setDomains", ["*.starsandtoques.com"]]);
+        push(["setDoNotTrack", true]);
+        push(['enableLinkTracking']);
+      },
+    });
   }, []);
 
   return (

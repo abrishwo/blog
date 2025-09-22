@@ -23,7 +23,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (params = {}) => {
   // blogger/frontend/redux/slices/articlesSlice.js
-  const { page = 1, pageSize = 4, tags = [], search = "" } = params;
+  const { page = 1, pageSize = 8, tags = [], search = "" } = params;
   let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort[0]=Date:desc`;
   
   if (tags.length > 0) {
@@ -132,7 +132,7 @@ export const searchArticles = createAsyncThunk(
   async (params = {}) => {
     const { page = 1, pageSize = 8, tags = [], search = "" } = params;
 
-    let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+    let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort[0]=Date:desc`;
     let conditions = [];
 
     if (tags.length > 0) {
@@ -305,7 +305,7 @@ const articlesSlice = createSlice({
     pagination: {
       currentPage: 1,
       totalItems: 20,
-      pageSize: 10,
+      pageSize: 8,
       totalPages: 1,
     },
     search: '',

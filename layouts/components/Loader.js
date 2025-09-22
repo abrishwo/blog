@@ -1,10 +1,14 @@
 import React from 'react';
-// import './Loader.scss'; // Import the loader styles
+//import 'styles/Loader.scss'; // Import the loader styles
 
 const Loader = () => {
   return (
     <div className="loader-container">
-      <div className="loader"></div>
+      <div className="loader">
+        <div />
+        <div />
+        <div />
+      </div>
     </div>
   );
 };
