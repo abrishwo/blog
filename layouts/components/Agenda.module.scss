@@ -1,139 +1,82 @@
-/* Main container for the widget */
 .agenda-widget {
-  display: grid;
-  grid-template-columns: 1fr; /* Default to a single column for mobile */
-  gap: 2rem;
-  padding: 1.5rem;
-  background-color: #f8f9fa;
-  border: 1px solid #e1e1e1;
+  padding: .5rem;
+  background-color: #f9f9f9;
   border-radius: 8px;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  width: 100%;
-}
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: .2rem;
+  // margin-top: 2rem !important;
 
-/* On medium screens and up, switch to a two-column layout */
-@media (min-width: 992px) {
-  .agenda-widget {
-    grid-template-columns: 300px 1fr; /* Left column for bio, right for events */
-    grid-template-areas: "header events";
+  &.below-news {
+    margin-top: 1.2rem;
   }
-}
 
-/* Header section for logo and bio */
-.agenda-header {
-  grid-area: header; /* Assign to the 'header' grid area */
-  text-align: center;
-  padding-right: 2rem;
-  border-right: 1px solid #e1e1e1;
-}
-
-/* On mobile, remove the border and padding */
-@media (max-width: 991px) {
-  .agenda-header {
-    padding-right: 0;
-    border-right: none;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid #e1e1e1;
+  &.above-news {
+    margin-bottom: 1.2rem;
   }
-}
 
-.agenda-logo-wrap {
-  margin-bottom: 1.5rem;
-}
+  .agenda-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    // color: #fff;
+    margin-bottom: 1.5rem;
+  }
 
-.agenda-logo {
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+  .agenda-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
 
-.agenda-bio {
-  font-size: 1rem;
-  color: #555;
-  line-height: 1.6;
-}
+  .agenda-cards {
+    max-height: 300px; // Adjust height for 2-3 items
+    overflow-y: auto; // Enable scrolling for overflow
+    scrollbar-width: none; // For Firefox
+    -ms-overflow-style: none; // For IE and Edge
 
-/* Upcoming events section */
-.agenda-events {
-  grid-area: events; /* Assign to the 'events' grid area */
-  width: 100%;
-  min-height: 300px; /* Ensure it has some height */
-}
+    &::-webkit-scrollbar {
+      display: none; // For Chrome, Safari, and Opera
+    }
+  }
 
-/* Title for the events section */
-.agenda-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-align: center;
-  color: #222;
-  margin-bottom: 2rem;
-}
+  .agenda-card {
+    background: linear-gradient(135deg, #6e45e1, #88d3ce);
+    color: #fff;
+    border-radius: 12px;
+    padding: 1.2rem;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+    flex: 1 1 calc(100% - 1.5rem);
+    max-width: 300px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-/* Container for the scrolling cards */
-.agenda-cards {
-  display: flex;
-  flex-direction: column; /* Always stack event cards vertically */
-  gap: 1rem;
-  max-height: 400px;
-  overflow-y: auto;
-  padding: 0.5rem;
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+    }
 
-  /* Custom scrollbar for a cleaner look */
-  scrollbar-width: thin;
-  scrollbar-color: #2ba283 #f8f9fa;
-}
+    .agenda-date {
+      font-size: 1rem;
+      font-weight: bold;
+      background: #fff;
+      color: #6e45e1;
+      padding: 0.5rem .7rem;
+      border-radius: 8px;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
 
-.agenda-cards::-webkit-scrollbar {
-  width: 8px;
-}
+    .agenda-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+    }
 
-.agenda-cards::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.agenda-cards::-webkit-scrollbar-thumb {
-  background-color: #2ba283;
-  border-radius: 10px;
-  border: 3px solid #f8f9fa;
-}
-
-/* Individual card for each event */
-.agenda-card {
-  background-color: #ffffff;
-  border: 1px solid #e1e1e1;
-  border-radius: 8px;
-  padding: 1.5rem;
-  text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: 100%;
-}
-
-.agenda-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.07);
-}
-
-/* Date styling */
-.agenda-date {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #2ba283;
-  margin-bottom: 0.75rem;
-}
-
-/* Title of the event card */
-.agenda-card-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #222;
-  margin-bottom: 0.5rem;
-}
-
-/* Description of the event */
-.agenda-description {
-  font-size: 1rem;
-  color: #555;
-  line-height: 1.6;
+    .agenda-description {
+      font-size: 0.9rem;
+      color: #fff;
+    }
+  }
 }
