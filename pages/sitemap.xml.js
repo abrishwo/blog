@@ -35,7 +35,7 @@ export const getServerSideProps = async ({ res }) => {
     // Loop through all pages of posts from the Strapi API
     do {
       const response = await axios.get(
-        `${STRAPI_URL}/api/articles?pagination[page]=${page}&pagination[pageSize]=${pageSize}&fields[0]=slug&fields[1]=updatedAt`
+        `${STRAPI_URL}/api/articles?pagination[page]=${page}&pagination[pageSize]=${pageSize}&fields[0]=Slug&fields[1]=updatedAt`
       );
 
       const posts = response.data.data;
@@ -68,7 +68,7 @@ export const getServerSideProps = async ({ res }) => {
     allPosts.forEach(post => {
       sitemap += `
   <url>
-    <loc>${SITE_URL}/posts/${post.attributes.slug}</loc>
+    <loc>${SITE_URL}/posts/${post.attributes.Slug}</loc>
     <lastmod>${new Date(post.attributes.updatedAt).toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
