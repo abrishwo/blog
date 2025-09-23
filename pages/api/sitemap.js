@@ -2,34 +2,37 @@ import { SitemapStream, streamToPromise } from 'sitemap';
 import { Readable } from 'stream';
 
 export default async function handler(req, res) {
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://starsandtoques.com';
+  const STRAPI_API_URL = process.env.STRAPI_API_URL || 'https://vivid-flowers-9f3564b8da.strapiapp.com';
 
+  // Static pages
+  const staticPages = [
+    { url: '/', changefreq: 'weekly', priority: 1 },
+    { url: '/about', changefreq: 'monthly', priority: 0.7 },
+  ];
 
-    const staticPages = [
-        { url: '/', changefreq: 'weekly', priority: 1 },
-        { url: '/about', changefreq: 'monthly', priority: 0.7 },
-        // Add more static pages here
-      ];
+  // Fetch dynamic posts
+  const response = await fetch(`${STRAPI_API_URL}/api/articles?fields[0]=slug&fields[1]=updatedAt`);
+  const data = await response.json();
+  const posts = data?.data || [];
 
+  // Convert Strapi posts into sitemap format
+  const dynamiclinks = posts.map(post => ({
+    url: `/posts/${post.attributes.slug}`, // FIX: use attributes.slug
+    lastmod: post.attributes.updatedAt,
+    changefreq: 'weekly',
+    priority: 0.7,
+  }));
 
-    // Fetch or retrieve your dynamic data, e.g., from a CMS, database, or static list.
-//   const posts = await fetch('http://localhost:1337/api/articles').then(res => res.json());
+  // Merge links
+  const links = [...staticPages, ...dynamiclinks];
 
-  // Set the header to XML.
+  // Set header
   res.setHeader('Content-Type', 'application/xml');
 
-  // Create a new sitemap stream.
-  const sitemap = new SitemapStream({ hostname: 'http://localhost:3000' });
+  // Create sitemap stream
+  const sitemap = new SitemapStream({ hostname: SITE_URL });
 
-  // Convert dynamic posts to URL format.
-//   const dynamiclinks = posts.map(post => ({
-//     url: `/posts/${post.slug}`,
-//     changefreq: 'daily',
-//     priority: 0.8,
-//   }));
-const dynamiclinks = [];
-  // Merge dynamic and static links
-const links = [...staticPages, ...dynamiclinks];
-  // Stream the sitemap data.
   const xmlStream = new Readable({
     read() {
       links.forEach(link => sitemap.write(link));
@@ -37,7 +40,6 @@ const links = [...staticPages, ...dynamiclinks];
     }
   });
 
-  // Convert stream to XML and send as response.
   const sitemapOutput = await streamToPromise(xmlStream).then(data => data.toString());
   res.status(200).end(sitemapOutput);
 }
