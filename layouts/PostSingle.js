@@ -16,7 +16,7 @@ const { disqus } = config;
 const { meta_author } = config.metadata;
 import GallerySlider from "./components/GalleryView";
 import ImageGallery from "./components/GalleryImages";
-import Head from 'next/head';
+
 const PostSingle = ({
   content,
   relatedPost,
@@ -50,11 +50,7 @@ const PostSingle = ({
 
   return (
    <>
- { (content.attributes && content.attributes?.SEO) && (      <Head>
-        <title>{content.attributes?.SEO?.metaTitle}</title>
-        <meta name="description" content={content.attributes?.SEO?.metaDescription} />
-        {content.attributes?.SEO?.metaKeywords && <meta name="keywords" content={content.attributes?.SEO?.metaKeywords} />}
-      </Head>)}
+
    
    {content.attributes && ( <Base title={content.attributes.Title} description={content.attributes.Content}>
       <section className="section single-blog md:mt-6">

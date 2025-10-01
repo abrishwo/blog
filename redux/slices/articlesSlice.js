@@ -21,10 +21,19 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 // });
 // Fetch all articles 
 
+// Fetch the featured article
+export const fetchFeaturedArticle = createAsyncThunk('articles/fetchFeaturedArticle', async () => {
+  const query = `${BASE_URL}/api/articles?populate=*&filters[Featured][$eq]=true&pagination[limit]=1`;
+  const response = await axios.get(query);
+  // The response is an array, we want the first item
+  return response.data.data[0] || null;
+});
+
 export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (params = {}) => {
   // blogger/frontend/redux/slices/articlesSlice.js
   const { page = 1, pageSize = 8, tags = [], search = "" } = params;
-  let query = `${BASE_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort[0]=Date:desc`;
+  // Exclude the featured article from the main list
+  let query = `${BASE_URL}/api/articles?populate=*&filters[Featured][$eq]=false&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort[0]=Date:desc`;
   
   if (tags.length > 0) {
     const tagsQuery = tags.map(tag => `filters[tags][Name][$eq]=${tag}`).join('&');
@@ -344,7 +353,20 @@ const articlesSlice = createSlice({
         state.error = action.error.message;
       });
 
-          // Fetch all articles
+    // Fetch featured article
+    builder
+      .addCase(fetchFeaturedArticle.pending, (state) => {
+        state.status = 'loading'; // Can use the same status or a dedicated one
+      })
+      .addCase(fetchFeaturedArticle.fulfilled, (state, action) => {
+        state.featuredArticle = action.payload;
+        // Optionally set a different status to indicate completion
+      })
+      .addCase(fetchFeaturedArticle.rejected, (state, action) => {
+        state.error = action.error.message; // Optionally set a different error state
+      });
+
+    // Fetch all articles
   builder
     .addCase(searchArticles.pending, (state) => {
       state.searchStatus = 'loading';
