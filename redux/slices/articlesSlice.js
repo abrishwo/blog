@@ -294,7 +294,9 @@ export const fetchPostsByTags = createAsyncThunk('articles/fetchPostsByTags', as
 
 // Fetch tags
 export const fetchTags = createAsyncThunk('articles/fetchTags', async () => {
-  const response = await axios.get(`${BASE_URL}/api/tags/?populate=*`);
+ // const response = await axios.get(`${BASE_URL}/api/tags/?populate=*`);
+   const response = await axios.get(`${BASE_URL}/api/tags?pagination[page]=1&pagination[pageSize]=100&populate=*`);
+ 
   return response.data;
 });
 
