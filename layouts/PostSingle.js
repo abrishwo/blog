@@ -26,7 +26,8 @@ const PostSingle = ({
 
   return (
    <>
-   {content.attributes && ( <Base title={content.attributes.Title} description={content.attributes.Content}>
+   {content.attributes && ( <Base title={content.attributes?.SEO?.metaTitle?content.attributes?.SEO?.metaTitle:content.attributes.Title} meta_title={content.attributes?.SEO?.metaTitle?content.attributes?.SEO?.metaTitle:content.attributes.Title} meta_keywords={content.attributes?.SEO?.metaKeywords?content.attributes?.SEO?.metaKeywords:content.attributes.Title} description={content.attributes?.SEO?.metaDescription?content.attributes?.SEO?.metaDescription:content.attributes.Content}>
+      
       <section className="section single-blog md:mt-6">
         <div className="container">
         {markdownify(content.attributes.Title, "h1", "title-h2 lg:text-[42px] my-4")}
