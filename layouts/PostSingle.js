@@ -14,33 +14,81 @@ import Sidebar from "./partials/Sidebar";
 import shortcodes from "./shortcodes/all";
 const { disqus } = config;
 const { meta_author } = config.metadata;
-import GalleryView from "./components/GalleryView";
+import GallerySlider from "./components/GalleryView";
+import ImageGallery from "./components/GalleryImages";
 
 const PostSingle = ({
   content,
   relatedPost,
   tags
 }) => {
+
   const { theme } = useTheme();
   const author = "Admin";
+ 
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+    
+
+    // const thumb = [
+    //   content.attributes.Thumbnail.data.attributes.formats.large.url,
+    // ];
+    
+    // Check if there are gallery images, and map them to an array of URLs
+    // const gall = content.attributes?.Images?.data.map(
+    //   (image) => image.attributes.formats.large.url
+    // );
+    
+    const imageUrls = content.attributes?.gallery?.images?.data?.map(
+      (img) => img?.attributes?.formats?.large?.url
+    );
+   
+    // const imageList = [...thumb, ...(gall || [])]; // Use spread operator to combine arrays
+    // const imageList = gall || [];
+    // console.log(imageList); 
+    
 
   return (
    <>
+
+   
    {content.attributes && ( <Base title={content.attributes?.SEO?.metaTitle?content.attributes?.SEO?.metaTitle:content.attributes.Title} meta_title={content.attributes?.SEO?.metaTitle?content.attributes?.SEO?.metaTitle:content.attributes.Title} meta_keywords={content.attributes?.SEO?.metaKeywords?content.attributes?.SEO?.metaKeywords:content.attributes.Title} description={content.attributes?.SEO?.metaDescription?content.attributes?.SEO?.metaDescription:content.attributes.Content}>
-      
       <section className="section single-blog md:mt-6">
         <div className="container">
         {markdownify(content.attributes.Title, "h1", "title-h2 lg:text-[42px] my-4")}
          
+      
+         
           <div className="row">
-            {content.attributes?.gallery?.images?.data && (
-              <div className="mb-8 w-full">
-                <GalleryView images={content.attributes.gallery.images.data} />
-              </div>
+
+          {(content.attributes?.gallery && content.attributes?.gallery?.Position === 'below-title' && content.attributes?.gallery?.Layout === 'grid') && (
+              <ImageGallery
+                images={content.attributes?.gallery?.images?.data?.map((img) => ({
+                  url: BASE_URL + img?.attributes?.formats?.large?.url,
+                  alt: img.alt || "Gallery Image",
+                }))}
+                layout={content.attributes?.gallery?.Layout}
+                position={content.attributes?.gallery?.Position}
+                smallImagePosition={content.attributes?.gallery?.smallImagePosition}
+              />
             )}
+
+
+
 
             <div className="lg:col-8">
               <article>
+              {(content.attributes?.gallery && (content.attributes?.gallery?.Position === 'below-title' && content.attributes?.gallery?.Layout === 'carousel')) && (
+                <div className="relative">
+                    <GallerySlider 
+                    images={imageUrls}
+                    
+                    position={content.attributes?.gallery?.Position}
+                    smallImagePosition={content.attributes?.gallery?.smallImagePosition}
+                  />
+                  
+                </div>
+              )}
                 {/* {markdownify(content.attributes.Title, "h1", "title-h2 lg:text-[42px] mt-4")} */}
                 <ul className="flex items-center space-x-4">
                   <li>
@@ -77,6 +125,36 @@ const PostSingle = ({
                   </div>
 
                 {markdownify(content.attributes.Content, "div", "enatsoft-post-content sm:mx-0 sm:p-0 sm:left-0 content text-left")}
+                 
+               
+
+
+         {(content.attributes?.gallery && (content.attributes?.gallery?.Position === 'end-of-article' && content.attributes?.gallery?.Layout === 'grid')) && (
+            <div className="relative">
+              <ImageGallery
+                images={content.attributes?.gallery?.images?.data?.map((img) => ({
+                  url: BASE_URL + img?.attributes?.formats?.large?.url,
+                  alt: img.alt || "Gallery Image",
+                }))}
+                layout={content.attributes?.gallery?.Layout}
+                position={content.attributes?.gallery?.Position}
+                smallImagePosition={content.attributes?.gallery?.smallImagePosition}
+              />
+             
+             </div>
+            )} 
+{/* blogger/frontend/layouts/PostSingle.js */}
+{(content.attributes?.gallery && (content.attributes?.gallery?.Position === 'end-of-article' && content.attributes?.gallery?.Layout === 'carousel')) && (
+                <div className="relative">
+                    <GallerySlider 
+                    images={imageUrls}
+                    
+                    position={content.attributes?.gallery?.Position}
+                    smallImagePosition={content.attributes?.gallery?.smallImagePosition}
+                  />
+                  
+                </div>
+              )}
               </article>
              
             </div>
