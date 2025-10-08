@@ -252,7 +252,7 @@ export const fetchArticleDetails = createAsyncThunk('articles/fetchArticleDetail
   // https://admin.starsandtoques.com/api/articles?filters[Slug][$eq]=data-management&populate[gallery][populate][images]=*&populate[Images]=*   for all population
   // const response = await axios.get(`${BASE_URL}/api/articles?filters[Slug][$eq]=${slug}&populate=*`);
   // const response = await axios.get(`${BASE_URL}/api/articles?filters[Slug][$eq]=${slug}&populate[gallery][populate][images]=*&populate[Images]=*&populate[Thumbnail]=*&populate[tags]=*`);
-  const response = await axios.get(`${BASE_URL}/api/articles?filters[Slug][$eq]=${slug}&populate[gallery][populate][images]=*&populate[Thumbnail]=*&populate[SEO]=*&populate[tags]=*`);
+  const response = await axios.get(`${BASE_URL}/api/articles?filters[Slug][$eq]=${slug}&populate[gallery][populate][images]=*&populate[Thumbnail]=*&populate[tags]=*`);
   return response.data;
 });
 
@@ -294,9 +294,7 @@ export const fetchPostsByTags = createAsyncThunk('articles/fetchPostsByTags', as
 
 // Fetch tags
 export const fetchTags = createAsyncThunk('articles/fetchTags', async () => {
- // const response = await axios.get(`${BASE_URL}/api/tags/?populate=*`);
-   const response = await axios.get(`${BASE_URL}/api/tags?pagination[page]=1&pagination[pageSize]=100&populate=*`);
- 
+  const response = await axios.get(`${BASE_URL}/api/tags/?populate=*`);
   return response.data;
 });
 
