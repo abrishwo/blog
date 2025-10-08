@@ -12,7 +12,6 @@ const Base = ({
   title,
   meta_title,
   description,
-  meta_keywords,
   image,
   noindex,
   canonical,
@@ -73,7 +72,6 @@ const Base = ({
           name="description"
           content={plainify(description ? description : meta_description)}
         />
-<meta name="keywords" content={plainify(meta_keywords ? meta_keywords : '')}/>
 
         {/* author from config.json */}
         <meta name="author" content={meta_author} />
