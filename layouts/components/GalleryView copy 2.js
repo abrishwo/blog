@@ -1,68 +1,119 @@
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React, { useState, useEffect } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import styles from './ImageGallery.module.scss';
+import ImageFallback from '@layouts/components/ImageFallback';
+import { FaRandom, FaSyncAlt, FaSortAlphaDown } from 'react-icons/fa';
 
-const GallerySlider = ({ images }) => {
-  const [selectedImage, setSelectedImage] = useState(images[0]);
-
-  const handleImageClick = (image) => {
-    setSelectedImage(image);
-  };
+const GalleryView = ({ images: initialImages }) => {
+  const [images, setImages] = useState([]);
+  const [isBrowser, setIsBrowser] = useState(false);
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+  useEffect(() => {
+    setIsBrowser(true);
+    if (initialImages) {
+      setImages(
+        initialImages.map((img, index) => ({
+          ...img,
+          dndId: `image-${index}`,
+          orientation: 'portrait', // Default orientation
+        }))
+      );
+    }
+  }, [initialImages]);
+
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
+    const items = Array.from(images);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setImages(items);
+  };
+
+  const handleShuffle = () => {
+    const shuffled = [...images].sort(() => 0.5 - Math.random());
+    setImages(shuffled);
+  };
+
+  const handleSort = () => {
+    const sorted = [...images].sort((a, b) =>
+      a.attributes.name.localeCompare(b.attributes.name)
+    );
+    setImages(sorted);
+  };
+
+  const handleOrientationToggle = (dndId) => {
+    setImages(
+      images.map((img) =>
+        img.dndId === dndId
+          ? { ...img, orientation: img.orientation === 'portrait' ? 'landscape' : 'portrait' }
+          : img
+      )
+    );
+  };
+
+  if (!isBrowser) {
+    return null;
+  }
+
   return (
-    <div className="gallery-container flex flex-col items-center">
-      {/* <div className="selected-image-container w-full max-w-3xl h-[60vh] md:h-[70vh] lg:h-[80vh] relative"> */}
-      {/* import Image from 'next/image'; */}
-
-{/* const YourComponent = ({ selectedImage }) => ( */}
-  <div className="slide-container position-center">
-    <Image
-      src={`${BASE_URL}${selectedImage}`}
-      alt="Selected"
-      className="rounded-lg slide-image"
-      fill={true}
-     
-      style={{
-        objectFit: 'contain',      // Ensures the image fits within the div boundaries
-        objectPosition: 'center',  // Centers the image if aspect ratios differ
-        maxWidth: '100%',
-        maxHeight: '100%',
-        aspectRatio: 'auto scale !important',
-        transition: 'transform 0.3s ease',
-      }}
-      priority
-    />
-  </div>
-
-      <div className="thumbnail-slider mt-4 flex overflow-x-auto space-x-2 w-full max-w-3xl">
-        <div className="grid grid-flow-col auto-cols-[minmax(100px,_1fr)] sm:auto-cols-[minmax(150px,_1fr)] gap-2">
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className={`thumbnail-wrapper flex items-center ${
-                selectedImage === image ? 'border-2 border-green-500' : ''
-              } rounded-md cursor-pointer`}
-              onClick={() => handleImageClick(image)}
-            >
-              <Image
-                src={`${BASE_URL}${image}`}
-                width={120}
-                height={100}
-               
-                style={{
-                  objectFit: "contain",
-                  objectPosition: "center",
-
-                  aspectRatio: "scale auto",
-                }}
-                alt={`Thumbnail ${index}`}
-                className="rounded-md mx-auto my-auto"
-              />
-            </div>
-          ))}
-        </div>
+    <div className={styles.galleryContainer}>
+      <div className={styles.controls}>
+        <button onClick={handleShuffle} className={styles.controlButton}>
+          <FaRandom /> Shuffle
+        </button>
+        <button onClick={handleSort} className={styles.controlButton}>
+          <FaSortAlphaDown /> Sort A-Z
+        </button>
       </div>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="gallery" direction="horizontal">
+          {(provided) => (
+            <div
+              className={styles.galleryGrid}
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {images.map((image, index) => (
+                <Draggable key={image.dndId} draggableId={image.dndId} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className={`${styles.imageCard} ${styles[image.orientation]}`}
+                    >
+                      <div className={styles.imageWrapper}>
+                        <ImageFallback
+                          src={`${BASE_URL}${image.attributes.formats.small.url}`}
+                          alt={image.attributes.alternativeText || 'Gallery image'}
+                          width={150}
+                          height={150}
+                          className={styles.image}
+                        />
+                        <button
+                          className={styles.orientationButton}
+                          onClick={() => handleOrientationToggle(image.dndId)}
+                        >
+                          <FaSyncAlt />
+                        </button>
+                      </div>
+                      {image.attributes.caption && (
+                        <div className={styles.caption}>
+                          {image.attributes.caption}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 };
 
-export default GallerySlider;
+export default GalleryView;
