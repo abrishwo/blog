@@ -1,23 +1,35 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import ImageFallback from '@layouts/components/ImageFallback';
-import { FaChevronLeft, FaChevronRight, FaRandom, FaSyncAlt, FaSortAlphaDown } from 'react-icons/fa';
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaRandom,
+  FaSyncAlt,
+  FaSortAlphaDown,
+  FaThLarge,
+  FaImages,
+} from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import styles from './ImageGallery.module.scss';
 
-const GalleryView = ({ images: initialImages, smallImagePosition }) => {
+const GalleryView = ({
+  images: initialImages = [],
+  smallImagePosition = 'below-large-image',
+}) => {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showLeftChevron, setShowLeftChevron] = useState(false);
   const [showRightChevron, setShowRightChevron] = useState(true);
   const [isBrowser, setIsBrowser] = useState(false);
+  const [layoutMode, setLayoutMode] = useState('carousel'); // ✅ carousel | grid
   const thumbnailRef = useRef(null);
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-  // Initialize images for DnD and selection
+  /** Initialize images */
   useEffect(() => {
     setIsBrowser(true);
-    if (initialImages && initialImages.length > 0) {
+    if (initialImages.length > 0) {
       const formatted = initialImages.map((img, index) => ({
         ...img,
         dndId: `image-${index}`,
@@ -31,9 +43,7 @@ const GalleryView = ({ images: initialImages, smallImagePosition }) => {
     }
   }, [initialImages, BASE_URL]);
 
-  /** =========================
-   * Thumbnail Scroll + Chevron
-   ========================== */
+  /** Scroll and Chevron logic */
   const scrollThumbnails = (direction) => {
     if (thumbnailRef.current) {
       const scrollAmount = direction === 'left' ? -150 : 150;
@@ -55,9 +65,7 @@ const GalleryView = ({ images: initialImages, smallImagePosition }) => {
     return () => window.removeEventListener('resize', updateChevronVisibility);
   }, [images]);
 
-  /** =========================
-   * Drag and Drop Handlers
-   ========================== */
+  /** Drag-and-drop reorder */
   const handleOnDragEnd = (result) => {
     if (!result.destination) return;
     const reordered = Array.from(images);
@@ -66,19 +74,177 @@ const GalleryView = ({ images: initialImages, smallImagePosition }) => {
     setImages(reordered);
   };
 
-  /** =========================
-   * Shuffle / Sort / Orientation
-   ========================== */
+  /** Shuffle / Sort / Orientation */
   const handleShuffle = () => setImages([...images].sort(() => 0.5 - Math.random()));
   const handleSort = () =>
     setImages([...images].sort((a, b) => (a.attributes?.name || '').localeCompare(b.attributes?.name || '')));
   const handleOrientationToggle = (dndId) =>
-    setImages(images.map((img) => (img.dndId === dndId ? { ...img, orientation: img.orientation === 'portrait' ? 'landscape' : 'portrait' } : img)));
+    setImages(
+      images.map((img) =>
+        img.dndId === dndId
+          ? {
+              ...img,
+              orientation: img.orientation === 'portrait' ? 'landscape' : 'portrait',
+            }
+          : img
+      )
+    );
 
-  /** =========================
-   * UI Rendering
-   ========================== */
   if (!isBrowser) return null;
+
+  /** Large Image */
+  const renderLargeImage = () =>
+    selectedImage ? (
+      <div className="slide-container relative w-full max-w-3xl h-[60vh] md:h-[70vh] lg:h-[80vh]">
+        <ImageFallback
+          src={selectedImage.src}
+          alt={selectedImage.attributes?.alternativeText || 'Selected image'}
+          className="rounded-lg"
+          fill
+          style={{
+            objectFit: 'contain',
+            objectPosition: 'center',
+            transition: 'transform 0.3s ease',
+          }}
+        />
+        {selectedImage.attributes?.caption && (
+          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white text-sm px-3 py-1 rounded-md">
+            {selectedImage.attributes.caption}
+          </div>
+        )}
+      </div>
+    ) : null;
+
+  /** Thumbnail carousel (scrollable) */
+  const renderCarousel = () => (
+    <div className="relative w-full max-w-3xl mt-3">
+      {showLeftChevron && (
+        <button
+          onClick={() => scrollThumbnails('left')}
+          className="absolute top-1/2 left-0 transform -translate-y-1/2 p-3 bg-white bg-opacity-80 rounded-full shadow-md hover:bg-opacity-100 z-10"
+        >
+          <FaChevronLeft size={20} />
+        </button>
+      )}
+
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="gallery" direction="horizontal">
+          {(provided) => (
+            <div
+              className="thumbnail-slider flex overflow-x-auto space-x-2 scrollbar-custom"
+              ref={(el) => {
+                thumbnailRef.current = el;
+                provided.innerRef(el);
+              }}
+              onScroll={updateChevronVisibility}
+              {...provided.droppableProps}
+            >
+              <div className="grid grid-flow-col auto-cols-[minmax(100px,_1fr)] sm:auto-cols-[minmax(150px,_1fr)] gap-2">
+                {images.map((image, index) => (
+                  <Draggable key={image.dndId} draggableId={image.dndId} index={index}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        onClick={() => setSelectedImage(image)}
+                        className={`relative flex items-center justify-center rounded-md cursor-pointer transition-all ${
+                          selectedImage?.dndId === image.dndId
+                            ? 'border-2 border-green-500'
+                            : 'border border-gray-300 hover:border-green-300'
+                        }`}
+                      >
+                        <ImageFallback
+                          src={image.src}
+                          alt={image.attributes?.alternativeText || `Thumbnail ${index}`}
+                          width={120}
+                          height={100}
+                          style={{
+                            objectFit: 'contain',
+                            objectPosition: 'center',
+                          }}
+                          className="rounded-md"
+                        />
+                        <button
+                          className={`${styles.orientationButton} absolute top-1 right-1 bg-white p-1 rounded-full shadow-md`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOrientationToggle(image.dndId);
+                          }}
+                        >
+                          <FaSyncAlt size={12} />
+                        </button>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+
+      {showRightChevron && (
+        <button
+          onClick={() => scrollThumbnails('right')}
+          className="absolute top-1/2 right-0 transform -translate-y-1/2 p-3 bg-white bg-opacity-80 rounded-full shadow-md hover:bg-opacity-100 z-10"
+        >
+          <FaChevronRight size={20} />
+        </button>
+      )}
+    </div>
+  );
+
+  /** Grid layout */
+  const renderGrid = () => (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-4 w-full max-w-4xl">
+      {images.map((image, index) => (
+        <div
+          key={index}
+          onClick={() => setSelectedImage(image)}
+          className={`relative rounded-md overflow-hidden cursor-pointer ${
+            selectedImage?.dndId === image.dndId ? 'ring-2 ring-green-500' : 'hover:ring-2 hover:ring-green-300'
+          }`}
+        >
+          <ImageFallback
+            src={image.src}
+            alt={image.attributes?.alternativeText || `Grid ${index}`}
+            width={300}
+            height={200}
+            className="w-full h-auto object-contain rounded-md"
+          />
+          {image.attributes?.caption && (
+            <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white text-xs px-2 rounded">
+              {image.attributes.caption}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
+  /** Layout switcher */
+  const renderLayoutSwitch = () => (
+    <div className="flex gap-3 mb-4">
+      <button
+        onClick={() => setLayoutMode('carousel')}
+        className={`p-2 rounded-md flex items-center gap-1 ${
+          layoutMode === 'carousel' ? 'bg-green-500 text-white' : 'bg-gray-100'
+        }`}
+      >
+        <FaImages /> Carousel
+      </button>
+      <button
+        onClick={() => setLayoutMode('grid')}
+        className={`p-2 rounded-md flex items-center gap-1 ${
+          layoutMode === 'grid' ? 'bg-green-500 text-white' : 'bg-gray-100'
+        }`}
+      >
+        <FaThLarge /> Grid
+      </button>
+    </div>
+  );
 
   return (
     <div className={`${styles.galleryContainer} flex flex-col items-center`}>
@@ -88,113 +254,31 @@ const GalleryView = ({ images: initialImages, smallImagePosition }) => {
           <FaRandom /> Shuffle
         </button>
         <button onClick={handleSort} className={styles.controlButton}>
-          <FaSortAlphaDown /> Sort A-Z
+          <FaSortAlphaDown /> Sort A–Z
         </button>
       </div>
 
-      {/* Large Image View */}
-      {smallImagePosition === 'below-large-image' && selectedImage && (
-        <div className="slide-container relative w-full max-w-3xl h-[60vh] md:h-[70vh] lg:h-[80vh]">
-          <ImageFallback
-            src={selectedImage.src}
-            alt="Selected"
-            className="rounded-lg"
-            fill
-            style={{ objectFit: 'contain', objectPosition: 'center', transition: 'transform 0.3s ease' }}
-          />
-        </div>
-      )}
+      {/* Layout Switch */}
+      {renderLayoutSwitch()}
 
-      {/* Draggable Thumbnails with Scroll */}
-      <div className="relative w-full max-w-3xl mt-3">
-        {showLeftChevron && (
-          <button
-            onClick={() => scrollThumbnails('left')}
-            className="absolute top-1/2 left-0 transform -translate-y-1/2 p-4 bg-white bg-opacity-75 rounded-full shadow-md hover:bg-opacity-100 z-10"
-          >
-            <FaChevronLeft size={20} />
-          </button>
-        )}
-
-        <DragDropContext onDragEnd={handleOnDragEnd}>
-          <Droppable droppableId="gallery" direction="horizontal">
-            {(provided) => (
-              <div
-                className="thumbnail-slider flex overflow-x-auto space-x-2 scrollbar-custom"
-                ref={(el) => {
-                  thumbnailRef.current = el;
-                  provided.innerRef(el);
-                }}
-                onScroll={updateChevronVisibility}
-                {...provided.droppableProps}
-              >
-                <div className="grid grid-flow-col auto-cols-[minmax(100px,_1fr)] sm:auto-cols-[minmax(150px,_1fr)] gap-2">
-                  {images.map((image, index) => (
-                    <Draggable key={image.dndId} draggableId={image.dndId} index={index}>
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          onClick={() => setSelectedImage(image)}
-                          className={`relative rounded-md cursor-pointer flex items-center justify-center border ${
-                            selectedImage?.dndId === image.dndId ? 'border-green-500 border-2' : 'border-transparent'
-                          }`}
-                        >
-                          <ImageFallback
-                            src={image.src}
-                            alt={image.attributes?.alternativeText || `Thumbnail ${index}`}
-                            width={120}
-                            height={100}
-                            style={{ objectFit: 'contain', objectPosition: 'center' }}
-                            className="rounded-md"
-                          />
-                          <button
-                            className={`${styles.orientationButton} absolute top-1 right-1 bg-white p-1 rounded-full shadow-md`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleOrientationToggle(image.dndId);
-                            }}
-                          >
-                            <FaSyncAlt size={12} />
-                          </button>
-                          {image.attributes?.caption && (
-                            <div className="absolute bottom-1 text-xs text-center bg-black bg-opacity-50 text-white px-1 rounded">
-                              {image.attributes.caption}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-
-        {showRightChevron && (
-          <button
-            onClick={() => scrollThumbnails('right')}
-            className="absolute top-1/2 right-0 transform -translate-y-1/2 p-4 bg-white bg-opacity-75 rounded-full shadow-md hover:bg-opacity-100 z-10"
-          >
-            <FaChevronRight size={20} />
-          </button>
-        )}
-      </div>
-
-      {/* Large Image below thumbnails (for alternate layout) */}
-      {smallImagePosition === 'above-large-image' && selectedImage && (
-        <div className="slide-container relative w-full max-w-3xl h-[60vh] md:h-[70vh] lg:h-[80vh] mt-4">
-          <ImageFallback
-            src={selectedImage.src}
-            alt="Selected"
-            className="rounded-lg"
-            fill
-            style={{ objectFit: 'contain', objectPosition: 'center', transition: 'transform 0.3s ease' }}
-          />
-        </div>
+      {/* Layout Logic with smallImagePosition */}
+      {layoutMode === 'carousel' ? (
+        <>
+          {smallImagePosition === 'above-large-image' && (
+            <>
+              {renderCarousel()}
+              <div className="mt-4">{renderLargeImage()}</div>
+            </>
+          )}
+          {smallImagePosition === 'below-large-image' && (
+            <>
+              {renderLargeImage()}
+              {renderCarousel()}
+            </>
+          )}
+        </>
+      ) : (
+        renderGrid()
       )}
     </div>
   );
