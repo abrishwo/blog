@@ -8,8 +8,8 @@ import { markdownify } from "@lib/utils/textConverter";
 import Link from "next/link";
 import { FaRegCalendar } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchArticles, setSearch, setSelectedTags, setPagination, fetchTags, setFeaturedArticle } from '../redux/slices/articlesSlice';
-import React, { useEffect, useState, useRef } from "react";
+import { fetchArticles, fetchFeaturedArticle, fetchTags, setPagination } from '../redux/slices/articlesSlice';
+import React, { useEffect, useRef } from "react";
 import Loader from "@layouts/components/Loader";
 import { useRouter } from 'next/router';
 
@@ -21,109 +21,35 @@ const Home = ({
   promotion,
 }) => {
   const dispatch = useDispatch();
-  const { items: articles, status, pagination, search, selectedTags, featuredArticle, tags } = useSelector((state) => state.articles);
-
-  // const [featuredArticle, setFeaturedArticle] = useState(null);
-  const [filteredArticles, setFilteredArticles] = useState(null);
+  const { items: articles, status, pagination, featuredArticle, tags } = useSelector((state) => state.articles);
   
   const containerRef = useRef(null);
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const router = useRouter();
 
+  // Fetch featured article and paginated articles on initial load
   useEffect(() => {
-    if (status === 'idle') {
+    dispatch(fetchFeaturedArticle());
+    dispatch(fetchArticles({ page: 1, pageSize: pagination.pageSize }));
+    dispatch(fetchTags());
+  }, [dispatch, pagination.pageSize]);
 
-      dispatch(fetchArticles({
-        page: 1,
-        pageSize: pagination.pageSize,
-        tags: selectedTags,
-        search,
-      }));
-      dispatch(fetchTags());
-     
-     
-    }
-
-  }, [status, articles, pagination.currentPage, pagination.pageSize, dispatch]);
-
-
+  // Handle route changes to refetch data if needed
   useEffect(() => {
     const handleRouteChange = (url) => {
       if (url === '/') {
         dispatch(setPagination({ ...pagination, currentPage: 1 }));
-        dispatch(fetchArticles({
-          page: 1,
-          pageSize: pagination.pageSize,
-          tags: selectedTags,
-          search,
-        }));
-
+        dispatch(fetchArticles({ page: 1, pageSize: pagination.pageSize }));
         dispatch(fetchTags());
-
       }
     };
 
-    // Subscribe to route change events
     router.events.on('routeChangeComplete', handleRouteChange);
-
-    // Cleanup subscription on component unmount
     return () => {
       router.events.off('routeChangeComplete', handleRouteChange);
     };
-  }, [router.events]);
-
-  useEffect(() => {
-    if (!articles) {
-      dispatch(fetchArticles({
-        page: 1,
-        pageSize: pagination.pageSize,
-        tags: selectedTags,
-        search,
-      }));
-
-      dispatch(fetchTags());
-    }
-  }, [status, articles, pagination.pageSize, search, dispatch]);
-
- 
-
-  const filterArticles = ()=>{
-    if (articles) {
-      const featured = articles?.data?.find(article => article?.attributes?.Featured);
-      // setFeaturedArticle(featured);
-      const filteredArticlesData = articles?.data?.filter(article => !article?.attributes?.Featured);
-      if(!featuredArticle){
-        dispatch(setFeaturedArticle(featured));
-      }
-      
-      setFilteredArticles(filteredArticlesData);
-      if (containerRef.current) {
-        containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-      } else {
-        console.warn("containerRef is null, make sure it's assigned correctly.");
-      }
-    }
-    if (!tags) {
-      dispatch(fetchTags());
-    }
-  }
-  useEffect(() => {
-    if (articles) {
-      const featured = articles?.data?.find(article => article?.attributes?.Featured);
-      // setFeaturedArticle(featured);
-      const filteredArticlesData = articles?.data?.filter(article => !article?.attributes?.Featured);
-      if(!featuredArticle){
-        dispatch(setFeaturedArticle(featured));
-      }
-      
-      setFilteredArticles(filteredArticlesData);
-    }
-    if (!tags) {
-      dispatch(fetchTags());
-    }
-
-  }, [articles]);
+  }, [router.events, dispatch, pagination]);
 
   const handleSearchChange = (e) => {
     dispatch(setSearch(e.target.value));
@@ -132,31 +58,12 @@ const Home = ({
   const handleTagClick = (tag) => {
     dispatch(setSelectedTags([tag]));
   };
-  useEffect(() => {
-    if (containerRef.current) {
-
-      
-     containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-     
-      
-      console.log("✅ containerRef is set:", containerRef.current);
-    } else {
-      console.log("❌ containerRef is null");
-    }
-  }, [filteredArticles]); // Runs when filteredArticles updates
-  
-  
-  useEffect(() => {
-    // Only fetch articles if the items array is empty
-    if (articles?.data?.length === 0 && status !== 'loading') {
-      dispatch(fetchArticles({ page: pagination.currentPage, pageSize: pagination.pageSize }));
-    }
-  }, [dispatch, articles, pagination.currentPage, pagination.pageSize, status]);
-
   const handlePageChange = (page) => {
     dispatch(setPagination({ ...pagination, currentPage: page }));
     dispatch(fetchArticles({ page: page, pageSize: pagination.pageSize }));
-    
+    if (containerRef.current) {
+      containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
   
   
@@ -265,12 +172,11 @@ const Home = ({
             {/* <div className="mb-12 lg:mb-0 lg:col-8 flex items-center flex-col">
              */}
   <div className="mb-12 lg:mb-0 lg:col-8">
-  {/* Make sure ref is attached to a div that always renders */}
   <div ref={containerRef} className="section pt-0 mx-auto flex flex-col items-center">
     {markdownify("Recent Posts", "h2", "section-title")}
     <div className="row mx-auto">
-      {filteredArticles?.map((post) => (
-        <div className="mb-8 md:col-6" key={post.attributes.Slug}>
+      {articles?.data?.map((post) => (
+        <div className="col-12 mb-8 md:col-6" key={post.attributes.Slug}>
           <Post post={post} />
         </div>
       ))}

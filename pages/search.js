@@ -61,7 +61,7 @@ const SearchPage = () => {
           {searchData.articles && searchData.articles.length > 0 ? (
             <div className="row">
               {searchData.articles.map((post, i) => (
-                <div key={`key-${i}`} className="col-12 mb-8 sm:col-6">
+                <div key={`key-${i}`} className="col-12 mb-8 md:col-6">
                   <Post post={post} />
                 </div>
               ))}
