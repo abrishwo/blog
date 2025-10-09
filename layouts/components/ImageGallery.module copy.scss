@@ -46,4 +46,123 @@
       }
     }
   }
+
+// backup
+
+.galleryContainer {
+  margin: 2rem 0;
+  padding: 1rem;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.controls {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e1e1e1;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.controlButton {
+  background-color: #2ba283;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.controlButton:hover {
+  background-color: #228469;
+}
+
+.galleryGrid {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto; /* Allows horizontal scrolling */
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  min-height: 220px;
+}
+
+.imageCard {
+  flex: 0 0 auto; /* Prevent cards from shrinking */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.imageCard.portrait .image {
+  width: 150px;
+  height: 200px;
+}
+
+.imageCard.landscape .image {
+  width: 250px;
+  height: 140px;
+}
+
+.imageWrapper {
+  position: relative;
+}
+
+.image {
+  border-radius: 4px;
+  object-fit: cover;
+  display: block;
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.orientationButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.imageWrapper:hover .orientationButton {
+  opacity: 1;
+}
+
+.caption2 {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.caption {
+  text-align: center;
+  margin-top: 8px;
+  color: #475569;
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-height: 1em; // keeps height consistent even if caption is empty
+  word-wrap: break-word;
+}
+
   
