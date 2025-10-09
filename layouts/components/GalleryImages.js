@@ -41,7 +41,7 @@ const ImageGallery = ({ images, setImages, layout }) => {
   }, [images, setImages]);
 
   if (!images || images.length === 0 || !isBrowser) return null;
-
+// stylescarouselContainer
   const carouselSettings = {
     dots: true,
     infinite: true,
@@ -134,7 +134,7 @@ const ImageGallery = ({ images, setImages, layout }) => {
           </Droppable>
         </DragDropContext>
       ) : (
-        <div className={styles.carouselContainer}>
+        <div className="slider-container">
           <Slider {...carouselSettings}>
             {images.map((image, index) => (
 
