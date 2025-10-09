@@ -48,6 +48,7 @@ const ImageGallery = ({ images, setImages, layout }) => {
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 4,
+    adaptiveHeight: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [
