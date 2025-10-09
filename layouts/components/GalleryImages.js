@@ -106,36 +106,16 @@ const ImageGallery = ({ images, setImages, layout }) => {
                         {...provided.dragHandleProps}
                         className={`${styles.gridItem} ${styles[image.orientation]}`}
                       >
-                        <div className={styles.imageWrapper}>
-                          <img
-                            src={`${BASE_URL}${image.attributes.formats.small.url}`}
-                            alt={
-                              image.attributes.alternativeText ||
-                              "Gallery image"
-                            }
-                            onClick={() =>
-                              handleImageClick(
-                                `${BASE_URL}${image.attributes.formats.large.url}`
-                              )
-                            }
-                            className={styles.image}
-                          />
-                          <button
-                            className={styles.orientationButton}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleOrientationToggle(image.dndId);
-                            }}
-                          >
-                            <FaSyncAlt />
-                          </button>
-
-                                {/* Caption */}
-                        <div className={styles.caption}>
-                          {image.attributes.caption || "By Stars and toques "}
-                        </div>
-                          
-                        </div>
+                      {/* Grid */}
+<div className={styles.gridItem}>
+  <div className={styles.imageWrapper}>
+    <img src={`${BASE_URL}${image.attributes.formats.small.url}`} />
+    <button ... />
+  </div>
+  <div className={styles.caption}>
+    {image.attributes.caption ? image.attributes.caption : "By Stars and Toques"}
+  </div>
+</div>
 
                       
                       </div>
@@ -144,6 +124,11 @@ const ImageGallery = ({ images, setImages, layout }) => {
                 ))}
                 {provided.placeholder}
               </div>
+
+
+
+
+
             )}
           </Droppable>
         </DragDropContext>
@@ -151,22 +136,13 @@ const ImageGallery = ({ images, setImages, layout }) => {
         <div className={styles.carouselContainer}>
           <Slider {...carouselSettings}>
             {images.map((image, index) => (
-              <div key={index} className={styles.carouselItem}>
-                <img
-                  src={`${BASE_URL}${image.attributes.formats.small.url}`}
-                  alt={image.attributes.alternativeText || "Gallery image"}
-                  className={`${styles.smallImage} px-2 item-center`}
-                  onClick={() =>
-                    handleImageClick(
-                      `${BASE_URL}${image.attributes.formats.large.url}`
-                    )
-                  }
-                />
-                {/* Caption */}
-                <div className={styles.caption} >
-                  {image.attributes.caption || " "}
-                </div>
-              </div>
+ {/* Carousel */}
+<div className={styles.carouselItem}>
+  <img src={`${BASE_URL}${image.attributes.formats.small.url}`} />
+  <div className={styles.caption}>
+    {image.attributes.caption ? image.attributes.caption : "By Stars and Toques"}
+  </div>
+</div>
             ))}
           </Slider>
         </div>
