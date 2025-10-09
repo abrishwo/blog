@@ -133,7 +133,7 @@ const ImageGallery = ({ images, setImages, layout }) => {
 
                         {/* Caption */}
                         <div className={styles.caption}>
-                          {image.attributes.caption || " "}
+                          {image.attributes.caption || "By Stars and toques "}
                         </div>
                       </div>
                     )}
