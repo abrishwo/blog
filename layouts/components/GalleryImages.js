@@ -106,7 +106,7 @@ const ImageGallery = ({ images, setImages, layout }) => {
                         {...provided.dragHandleProps}
                         className={`${styles.gridItem} ${styles[image.orientation]}`}
                       >
-                      {/* Grid */}
+                    
 <div className={styles.gridItem}>
   <div className={styles.imageWrapper}>
     <img src={`${BASE_URL}${image.attributes.formats.small.url}`} />
@@ -136,7 +136,7 @@ const ImageGallery = ({ images, setImages, layout }) => {
         <div className={styles.carouselContainer}>
           <Slider {...carouselSettings}>
             {images.map((image, index) => (
- {/* Carousel */}
+
 <div className={styles.carouselItem}>
   <img src={`${BASE_URL}${image.attributes.formats.small.url}`} />
   <div className={styles.caption}>
