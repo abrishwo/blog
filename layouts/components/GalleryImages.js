@@ -129,12 +129,15 @@ const ImageGallery = ({ images, setImages, layout }) => {
                           >
                             <FaSyncAlt />
                           </button>
-                        </div>
 
-                        {/* Caption */}
+                                {/* Caption */}
                         <div className={styles.caption}>
                           {image.attributes.caption || "By Stars and toques "}
                         </div>
+                          
+                        </div>
+
+                      
                       </div>
                     )}
                   </Draggable>
@@ -160,7 +163,7 @@ const ImageGallery = ({ images, setImages, layout }) => {
                   }
                 />
                 {/* Caption */}
-                <div className={styles.caption}>
+                <div className={styles.caption} >
                   {image.attributes.caption || " "}
                 </div>
               </div>
