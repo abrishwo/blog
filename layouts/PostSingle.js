@@ -40,14 +40,14 @@ const PostSingle = ({ content, relatedPost, tags }) => {
 
   const galleryComponent = galleryData && (
     <div className={styles.galleryContainer}>
-      <div className={styles.controls}>
+  { /* <div className={styles.controls}>
         <button onClick={handleShuffle} className={styles.controlButton}>
           <FaRandom /> Shuffle
         </button>
         <button onClick={handleSort} className={styles.controlButton}>
           <FaSortAlphaDown /> Sort A-Z
         </button>
-      </div>
+      </div> */}
       {galleryData.Layout === 'grid' ? (
         <ImageGallery
           images={galleryImages}
