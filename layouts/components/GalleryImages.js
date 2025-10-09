@@ -110,7 +110,7 @@ const ImageGallery = ({ images, setImages, layout }) => {
 <div className={styles.gridItem}>
   <div className={styles.imageWrapper}>
     <img src={`${BASE_URL}${image.attributes.formats.small.url}`} />
-    <button ... />
+    
   </div>
   <div className={styles.caption}>
     {image.attributes.caption ? image.attributes.caption : "By Stars and Toques"}
