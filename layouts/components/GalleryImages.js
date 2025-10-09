@@ -8,12 +8,24 @@ import { FaSyncAlt } from "react-icons/fa";
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
-  return <div className={`${className}`} style={{ ...style, display: "block", background: "#1e293b" }} onClick={onClick} />;
+  return (
+    <div
+      className={`${className}`}
+      style={{ ...style, display: "block", background: "#1e293b" }}
+      onClick={onClick}
+    />
+  );
 }
 
 function PrevArrow(props) {
   const { className, style, onClick } = props;
-  return <div className={`${className}`} style={{ ...style, display: "block", background: "#1e293b" }} onClick={onClick} />;
+  return (
+    <div
+      className={`${className}`}
+      style={{ ...style, display: "block", background: "#1e293b" }}
+      onClick={onClick}
+    />
+  );
 }
 
 const ImageGallery = ({ images, setImages, layout }) => {
@@ -23,8 +35,8 @@ const ImageGallery = ({ images, setImages, layout }) => {
 
   useEffect(() => {
     setIsBrowser(true);
-    if (images && !images.every(img => 'orientation' in img)) {
-      setImages(images.map(img => ({ ...img, orientation: 'portrait' })));
+    if (images && !images.every((img) => "orientation" in img)) {
+      setImages(images.map((img) => ({ ...img, orientation: "portrait" })));
     }
   }, [images, setImages]);
 
@@ -41,8 +53,8 @@ const ImageGallery = ({ images, setImages, layout }) => {
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 3, slidesToScroll: 3 } },
       { breakpoint: 600, settings: { slidesToShow: 2, slidesToScroll: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } }
-    ]
+      { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+    ],
   };
 
   const handleImageClick = (url) => setSelectedImage(url);
@@ -60,7 +72,11 @@ const ImageGallery = ({ images, setImages, layout }) => {
     setImages(
       images.map((img) =>
         img.dndId === dndId
-          ? { ...img, orientation: img.orientation === 'portrait' ? 'landscape' : 'portrait' }
+          ? {
+              ...img,
+              orientation:
+                img.orientation === "portrait" ? "landscape" : "portrait",
+            }
           : img
       )
     );
@@ -72,16 +88,36 @@ const ImageGallery = ({ images, setImages, layout }) => {
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <Droppable droppableId="galleryGrid" direction="horizontal">
             {(provided) => (
-              <div className={styles.grid} {...provided.droppableProps} ref={provided.innerRef}>
+              <div
+                className={styles.grid}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
                 {images.map((image, index) => (
-                  <Draggable key={image.dndId} draggableId={image.dndId} index={index}>
+                  <Draggable
+                    key={image.dndId}
+                    draggableId={image.dndId}
+                    index={index}
+                  >
                     {(provided) => (
-                      <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className={`${styles.gridItem} ${styles[image.orientation]}`}>
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className={`${styles.gridItem} ${styles[image.orientation]}`}
+                      >
                         <div className={styles.imageWrapper}>
                           <img
                             src={`${BASE_URL}${image.attributes.formats.small.url}`}
-                            alt={image.attributes.alternativeText || 'Gallery image'}
-                            onClick={() => handleImageClick(`${BASE_URL}${image.attributes.formats.large.url}`)}
+                            alt={
+                              image.attributes.alternativeText ||
+                              "Gallery image"
+                            }
+                            onClick={() =>
+                              handleImageClick(
+                                `${BASE_URL}${image.attributes.formats.large.url}`
+                              )
+                            }
                             className={styles.image}
                           />
                           <button
@@ -94,7 +130,11 @@ const ImageGallery = ({ images, setImages, layout }) => {
                             <FaSyncAlt />
                           </button>
                         </div>
-                        {image.attributes.caption && <div className={styles.caption}>{image.attributes.caption}</div>}
+
+                        {/* Caption */}
+                        <div className={styles.caption}>
+                          {image.attributes.caption || " "}
+                        </div>
                       </div>
                     )}
                   </Draggable>
@@ -111,10 +151,18 @@ const ImageGallery = ({ images, setImages, layout }) => {
               <div key={index} className={styles.carouselItem}>
                 <img
                   src={`${BASE_URL}${image.attributes.formats.small.url}`}
-                  alt={image.attributes.alternativeText || 'Gallery image'}
+                  alt={image.attributes.alternativeText || "Gallery image"}
                   className={`${styles.smallImage} px-2 item-center`}
-                  onClick={() => handleImageClick(`${BASE_URL}${image.attributes.formats.large.url}`)}
+                  onClick={() =>
+                    handleImageClick(
+                      `${BASE_URL}${image.attributes.formats.large.url}`
+                    )
+                  }
                 />
+                {/* Caption */}
+                <div className={styles.caption}>
+                  {image.attributes.caption || " "}
+                </div>
               </div>
             ))}
           </Slider>
