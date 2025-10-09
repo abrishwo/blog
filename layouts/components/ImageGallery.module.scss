@@ -97,13 +97,18 @@
 }
 
 .caption {
-  text-align: center;
-  margin-top: 8px;
+  display: block;          // make sure it occupies its own line
+  text-align: center;      // center text
+  margin-top: 6px;         // space between image & caption
   color: #475569;
   font-size: 0.9rem;
   font-weight: 500;
-  min-height: 1em;
-  word-wrap: break-word;
+  line-height: 1.3;        // good line height for readability
+  min-height: auto;        // allow fallback text to show
+  word-break: break-word;  // wrap long text
+  white-space: normal;     // allow multiple words to wrap
+  overflow: visible;       // make sure text is visible
 }
+
 
 
