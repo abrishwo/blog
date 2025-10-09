@@ -96,11 +96,20 @@
   opacity: 1;
 }
 
-.caption {
+.caption2 {
   font-size: 0.8rem;
   color: #666;
   margin-top: 0.5rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.caption {
+  text-align: center;
+  margin-top: 8px;
+  color: #475569;
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-height: 1em; // keeps height consistent even if caption is empty
+  word-wrap: break-word;
 }
