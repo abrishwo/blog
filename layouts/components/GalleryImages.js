@@ -107,18 +107,12 @@ const ImageGallery = ({ images, setImages, layout }) => {
                         {...provided.dragHandleProps}
                         className={`${styles.gridItem} ${styles[image.orientation]}`}
                       >
-                    
-<div className={styles.gridItem}>
-  <div className={styles.imageWrapper}>
-    <img src={`${BASE_URL}${image.attributes.formats.small.url}`} />
-    
-  </div>
-  <div className={styles.caption}>
-    {image.attributes.caption ? image.attributes.caption : "By Stars and Toques"}
-  </div>
-</div>
-
-                      
+                        <div className={styles.imageWrapper}>
+                          <img src={`${BASE_URL}${image.attributes.formats.small.url}`} alt={image.attributes.alternativeText || `Image ${index + 1}`} />
+                        </div>
+                        <div className={styles.caption}>
+                          {image.attributes.caption ? image.attributes.caption : "By Stars and Toques"}
+                        </div>
                       </div>
                     )}
                   </Draggable>
