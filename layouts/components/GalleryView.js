@@ -46,31 +46,40 @@ const GallerySlider = ({ images, smallImagePosition }) => {
 
   return (
     <div className="gallery-container flex flex-col items-center">
-     {smallImagePosition === 'below-large-image' && (
-      <div className="slide-container relative w-full max-w-3xl h-[60vh] md:h-[70vh] lg:h-[80vh]">
-        { selectedImage && (<Image
-          src={`${BASE_URL}${selectedImage}`}
-          alt="Selected"
-          className="rounded-lg slide-image"
-          fill
-          style={{
-            objectFit: 'contain',
-            objectPosition: 'center',
-            maxWidth: '100%',
-            maxHeight: '100%',
-            transition: 'transform 0.3s ease',
-          }}
-          priority
-        />)}
-      </div>
-     )}
+      {smallImagePosition === 'below-large-image' && (
+        <div className="w-full max-w-3xl">
+          <div className="slide-container relative h-[60vh] w-full md:h-[70vh] lg:h-[80vh]">
+            {selectedImage && (
+              <Image
+                src={`${BASE_URL}${selectedImage.attributes.formats.large.url}`}
+                alt={selectedImage.attributes.alternativeText || 'Selected'}
+                className="slide-image rounded-lg"
+                fill
+                style={{
+                  objectFit: 'contain',
+                  objectPosition: 'center',
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  transition: 'transform 0.3s ease',
+                }}
+                priority
+              />
+            )}
+          </div>
+          {selectedImage?.attributes?.caption && (
+            <p className="mt-2 text-center text-sm text-gray-700 dark:text-gray-300">
+              {selectedImage.attributes.caption}
+            </p>
+          )}
+        </div>
+      )}
       {/* blogger/frontend/layouts/components/GalleryView.js */}
 
-      <div className="relative w-full max-w-3xl mt-3">
-      {showLeftChevron && (
+      <div className="relative mt-3 w-full max-w-3xl">
+        {showLeftChevron && (
           <button
             onClick={() => scrollThumbnails('left')}
-            className="chevron left absolute top-1/2 left-0 transform -translate-y-1/2 p-4 bg-white bg-opacity-75 rounded-full shadow-md hover:bg-opacity-100 z-10"
+            className="chevron left absolute top-1/2 left-0 z-10 -translate-y-1/2 transform rounded-full bg-white bg-opacity-75 p-4 shadow-md hover:bg-opacity-100"
           >
             <FaChevronLeft size={20} />
           </button>
@@ -78,65 +87,77 @@ const GallerySlider = ({ images, smallImagePosition }) => {
 
         {/* Thumbnail slider with custom scrollbar */}
         <div
-          className="thumbnail-slider flex overflow-x-auto space-x-2 scrollbar-custom"
+          className="thumbnail-slider scrollbar-custom flex space-x-2 overflow-x-auto"
           ref={thumbnailRef}
           onScroll={updateChevronVisibility} // Update visibility on scroll
         >
-          <div className="grid grid-flow-col auto-cols-[minmax(100px,_1fr)] sm:auto-cols-[minmax(150px,_1fr)] gap-2">
+          <div className="grid auto-cols-[minmax(100px,_1fr)] grid-flow-col gap-2 sm:auto-cols-[minmax(150px,_1fr)]">
             {images.map((image, index) => (
               <div
-                key={index}
-                className={`thumbnail-wrapper flex items-center justify-center ${
-                  selectedImage === image ? 'border-2 border-green-500' : ''
-                } rounded-md cursor-pointer`}
+                key={image.dndId || index}
+                className={`thumbnail-wrapper flex cursor-pointer items-center justify-center rounded-md ${
+                  selectedImage?.dndId === image.dndId
+                    ? 'border-2 border-green-500'
+                    : ''
+                }`}
                 onClick={() => handleImageClick(image)}
               >
                 <Image
-                  src={`${BASE_URL}${image}`}
+                  src={`${BASE_URL}${image.attributes.formats.thumbnail.url}`}
                   width={120}
                   height={100}
                   style={{
                     objectFit: 'contain',
                     objectPosition: 'center',
                   }}
-                  alt={`Thumbnail ${index}`}
-                  className="rounded-md mx-auto my-auto"
+                  alt={
+                    image.attributes.alternativeText || `Thumbnail ${index}`
+                  }
+                  className="mx-auto my-auto rounded-md"
                 />
               </div>
             ))}
           </div>
         </div>
 
-       {/* Right Chevron */}
-          {showRightChevron && (
-            <button
-              onClick={() => scrollThumbnails('right')}
-              className="chevron right absolute top-1/2 right-0 transform -translate-y-1/2 p-4 bg-white bg-opacity-75 rounded-full shadow-md hover:bg-opacity-100 z-10"
-            >
-              <FaChevronRight size={20} />
-            </button>
-          )}
+        {/* Right Chevron */}
+        {showRightChevron && (
+          <button
+            onClick={() => scrollThumbnails('right')}
+            className="chevron right absolute top-1/2 right-0 z-10 -translate-y-1/2 transform rounded-full bg-white bg-opacity-75 p-4 shadow-md hover:bg-opacity-100"
+          >
+            <FaChevronRight size={20} />
+          </button>
+        )}
       </div>
 
       {smallImagePosition === 'above-large-image' && (
-      <div className="slide-container relative w-full max-w-3xl h-[60vh] md:h-[70vh] lg:h-[80vh]">
-        { selectedImage && (<Image
-          src={`${BASE_URL}${selectedImage}`}
-          alt="Selected"
-          className="rounded-lg slide-image"
-          fill
-          style={{
-            objectFit: 'contain',
-            objectPosition: 'center',
-            maxWidth: '100%',
-            maxHeight: '100%',
-            transition: 'transform 0.3s ease',
-          }}
-          priority
-        />)}
-      </div>
-     )}
-
+        <div className="w-full max-w-3xl">
+          <div className="slide-container relative h-[60vh] w-full md:h-[70vh] lg:h-[80vh]">
+            {selectedImage && (
+              <Image
+                src={`${BASE_URL}${selectedImage.attributes.formats.large.url}`}
+                alt={selectedImage.attributes.alternativeText || 'Selected'}
+                className="slide-image rounded-lg"
+                fill
+                style={{
+                  objectFit: 'contain',
+                  objectPosition: 'center',
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  transition: 'transform 0.3s ease',
+                }}
+                priority
+              />
+            )}
+          </div>
+          {selectedImage?.attributes?.caption && (
+            <p className="mt-2 text-center text-sm text-gray-700 dark:text-gray-300">
+              {selectedImage.attributes.caption}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

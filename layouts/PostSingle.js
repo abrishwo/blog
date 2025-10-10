@@ -56,7 +56,7 @@ const PostSingle = ({ content, relatedPost, tags }) => {
         />
       ) : (
         <GallerySlider
-          images={galleryImages.map(img => img.attributes.formats.large.url)}
+          images={galleryImages}
           smallImagePosition={galleryData.smallImagePosition}
         />
       )}
