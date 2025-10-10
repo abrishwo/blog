@@ -28,7 +28,7 @@ function PrevArrow(props) {
   );
 }
 
-const ImageGallery = ({ images, setImages, layout, position }) => {
+const ImageGallery = ({ images, setImages, layout }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isBrowser, setIsBrowser] = useState(false);
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -133,17 +133,13 @@ const ImageGallery = ({ images, setImages, layout, position }) => {
             {images.map((image, index) => (
 
 <div className={styles.carouselItem}>
-  { position === 'above-large-image'  && (
-  <div className={styles.caption}>
-    {image.attributes.caption ? image.attributes.caption : "By Stars and Toques"}
-  </div>
-    )}            
+            
   <img src={`${BASE_URL}${image.attributes.formats.small.url}`} />
-{ position === 'below-large-image'  && (
+
   <div className={styles.caption}>
     {image.attributes.caption ? image.attributes.caption : "By Stars and Toques"}
   </div>
-    )}
+   
 </div>
             ))}
           </Slider>
