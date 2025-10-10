@@ -62,8 +62,10 @@
   height: 140px;
 }
 
+
 .imageWrapper {
   position: relative;
+  overflow: hidden; /* remove this if you added it elsewhere */
 }
 
 .image {
