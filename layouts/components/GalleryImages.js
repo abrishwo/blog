@@ -87,10 +87,10 @@ const ImageGallery = ({ images, setImages, layout }) => {
     <div className={styles.gallery}>
       {layout === "grid" ? (
         <DragDropContext onDragEnd={handleOnDragEnd}>
-          <Droppable droppableId="galleryGrid" direction="horizontal">
+          <Droppable droppableId="galleryGrid" direction="vertical">
             {(provided) => (
               <div
-                className={styles.grid}
+                className={styles.galleryGrid}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
@@ -105,7 +105,7 @@ const ImageGallery = ({ images, setImages, layout }) => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className={`${styles.gridItem} ${styles[image.orientation]}`}
+                        className={`${styles.imageCard} ${styles[image.orientation]}`}
                       >
                         <div className={styles.imageWrapper}>
                           <img src={`${BASE_URL}${image.attributes.formats.small.url}`} alt={image.attributes.alternativeText || `Image ${index + 1}`} />
