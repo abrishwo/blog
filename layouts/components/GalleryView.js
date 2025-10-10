@@ -48,6 +48,11 @@ const GallerySlider = ({ images, smallImagePosition }) => {
     <div className="gallery-container flex flex-col items-center">
       {smallImagePosition === 'below-large-image' && (
         <div className="w-full max-w-3xl">
+        {selectedImage?.attributes?.caption && (
+            <p className="mt-2 text-center text-sm text-gray-700 dark:text-gray-300">
+              {selectedImage.attributes.caption}
+            </p>
+          )}
           <div className="slide-container relative h-[60vh] w-full md:h-[70vh] lg:h-[80vh]">
             {selectedImage && (
               <Image
@@ -66,11 +71,7 @@ const GallerySlider = ({ images, smallImagePosition }) => {
               />
             )}
           </div>
-          {selectedImage?.attributes?.caption && (
-            <p className="mt-2 text-center text-sm text-gray-700 dark:text-gray-300">
-              {selectedImage.attributes.caption}
-            </p>
-          )}
+        
         </div>
       )}
       {/* blogger/frontend/layouts/components/GalleryView.js */}
