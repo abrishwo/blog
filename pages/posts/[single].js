@@ -56,7 +56,6 @@ const Article = ({ slug }) => {
 export const getStaticPaths = async () => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/articles?populate=*`);
   const articles = await response.json();
-console.log(articles)
   const paths = articles?.data?.map((article) => ({
     params: {
       single: article?.attributes?.Slug, // Use slug from your CMS (Strapi)
